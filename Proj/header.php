@@ -38,6 +38,9 @@
 
     <input type="hidden" id="baseUrlProject" value="<?= APP_BASE ?>">
     <input type="hidden" id="fastLoginApi" value="<?= INTERNAL_BASE ?>fastLoginUsuario">
+    <style>
+        .page-scroll { cursor: pointer; }
+    </style>
 </head>
 
 <body>

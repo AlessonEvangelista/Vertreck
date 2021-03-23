@@ -32,13 +32,13 @@ function fastLoginApi(loginApi, redirectback)
                     saveLoginSessionRedirect(data, redirectback);
                 } else {
                     alert("Ops! não te encontramos... Por favor cadastre-se :) ");
-                    location.href = redirectback + "/cadastro.php";
+                    location.href = redirectback + "/cadastro.php?cpf="+$("#fastLoginCpf").val();
                 }
             }
         },
         error: function (err) {
             alert("Ops! não te encontramos... Por favor cadastre-se :) ");
-            location.href = redirectback + "/cadastro.php";
+            location.href = redirectback + "/cadastro.php?cpf="+$("#fastLoginCpf").val();
         }
     });
 }
