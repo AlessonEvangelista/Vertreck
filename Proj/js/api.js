@@ -260,27 +260,45 @@ $('#AppExame').change(function() {
         success: function (obj) {
 
             if (obj != null) {
-                alert("Entre em contato com os Laboratórios abaixo, para agendamento de seu exame!");
                 var data = obj.data;
 
                 let html = "";
                 $.each(data, function (i, d) {
 
-                    html = html + "<div class='card d-flex' id='card_"+d.id+"' style='margin: 10px;'><div class='card-body'>" +
+                    html = html + "<div class='card d-flex' id='card_"+d.id+"'" +
+                        "onclick='msgTextCard(`"+ d.id +"`, `"+d.descricao_agenda+"`,`"+d.email+"`,`"+d.telefone+"`,`"+d.celular+"`)'" +
+                        "style='margin: 10px 0;'><div class='card-body'>" +
                         "<h6 class='card-title'> " + d.id + " - " + d.nome + "</h6>" +
-                        "<p class='card-text'> <a href='mail:' " + d.email + "'> " + d.email + " </a> <br>" +
-                        "<p class='card-text'> " + d.endereco + ", " + d.bairro + " <br>" +
-                        "Tel: <a href='tel:" + d.telefone + "'>" + d.telefone + "</a>; <br> Cel: <a href='tel:" + d.celular + "'>" + d.celular + "</a></p> </div></div>";
+                        "<p class='card-text'> " + d.endereco + ", " + d.bairro + " <br></p> " +
+                        "<p class='msgIntoCard' id='msgIntoCard_"+d.id+"' ></p>" +
+                        "</div></div>";
 
                 });
                 $("#lblEmpresasExames").html(html);
                 $("#lblEmpresasExames").css("display", "flex");
+                
+                window.scrollTo( 0, 600 );
+                swal("ESCOLHA O LOCAL DE SUA PREFERÊNCIA ABAIXO E CLIQUE NELE PARA SER INFORMADO(A) DE  COMO PODERÁ REALIZAR O AGENDAMENTO.");
             }
         }
 
     });
 
 });
+
+function msgTextCard(id, msg, email, telefone, celular)
+{
+    $(".msgIntoCard").html("");
+    $(".card").css("background-color", "#fff");
+
+    $("#card_"+id).css("background-color", "rgb(235 238 241)", );
+    $("#card_"+id).css("color", "#000");
+    $(".card-text").css("color", "#000");
+    $(".msgIntoCard").css("color", "#000");
+
+    let html = "<table class='table table-bordered border-primary'><tr><td style='font-size: 1.3rem;'>"+ msg +"</td></tr></table><br> Email: <a href='mail:'" + email + "'>" + email + "</a><br>Telefone: <a href='tel:" + telefone + "'>" + telefone + "</a><br>Celular: <a href='tel:" + celular + "'>" + celular + "</a><br>";
+    $("#msgIntoCard_"+id).html(html);
+}
 
 function appGetLaboratorioByCidadeAndServico()
 {
