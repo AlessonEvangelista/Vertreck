@@ -91,6 +91,13 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label for="descricaoAgenda">MENSAGEM AGENDA USUÁRIO</label>
+                                            <input type="text" name="descricao_agenda" class="form-control" id="descricaoAgenda" value="Para você ser atendido nesse local, você vai precisar agendar seu atendimento. Abaixo telefones e email para que possa combinar o melhor dia e horário." >
+                                        </div>
+                                    </div>
+
                                     <button type="submit" class="btn btn-primary">Entrar</button>
                                 </form>
                             </div>
@@ -933,6 +940,12 @@
                         '</select>'+
                     '</div>'+
                 '</div>'+
+                '<div class="form-row">' +
+                    '<div class="form-group col-md-12">'+
+                        '<label for="mdlUpdtdescricaoAgenda">Mensagem Agenda Usuário</label>'+
+                        '<input type="text" name="descricao_agenda" class="form-control" id="mdlUpdtdescricaoAgenda" value="'+data.descricao_agenda+'">'+
+                    '</div>'+
+                '</div>' +
                 '<button type="submit" class="btn btn-primary">Entrar</button>'+
             '</form>'+
         '</div>';

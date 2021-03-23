@@ -170,7 +170,7 @@
 
         public function getEmpresaById( $id = null )
         {
-            $sql = "select e.id, e.nome_fantasia, e.razao_social, e.cnpj, e.email, e.endereco, e.bairro, 
+            $sql = "select e.id, e.nome_fantasia, e.razao_social, e.cnpj, e.email, e.endereco, e.bairro, e.descricao_agenda,
                             e.telefone, e.celular, etd.nome as estado, c.nome as cidade, t.tipo, t.id as tipoId, c.id as cidadeId, etd.id as estadoId 
                         from empresa e 
                             inner join cidades c on e.cidade = c.id 

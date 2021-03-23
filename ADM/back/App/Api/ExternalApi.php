@@ -134,7 +134,7 @@
         public function appGetEmpresaByExame($data = null)
         {
             $dados = explode(",", $data);
-            $sql = "select emp.id, emp.nome_fantasia as nome, emp.email, emp.endereco, emp.bairro, emp.telefone, emp.celular from empresa emp 
+            $sql = "select emp.id, emp.nome_fantasia as nome, emp.email, emp.endereco, emp.bairro, emp.telefone, emp.celular, emp.descricao_agenda from empresa emp 
                         inner join exame_empresa exe on emp.id = exe.empresa
                         where exe.exame = :exame  and emp.cidade = :cidade group by emp.id";
             $stmt = $this->conn->prepare($sql);

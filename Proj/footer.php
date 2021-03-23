@@ -128,6 +128,7 @@
 
 </script>
 <script src="js/api.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <!-- Modal -->
 <div class="modal fade" id="appLoginCad" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="appLoginCadLabel" aria-hidden="true">

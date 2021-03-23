@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row" id="lblEmpresasExames" style="display: none"></div>
+                                <div class="row" id="lblEmpresasExames" style="display: none; padding: 10px;"></div>
                             </form>
 
 
@@ -164,6 +164,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script src="js/api.js"></script>
 
@@ -286,4 +287,9 @@
         }
     });
 </script>
+
+    <div id="dialog" title="Basic dialog">
+        <p>icon.</p>
+    </div>
+
 </html>

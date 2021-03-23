@@ -46,7 +46,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="cadastroCpf" name="cadastroCpf" placeholder="Cpf" required data-error="informe o Cpf">
+                                            <input type="text" class="form-control" id="cadastroCpf" name="cadastroCpf" onkeydown="fMasc( this, mCPF )" placeholder="Cpf" required data-error="informe o Cpf">
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
