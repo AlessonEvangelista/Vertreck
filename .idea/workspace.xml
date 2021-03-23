@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="28baefb0-a8ba-41a9-abd4-c4f633566b3f" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/PHP/composer.json</pharConfigPath>
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/PHP/vendor/composer" />
+      <path value="$PROJECT_DIR$/PHP/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/PHP/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/PHP/vendor/symfony/polyfill-ctype" />
+    </include_path>
+  </component>
+  <component name="ProjectId" id="1paOGaUznWoynO2bLvRDSaOBcUp" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/WEBAPP/img" />
+      <recent name="$PROJECT_DIR$/ADM/back/App/Services" />
+      <recent name="$PROJECT_DIR$/ADM/back/App/Models" />
+      <recent name="$PROJECT_DIR$/ADM/back" />
+      <recent name="$PROJECT_DIR$/ADM/app/view/template" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/WEBAPP" />
+      <recent name="$PROJECT_DIR$/ADM/back/App" />
+      <recent name="$PROJECT_DIR$/ADM/public" />
+      <recent name="$PROJECT_DIR$/ADM" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="28baefb0-a8ba-41a9-abd4-c4f633566b3f" name="Default Changelist" comment="" />
+      <created>1615417639567</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1615417639567</updated>
+      <workItem from="1615417640650" duration="15487000" />
+      <workItem from="1615484570242" duration="71809000" />
+      <workItem from="1615658186386" duration="28140000" />
+      <workItem from="1615812829786" duration="1367000" />
+      <workItem from="1615838835173" duration="79189000" />
+      <workItem from="1616030178698" duration="2601000" />
+      <workItem from="1616086319951" duration="4137000" />
+      <workItem from="1616092351657" duration="3424000" />
+      <workItem from="1616271806910" duration="5799000" />
+      <workItem from="1616331127156" duration="15445000" />
+      <workItem from="1616416443818" duration="62000" />
+      <workItem from="1616500031917" duration="911000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
