@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../Vertreck">
+      <sourceFolder url="file://$MODULE_DIR$/../Vertreck/PHP/App" isTestSource="false" packagePrefix="App\" />
+      <sourceFolder url="file://$MODULE_DIR$/../Vertreck/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../Vertreck/tests" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/../Vertreck/PHP/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/../Vertreck/PHP/vendor/twig/twig" />
+      <excludeFolder url="file://$MODULE_DIR$/../Vertreck/PHP/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/../Vertreck/PHP/vendor/symfony/polyfill-ctype" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
