@@ -4,7 +4,7 @@
 <?php require_once 'header.php'; ?>
 <div class="separeted"></div>
 
-<section id="app">
+<section id="app" style="overflow: auto; height:100%;">
 
     <div class="app-form">
         <div class="container">
@@ -20,27 +20,27 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="estado">Estado</label>
-                                            <select class="form-control" id="AppEstado" name="AppEstado">
-                                                <option class="form-control"> selecione... </option>
-                                            </select>
+                                            <select class="form-control" id="AppEstado" name="AppEstado"></select>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="estado">Cidade</label>
-                                            <select class="form-control" id="AppCidade" name="AppCidade">
-                                                <option class="form-control"> selecione... </option>
-                                            </select>
+                                            <select class="form-control" id="AppCidade" name="AppCidade"></select>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="estado">Serviço a ser realizado</label>
-                                            <select class="form-control" id="Appservico" name="Appservico">
-                                                <option class="form-control"> selecione... </option>
-                                            </select>
+                                            <select class="form-control" id="Appservico" name="Appservico"></select>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-12" id="divExamesServicos">
                                         <div class="form-group">
                                             <label for="estado">Exame por serviço</label>
@@ -197,6 +197,7 @@
             nSelectedText: 'selecione.',
             nonSelectedText: 'selecione...'
         });
+        appGetEstadoCombo();
     })
 
     function enabledMenu(off, on)
@@ -287,9 +288,7 @@
         }
     });
 </script>
-
-    <div id="dialog" title="Basic dialog">
-        <p>icon.</p>
-    </div>
-
+<style>
+    .row { margin: 10px 0; }
+</style>
 </html>

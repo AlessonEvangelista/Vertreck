@@ -103,7 +103,7 @@
         {
             $sql = "select estd.id, estd.nome from estados estd 
                             inner join cidades c on c.estado = estd.id
-                            right join empresa e on e.cidade = c.id
+                            inner join empresa e on e.cidade = c.id
                             group by estd.id";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();

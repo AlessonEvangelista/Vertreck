@@ -34,6 +34,12 @@ Domain Path:      /languages/
 /* ==========================================================================
    GENERAL
    ========================================================================== */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 body {
   font-family: 'Roboto', sans-serif;
   color: #a0a6ad;
@@ -2365,7 +2371,7 @@ footer .menu li a:hover {
 }
 .separeted {
   display: block;
-  height: 215px !important;
+  height: 8rem !important;
 }
 .separeted-index {
   display: block;
@@ -2396,6 +2402,8 @@ footer .menu li a:hover {
 }
 .btn-group > button {
   text-align: left;
+  border: 1px solid #cdcdcd;
+  padding: 14px 10px;
 }
 .show>.multiselect>.multiselect-selected-text { display: none; }
 

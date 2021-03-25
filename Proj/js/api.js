@@ -134,7 +134,7 @@ $('#AppMedicacaoCheck2').change(function() {
 
 function appGetEstadoCombo()
 {
-    var selectbox = $('#AppEstado');
+    let selectboxEstado = $('#AppEstado');
     $.ajax({
         url: $("#AppFrmConsulta").attr('action') + "appGetEstadoCombo",
         method: "get",
@@ -144,11 +144,19 @@ function appGetEstadoCombo()
             if (obj != null) {
                 var data = obj.data;
 
-                selectbox.find('option').remove();
-                $('<option>').val(null).text("Selecione...").appendTo(selectbox);
+                selectboxEstado.multiselect('destroy');
+                let params = [{label: "Selecione um Estado", value: 0}];
                 $.each(data, function (i, d) {
-                    $('<option>').val(d.id).text(d.nome).appendTo(selectbox);
+                    params.push({ label: d.nome, value: d.id});
                 });
+                selectboxEstado.multiselect({
+                    nableFiltering: true,
+                    enableCaseInsensitiveFiltering: true,
+                    buttonWidth:'100%',
+                    nSelectedText: 'selecione.',
+                    nonSelectedText: 'selecione...'
+                });
+                selectboxEstado.multiselect('dataprovider', params);
             }
         }
 
@@ -164,7 +172,7 @@ function appGetCidade()
         swal("Selecione um estado para prosseguir");
         return;
     }
-    var selectbox = $('#AppCidade');
+    let selectboxCidade = $('#AppCidade');
     $.ajax({
         url: $("#AppFrmConsulta").attr('action') +  "appGetCidade/"+estadoSelecionado,
         method: "get",
@@ -173,11 +181,19 @@ function appGetCidade()
             if (obj != null) {
                 var data = obj.data;
 
-                selectbox.find('option').remove();
-                $('<option>').val(null).text("Selecione...").appendTo(selectbox);
+                selectboxCidade.multiselect('destroy');
+                let params = [{label: "Selecione uma Cidade", value: 0}];
                 $.each(data, function (i, d) {
-                    $('<option>').val(d.id).text(d.nome).appendTo(selectbox);
+                    params.push({ label: d.nome, value: d.id});
                 });
+                selectboxCidade.multiselect({
+                    nableFiltering: true,
+                    enableCaseInsensitiveFiltering: true,
+                    buttonWidth:'100%',
+                    nSelectedText: 'selecione.',
+                    nonSelectedText: 'selecione...'
+                });
+                selectboxCidade.multiselect('dataprovider', params);
             }
         }
     });
@@ -188,7 +204,7 @@ function appGetServicoByCidade()
     var cidade = $('#AppCidade');
     var cidadeSelecionada = cidade.find('option:selected').val();
 
-    var selectbox = $('#Appservico');
+    let selectboxServico = $('#Appservico');
     $.ajax({
         url: $("#AppFrmConsulta").attr('action') +  "appGetServicoByCidade/"+ cidadeSelecionada,
         method: "post",
@@ -197,11 +213,24 @@ function appGetServicoByCidade()
             if (obj != null) {
                 var data = obj.data;
 
-                selectbox.find('option').remove();
-                $('<option>').val(null).text("Selecione...").appendTo(selectbox);
+                selectboxServico.multiselect('destroy');
+                let params = [];
+                if(data.length > 0)
+                    params = [{label: "Selecione um Serviço", value: 0}];
+
                 $.each(data, function (i, d) {
-                    $('<option>').val(d.id).text(d.nome).appendTo(selectbox);
+                    params.push({ label: d.nome, value: d.id});
                 });
+                selectboxServico.multiselect({
+                    nableFiltering: true,
+                    enableCaseInsensitiveFiltering: true,
+                    buttonWidth:'100%',
+                    disableIfEmpty: true,
+                    disabledText: 'Não encontrado Serviço para essa cidade...',
+                    nSelectedText: 'selecione.',
+                    nonSelectedText: 'selecione...'
+                });
+                selectboxServico.multiselect('dataprovider', params);
             }
 
         }
@@ -235,7 +264,7 @@ function appGetExameByServico()
 
 function appGetEmpresasByExame(servico)
 {
-    var selectbox = $('#AppExame');
+    let selectboxExame = $('#AppExame');
     $.ajax({
         url: $("#AppFrmConsulta").attr('action') +  "appGetExame/"+servico,
         method: "get",
@@ -244,11 +273,23 @@ function appGetEmpresasByExame(servico)
             if (obj != null) {
                 var data = obj.data;
 
-                selectbox.find('option').remove();
-                $('<option>').val(null).text("Selecione...").appendTo(selectbox);
+                selectboxExame.multiselect('destroy');
+                let params = [];
+                if(data.length > 0)
+                    params = [{label: "Selecione um Exame", value: 0}];
                 $.each(data, function (i, d) {
-                    $('<option>').val(d.id).text(d.exame).appendTo(selectbox);
+                    params.push({ label: d.exame, value: d.id});
                 });
+                selectboxExame.multiselect({
+                    nableFiltering: true,
+                    enableCaseInsensitiveFiltering: true,
+                    buttonWidth:'100%',
+                    disableIfEmpty: true,
+                    disabledText: 'Não encontrado Exame...',
+                    nSelectedText: 'selecione.',
+                    nonSelectedText: 'selecione...'
+                });
+                selectboxExame.multiselect('dataprovider', params);
             }
         }
     });
@@ -270,10 +311,10 @@ $('#AppExame').change(function() {
                 let html = "";
                 $.each(data, function (i, d) {
 
-                    html = html + "<div class='card d-flex' id='card_"+d.id+"'" +
-                        "onclick='msgTextCard(`"+ d.id +"`, `"+d.descricao_agenda+"`,`"+d.email+"`,`"+d.telefone+"`,`"+d.celular+"`)'" +
-                        "style='margin: 10px 0;'><div class='card-body'>" +
-                        "<h6 class='card-title'> " + d.id + " - " + d.nome + "</h6>" +
+                    html = html + "<div class='card d-flex' id='card_"+d.id+"' style='margin: 10px 0;'><div class='card-body'>" +
+                        "<h6 class='card-title' style='cursor: pointer; color: blue;' " +
+                        "onclick='msgTextCard(`"+ d.id +"`, `"+d.descricao_agenda+"`,`"+d.email+"`,`"+d.telefone+"`,`"+d.celular+"`,`"+data.length+"`)'" +
+                        "> " + d.id + " - " + d.nome + "</h6>" +
                         "<p class='card-text'> " + d.endereco + ", " + d.bairro + " <br></p> " +
                         "<p class='msgIntoCard' id='msgIntoCard_"+d.id+"' ></p>" +
                         "</div></div>";
@@ -282,7 +323,7 @@ $('#AppExame').change(function() {
                 $("#lblEmpresasExames").html(html);
                 $("#lblEmpresasExames").css("display", "flex");
                 
-                window.scrollTo( 0, 600 );
+                window.scrollTo( 0, 800 );
                 swal("ESCOLHA O LOCAL DE SUA PREFERÊNCIA ABAIXO E CLIQUE NELE PARA SER INFORMADO(A) DE  COMO PODERÁ REALIZAR O AGENDAMENTO.");
             }
         }
@@ -291,18 +332,52 @@ $('#AppExame').change(function() {
 
 });
 
-function msgTextCard(id, msg, email, telefone, celular)
+function msgTextCard(id, msg, email, telefone, celular, rows)
 {
     $(".msgIntoCard").html("");
     $(".card").css("background-color", "#fff");
 
-    $("#card_"+id).css("background-color", "rgb(235 238 241)", );
+    $("#card_"+id).css("background-color", "rgb(235 238 241)" );
     $("#card_"+id).css("color", "#000");
     $(".card-text").css("color", "#000");
     $(".msgIntoCard").css("color", "#000");
 
-    let html = "<table class='table table-bordered border-primary'><tr><td style='font-size: 1.3rem;'>"+ msg +"</td></tr></table><br> Email: <a href='mail:'" + email + "'>" + email + "</a><br>Telefone: <a href='tel:" + telefone + "'>" + telefone + "</a><br>Celular: <a href='tel:" + celular + "'>" + celular + "</a><br>";
+    let html = "<table class='table table-bordered border-primary'><tr><td style='font-size: 1.3rem;'>"+ msg +"</td></tr></table>"+
+            "<div class='container px-0 pg-4'>"+
+                "<div class='row'>" +
+                    "<div class='col'>" +
+                        "<div class='px-0 pg-3 border'>" +
+                            "Email: <a href='mail:'" + email + "'>" + email + "</a>"+
+                            "<br>Telefone: <a href='tel:" + telefone + "'>" + telefone + "</a>"+
+                            "<br>Celular: <a href='tel:" + celular + "'>" + celular + "</a><br>" +
+                        "</div>" +
+                    "</div>" +
+                    "<div class='col' style='padding-left: 0; padding-right: 0;'>" +
+                        "<div class='px-0 pg-3 border' style='margin: 18px 0;'>" +
+                            "<button onclick='enviarParaAgenda(`"+email+"`,`"+telefone+"`,`"+celular+"`)' style='width: 50%; z-index: 900;' type='button' class='btn btn-primary'>Desejo ir nesse</button>" +
+                            "<button onclick='clearMsgTextCard("+rows+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-danger'>Desejo escolher outro</button>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>" +
+            "</div>";
+
     $("#msgIntoCard_"+id).html(html);
+}
+function clearMsgTextCard(count)
+{
+    for(let i = 1; i <= count; i ++){
+        $("#card_"+i).css("background-color", "#fff" );
+        $("#msgIntoCard_"+i).html("");
+    }
+    $(".card").css("background-color", "#fff");
+}
+
+function enviarParaAgenda(email, telefone, celular)
+{
+    swal("Estamos quase lá", "entre em contato através do email: "+ email + ", ou dos telefones: "+ telefone + ", "+ celular +".")
+    .then((value) => {
+        location.href = "https://vertreck.net.br";
+    });
 }
 
 function appGetLaboratorioByCidadeAndServico()
