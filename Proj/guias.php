@@ -8,27 +8,27 @@
     <div class="container" >
         <div class="row space-100">
             <div class="col-lg-7 col-md-12 col-xs-12">
-                    <a target="_blank" style="padding: 20px 10px 10px 10px" href="https://appmed.vertreck.com.br/wp-content/uploads/2020/12/Z-Adendo-A-Anexo-1D_Formulario-para-avaliacao-medica-ocupacional-LOTE-3.pdf">
+                    <a target="_blank" style="padding: 20px 10px 10px 10px" href="pdf/Z-Adendo-A-Anexo-1D_Formulario-para-avaliacao-medica-ocupacional-LOTE-3.pdf">
                         <div class="card" style="width: 90%; margin: 0 auto;">
-                            <img style="max-width: 8rem; margin: 0 auto;" src="https://appmed.vertreck.com.br/wp-content/uploads/2020/09/pdf.png" alt="pdf" title="pdf">
+                            <img style="max-width: 8rem; margin: 0 auto;" src="img/pdf.png" alt="pdf" title="pdf">
                             <div class="card-body">
                                 <h6 class="card-title">Z - Adendo A - Anexo 1D_Formulário para avaliação médica ocupacional LOTE 3</h6>
                             </div>
                         </div>
                     </a>
 
-                    <a target="_blank" style="padding: 10px" href="https://appmed.vertreck.com.br/wp-content/uploads/2020/12/Z-Adendo-A-Anexo-1E_Formulario-para-avaliacao-odontologica-LOTE-3.pdf">
+                    <a target="_blank" style="padding: 10px" href="pdf/Z-Adendo-A-Anexo-1E_Formulario-para-avaliacao-odontologica-LOTE-3.pdf">
                         <div class="card" style="width: 90%; margin: 0 auto;">
-                            <img style="max-width: 8rem; margin: 0 auto;" src="https://appmed.vertreck.com.br/wp-content/uploads/2020/09/pdf.png" alt="pdf" title="pdf">
+                            <img style="max-width: 8rem; margin: 0 auto;" src="img/pdf.png" alt="pdf" title="pdf">
                             <div class="card-body">
                                 <h6 class="card-title">Z - Adendo A - Anexo 1E_Formulário para avaliação odontológica LOTE 3</h6>
                             </div>
                         </div>
                     </a>
 
-                    <a target="_blank" style="padding: 10px" href="https://appmed.vertreck.com.br/wp-content/uploads/2020/12/Z-Adendo-A-Anexo-1F_Formulario-para-avaliacao-nutricional-LOTE-3.pdf">
+                    <a target="_blank" style="padding: 10px" href="pdf/Z-Adendo-A-Anexo-1F_Formulario-para-avaliacao-nutricional-LOTE-3.pdf">
                         <div class="card" style="width: 90%; margin: 0 auto;">
-                            <img style="max-width: 8rem; margin: 0 auto;" src="https://appmed.vertreck.com.br/wp-content/uploads/2020/09/pdf.png" alt="pdf" title="pdf">
+                            <img style="max-width: 8rem; margin: 0 auto;" src="img/pdf.png" alt="pdf" title="pdf">
                             <div class="card-body">
                                 <h6 class="card-title">Z - Adendo A - Anexo 1F_Formulário para avaliação nutricional LOTE 3</h6>
                             </div>

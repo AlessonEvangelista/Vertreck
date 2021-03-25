@@ -53,7 +53,7 @@
                             </form>
 
 
-                            <div class="row" id="AppAgendamentoContainer" style="display: none;">
+                            <div class="row" id="AppAgendamentoContainer" style="display: none; margin: 0;">
 
                                 <form class="form-control" method="post" action="<?= LOCAL_API ?>/api.php?url=External/" id="AppFrmAgendamento">
 
@@ -270,7 +270,7 @@
 
                     $("#appConsultaSolicitar").css("display", "none");
                     $("#appConsultaFinalizar").css("display", "flex");
-                    alert(data.data)
+                    swal(data.data)
                 }
             },
             error: function (y, d) {

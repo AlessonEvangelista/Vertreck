@@ -7,7 +7,7 @@ function fastLoginClick() {
 
     if( ! ValidaCpf($("#fastLoginCpf").val()) )
     {
-        alert("CPF inválido. Por favor informe um CPF válido!");
+        swal("CPF inválido. Por favor informe um CPF válido!");
         $("#fastLoginCpf").focus();
     }
     else {
@@ -31,14 +31,18 @@ function fastLoginApi(loginApi, redirectback)
                 if(data.status === "sucesso") {
                     saveLoginSessionRedirect(data, redirectback);
                 } else {
-                    alert("Ops! não te encontramos... Por favor cadastre-se :) ");
-                    location.href = redirectback + "/cadastro.php?cpf="+$("#fastLoginCpf").val();
+                    swal("Ops! não te encontramos..", "Por favor clique no botão abaixo e você será redirecionado a página de cadastro")
+                        .then((value) => {
+                            location.href = redirectback + "/cadastro.php?cpf="+$("#fastLoginCpf").val();
+                        });
                 }
             }
         },
         error: function (err) {
-            alert("Ops! não te encontramos... Por favor cadastre-se :) ");
-            location.href = redirectback + "/cadastro.php?cpf="+$("#fastLoginCpf").val();
+            swal("Ops! não te encontramos..", "Clicando no botão abaixo, você irá a tela de cadastro para refazer o seu cadastro. Caso persista o erro favor reportar no Email: vertreck@vertreck.com.br")
+            .then((value) => {
+                location.href = redirectback + "/cadastro.php?cpf="+$("#fastLoginCpf").val();
+            });
         }
     });
 }
@@ -133,7 +137,8 @@ function appGetEstadoCombo()
     var selectbox = $('#AppEstado');
     $.ajax({
         url: $("#AppFrmConsulta").attr('action') + "appGetEstadoCombo",
-        method: "post",
+        method: "get",
+        crossDomain: true,
         success: function (obj) {
 
             if (obj != null) {
@@ -156,7 +161,7 @@ function appGetCidade()
     var estadoSelecionado = estado.find('option:selected').val();
 
     if (typeof estadoSelecionado === 'undefined'){
-        alert("Selecione um estado para prosseguir");
+        swal("Selecione um estado para prosseguir");
         return;
     }
     var selectbox = $('#AppCidade');

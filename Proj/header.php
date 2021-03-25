@@ -5,8 +5,8 @@
         define("INTERNAL_BASE", "../ADM/back/api.php?url=External/");
     }
     else {
-        define("LOCAL_API", "http://vertreck1.hospedagemdesites.ws/Adm/back");
-        define("APP_BASE", "http://vertreck1.hospedagemdesites.ws");
+        define("LOCAL_API", "https://vertreck.net.br/Adm/back");
+        define("APP_BASE", "https://vertreck.net.br");
         define("INTERNAL_BASE", "Adm/back/api.php?url=External/");
     }
 ?>
