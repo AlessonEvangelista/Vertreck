@@ -3,7 +3,6 @@
     namespace App\Api;
     use App\Config\Utils;
     use App\Models\Sql;
-    use App\Models\Access;
 
     class ExternalApi extends Sql
     {
@@ -70,23 +69,6 @@
             return json_encode($retorno);
         }
 
-        public function fastLoginUsuario()
-        {
-            $retorno = [ "status" => "erro",  "data" => 'Erro ao realizar login'];
-            $sql = "select id, nome, email from usuario
-                            WHERE cpf = '".$_POST["cpf"]."'";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute();
-
-            if($stmt->rowCount() > 0)
-            {
-                $login = $stmt->fetch(\PDO::FETCH_ASSOC);
-                $retorno = ["status" => "sucesso", "data" => ["id" => $login['id'], "nome" => $login['nome'], "email" => $login['email']]];
-            }
-
-            return json_encode($retorno);
-        }
-
         private function validCreateField($data)
         {
             if(isset($data['telefone']) || $data['telefone'] === "") { unset($data['telefone']); }
@@ -121,9 +103,19 @@
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
-        public function appGetExame($id =null)
+        public function appGetServicoByExame($id =null)
         {
-            $sql = "select e.id, e.exame from exame e inner join servico s on e.servico = s.id Where s.id = :id";
+            $sql = "select s.id, s.nome from servico s inner join exame e on s.id = e.servico Where e.id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+
+        public function appGetAllExame($id =null)
+        {
+            $sql = "select e.id, e.exame, s.nome as servico from exame e inner join servico s on e.servico = s.id";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id);
             $stmt->execute();
@@ -140,23 +132,6 @@
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':exame', $dados[0]);
             $stmt->bindValue(':cidade', $dados[1]);
-            $stmt->execute();
-
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        }
-
-        public function appGetLaboratorioByCidadeAndServico($data)
-        {
-            $params = explode(",", $data);
-            $sql = "select e.id, e.nome_fantasia as nome, e.endereco, e.bairro, e.telefone, e.celular from empresa e
-                    inner join exame_empresa exe on exe.empresa = e.id
-                    inner join exame ex on exe.exame = ex.id
-                    inner join servico s on ex.servico = s.id
-                        where s.id = :servico AND e.cidade = :cidade
-                    group by e.id";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindValue(':servico', $params[0]);
-            $stmt->bindValue(':cidade', $params[1]);
             $stmt->execute();
 
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -226,19 +201,17 @@
                 $id = $this->conn->lastInsertId();
 
                 if($data['exames']) {
-                    foreach ($data['exames'] as $exame) {
-                        $agenda_exame = [
-                            'usuario_agenda' => $id,
-                            'exame' => $exame
-                        ];
+                    $agenda_exame = [
+                        'usuario_agenda' => $id,
+                        'exame' => $data['exames']
+                    ];
 
-                        $sql = "INSERT INTO usuario_agenda_exame (usuario_agenda, exame) VALUES (:usuario_agenda, :exame)";
-                        $stmt = $this->conn->prepare($sql);
-                        $stmt->execute($agenda_exame);
-                    }
+                    $sql = "INSERT INTO usuario_agenda_exame (usuario_agenda, exame) VALUES (:usuario_agenda, :exame)";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->execute($agenda_exame);
                 }
                 $empresa = $this->getEmpresaTelefones($data['empresa']);
-                $retorno = [ "status" => "sucesso",  "data" => "Agenda solicitada! Ligue no Tel: " . $empresa['telefone'] . " ou Cel: " . $empresa['celular'] . "! para confirmar data e horário."];
+                $retorno = [ "status" => "sucesso",  "data" => "Agenda SOLICITADA! Para CONFIRMAR por favor. Ligue no Tel: " . $empresa['telefone'] . " ou Cel: " . $empresa['celular'] . "! E confirmar data e horário. Depois não esqueça de clicar no botão abaixo de CONFIRMAÇÃO"];
             }
 
             return json_encode($retorno);

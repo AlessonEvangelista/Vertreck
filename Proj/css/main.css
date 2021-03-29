@@ -2161,7 +2161,7 @@ footer {
   width:100%;
 }
 footer .footer-Content {
-  padding: 60px 0 0px;
+  padding: 0;
   color: #546E7A;
 }
 
@@ -2237,10 +2237,9 @@ footer .menu li a:hover {
   background-image: -webkit-linear-gradient(0deg, #3c96ff 0%, #2dfbff 100%);
   background-image: -ms-linear-gradient(0deg, #3c96ff 0%, #2dfbff 100%);
 
-  padding: 15px 0;
+  padding: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   color: #ffffff;
-  margin-top: 30px;
 }
 
 .copyright p {
@@ -2371,7 +2370,7 @@ footer .menu li a:hover {
 }
 .separeted {
   display: block;
-  height: 8rem !important;
+  height: 6.7rem !important;
 }
 .separeted-index {
   display: block;
@@ -2399,6 +2398,7 @@ footer .menu li a:hover {
 }
 .dropdown-menu.show {
   width: 100%;
+  top: 193% !important;
 }
 .btn-group > button {
   text-align: left;

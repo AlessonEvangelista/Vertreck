@@ -1,4 +1,5 @@
 <?php
+    session_start();
     if ($_SERVER['HTTP_HOST'] === 'localhost') {
         define("LOCAL_API", "http://localhost/pessoal/Vertreck/ADM/back");
         define("APP_BASE", "http://localhost/pessoal/Vertreck/Proj");
@@ -8,6 +9,11 @@
         define("LOCAL_API", "https://vertreck.net.br/Adm/back");
         define("APP_BASE", "https://vertreck.net.br");
         define("INTERNAL_BASE", "Adm/back/api.php?url=External/");
+    }
+    if(!isset($_SESSION['nome']) and !isset($_GET['rollback'])){
+        echo "<script> alert('É necessário realizar o Login para ter acesso!'); </script>";
+        header("Location: index.php?rollback=true");
+        exit;
     }
 ?>
 <head>
@@ -43,7 +49,7 @@
     </style>
 </head>
 
-<body>
+<body style="margin-top: 15vh; height: 100vh;">
 
     <!-- Header Section Start -->
     <header id="home" class="hero-area-2">
@@ -56,40 +62,42 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
 
-                    <ul class="navbar-nav mr-auto w-100 justify-content-end" id="menu-off" style="display: flex;">
-                        <li class="nav-item">
-                            <a class="nav-link page-scroll" href="index.php">Início</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link page-scroll" href="ouvidoria.php">Ouvidoria</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link page-scroll" data-bs-toggle="modal" data-bs-target="#appLoginCad">Entrar</a>
-                        </li>
-                    </ul>
-
-                    <ul class="navbar-nav mr-auto w-100 justify-content-end" id="menu-on" style="display: none;">
-                        <li class="nav-item" id="UserLablLog">
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link page-scroll" href="index.php">Início</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link page-scroll" href="app.php">Exame</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link page-scroll" href="ouvidoria.php">Ouvidoria</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link page-scroll" href="guias.php">Guias</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link page-scroll" onclick="logout()" id="logout">
-                                <figcaption class="blockquote-footer">Sair</figcaption>
-                            </a>
-                        </li>
-                    </ul>
-
+                    <?php if( $_SESSION['nome'] ) { ?>
+                        <ul class="navbar-nav mr-auto w-100 justify-content-end" id="menu-on" >
+                            <li class="nav-item" id="UserLablLog">
+                                <?= $_SESSION['nome'] ?>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link page-scroll" href="index.php">Início</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link page-scroll" href="app.php">Exame</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link page-scroll" href="ouvidoria.php">Ouvidoria</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link page-scroll" href="guias.php">Guias</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link page-scroll" href="app.php?logout=true" >
+                                    <figcaption class="blockquote-footer">Sair</figcaption>
+                                </a>
+                            </li>
+                        </ul>
+                    <?php } else { ?>
+                        <ul class="navbar-nav mr-auto w-100 justify-content-end" id="menu-off">
+                            <li class="nav-item">
+                                <a class="nav-link page-scroll" href="index.php">Início</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link page-scroll" href="ouvidoria.php">Ouvidoria</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link page-scroll" data-bs-toggle="modal" data-bs-target="#appLoginCad">Entrar</a>
+                            </li>
+                        </ul>
+                    <?php } ?>
                 </div>
             </div>
         </nav>

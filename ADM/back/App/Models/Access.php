@@ -31,22 +31,15 @@
                 return false;
         }
 
-        public function loginUsuario($data)
+        public function fastLogin($cpf)
         {
-            $data['senha'] = (new Utils())->encrypt($data['senha']);
-
-            $sqlWhere="";
-            foreach (array_keys($data) as $item) {
-                $sqlWhere = $sqlWhere . "$item = :$item AND ";
-            }
-            $sqlWhere = substr($sqlWhere, 0, -5);
-
-
-            $sql = "SELECT id, nome, email
-                    FROM usuario WHERE $sqlWhere";
+            $sql = "select id, nome, email from usuario
+                            WHERE cpf = :cpf";
 
             $stmt = $this->conn->prepare($sql);
-            $stmt->execute($data);
+            $stmt->bindValue(':cpf', $cpf);
+            $stmt->execute();
+
 
             if($stmt->rowCount() > 0)
                 return $stmt->fetch(\PDO::FETCH_ASSOC);

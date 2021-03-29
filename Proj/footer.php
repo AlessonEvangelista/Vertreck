@@ -1,5 +1,5 @@
 <!-- Footer Section Start -->
-<footer style="margin-top: 20px; ">
+<footer style="margin-top: 0; ">
     <!-- Footer Area Start -->
     <section class="footer-Content">
         <!-- Copyright Start  -->
@@ -64,21 +64,6 @@
 
 <script>
     const BaseUrl = "<?= APP_BASE ?>";
-    $(document).ready(function () {
-        const nome = sessionStorage.getItem("nome");
-        const email = sessionStorage.getItem("email");
-
-        if( nome && nome != "undefined" )
-        {
-            enabledMenu("none", "flex");
-            let userLbl = $("#UserLablLog").html(
-                "<label class='nav-link' >Olá "+nome+"</label>");
-        }
-        else
-        {
-            enabledMenu("flex", "none");
-        }
-    })
 
     function enabledMenu(off, on)
     {
@@ -138,30 +123,33 @@
                 <h5 class="modal-title" id="staticBackdropLabel" style="font-family: 'Montserrat', sans-serif; font-weight: 700;"> Informe o seu CPF </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" style="margin: 5vh 0 0 0;">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4> Agende agora mesmo o seu exame na rede redenciada Petrobras</h4>
-                        <figcaption class="blockquote-footer" style="margin: 2vh 0 0 0;">
-                            <span> Informe o seu CPF abaixo </span>
-                        </figcaption>
+            <form action="<?= LOCAL_API ?>/app.php?url=Access/fastLoginClick" name="" method="post">
+                <div class="modal-body" style="margin: 5vh 0 0 0;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4> Agende agora mesmo o seu exame na rede redenciada Petrobras</h4>
+                            <figcaption class="blockquote-footer" style="margin: 2vh 0 0 0;">
+                                <span> Informe o seu CPF abaixo </span>
+                            </figcaption>
+                        </div>
                     </div>
-                </div>
-                <div class="row" style="margin: 5vh 0 0 0;">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <input type="text" class="form-control" onkeydown="fMasc( this, mCPF )" id="fastLoginCpf" name="fastLoginCpf" placeholder="CPF" >
+                    <div class="row" style="margin: 5vh 0 0 0;">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" class="form-control" onkeydown="fMasc( this, mCPF )" id="fastLoginCpf" name="fastLoginCpf" placeholder="CPF" >
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <div class="col-md-12">
-                    <div class="submit-button">
-                        <button class="btn btn-common btn-effect" type="button" onclick="fastLoginClick()" id="btnFastLogin" >Entrar</button>
+                <div class="modal-footer">
+                    <div class="col-md-12">
+                        <div class="submit-button">
+<!--                            onclick="fastLoginClick()"-->
+                            <button class="btn btn-common btn-effect" type="submit" id="btnFastLogin" >Entrar</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>

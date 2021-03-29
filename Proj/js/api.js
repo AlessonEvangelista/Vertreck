@@ -2,9 +2,6 @@ function fastLoginClick() {
     let localApi = $("#baseUrlProject").val();
     let postLogin = $("#fastLoginApi").val();
 
-    console.log(localApi)
-    console.log(postLogin)
-
     if( ! ValidaCpf($("#fastLoginCpf").val()) )
     {
         swal("CPF inválido. Por favor informe um CPF válido!");
@@ -106,7 +103,9 @@ function saveLoginSessionRedirect(data, redirect)
     sessionStorage.setItem("nome", data.data.nome);
     sessionStorage.setItem("email" , data.data.email);
 
-    location.href = redirect + "/app.php";
+    if( sessionStorage.getItem("nome") ) {
+        location.href = redirect + "/app.php";
+    }
 }
 
 $('#AppEstado').focus(function() {
@@ -116,25 +115,29 @@ $('#AppEstado').change(function() {
     appGetCidade();
 });
 $('#AppCidade').change(function() {
-    appGetServicoByCidade();
+    // appGetServicoByCidade();
+    appGetEmpresasByExame();
 });
-$('#Appservico').change(function() {
-    appGetExameByServico();
+$('#AppExame').change(function() {
+    appGetServicoByExame();
 });
-$('#AppMedicacaoCheck1').change(function() {
-    if ($('#AppMedicacaoCheck1').val() === "on") {
-        $("#AppMedicamentosLbl").css("display", "flex");
+
+function verifySessionLogin(id, nome)
+{
+    sessionStorage.setItem("id", id);
+    sessionStorage.setItem("nome", nome);
+
+    if( !nome )
+    {
+        swal("É necessário realizar o Login para ter acesso!");
+        window.location = BaseUrl + "/index.php";
     }
-});
-$('#AppMedicacaoCheck2').change(function() {
-    if ($('#AppMedicacaoCheck2').val() === "on") {
-        $("#AppMedicamentosLbl").css("display", "none");
-    }
-});
+}
 
 function appGetEstadoCombo()
 {
     let selectboxEstado = $('#AppEstado');
+    $("#loadSelected").css("display", "block")
     $.ajax({
         url: $("#AppFrmConsulta").attr('action') + "appGetEstadoCombo",
         method: "get",
@@ -157,6 +160,7 @@ function appGetEstadoCombo()
                     nonSelectedText: 'selecione...'
                 });
                 selectboxEstado.multiselect('dataprovider', params);
+                $("#loadSelected").css("display", "none")
             }
         }
 
@@ -173,6 +177,7 @@ function appGetCidade()
         return;
     }
     let selectboxCidade = $('#AppCidade');
+    $("#loadSelected").css("display", "block")
     $.ajax({
         url: $("#AppFrmConsulta").attr('action') +  "appGetCidade/"+estadoSelecionado,
         method: "get",
@@ -194,6 +199,7 @@ function appGetCidade()
                     nonSelectedText: 'selecione...'
                 });
                 selectboxCidade.multiselect('dataprovider', params);
+                $("#loadSelected").css("display", "none")
             }
         }
     });
@@ -205,6 +211,7 @@ function appGetServicoByCidade()
     var cidadeSelecionada = cidade.find('option:selected').val();
 
     let selectboxServico = $('#Appservico');
+    $("#loadSelected").css("display", "block")
     $.ajax({
         url: $("#AppFrmConsulta").attr('action') +  "appGetServicoByCidade/"+ cidadeSelecionada,
         method: "post",
@@ -231,6 +238,7 @@ function appGetServicoByCidade()
                     nonSelectedText: 'selecione...'
                 });
                 selectboxServico.multiselect('dataprovider', params);
+                $("#loadSelected").css("display", "none")
             }
 
         }
@@ -238,35 +246,44 @@ function appGetServicoByCidade()
     });
 }
 
-function appGetExameByServico()
+function appGetServicoByExame()
 {
-    var servico = $('#Appservico');
-    var idServicoSelecionado = servico.find('option:selected').val();
-    var txtServicoSelecionado = servico.find('option:selected').text();
+    let servico= "";
+    $.ajax({
+        url: $("#AppFrmConsulta").attr('action') +  "appGetServicoByExame/" + $('#AppExame').val(),
+        method: "get",
+        success: function (obj) {
 
-    let txtservico = txtServicoSelecionado.replace(/\s/g, '');
+            if (obj != null) {
+                servico = obj.data.nome;
+            }
 
-    if( txtservico.toLowerCase() === "exameslaboratoriais" )
-    {
-        $("#divExamesServicos").css("display", "none");
-        $("#AppAgendamentoContainer").css("display", "block")
-        $("#lblEmpresasExames").css("display", "none");
+            let txtservico = servico.replace(/\s/g, '');
+            if( txtservico.toLowerCase() === "análisesclínicas" )
+            {
+                $("#AppAgendamentoContainer").css("display", "block")
+                $("#lblEmpresasExames").css("display", "none");
 
-        appGetLaboratorioByCidadeAndServico();
-    }
-    else {
-        $("#divExamesServicos").css("display", "block");
-        $("#AppAgendamentoContainer").css("display", "none")
+                cardEscolhaLocalAgendamento();
+                // cardEscolhaLocal("lblEmpresasExames", "primario");
+            }
+            else {
+                $("#divExamesServicos").css("display", "block");
+                $("#AppAgendamentoContainer").css("display", "none")
 
-        appGetEmpresasByExame(idServicoSelecionado)
-    }
+                cardEscolhaLocal();
+            }
+        }
+    });
+
 }
 
-function appGetEmpresasByExame(servico)
+function appGetEmpresasByExame()
 {
     let selectboxExame = $('#AppExame');
+    $("#loadSelected").css("display", "block")
     $.ajax({
-        url: $("#AppFrmConsulta").attr('action') +  "appGetExame/"+servico,
+        url: $("#AppFrmConsulta").attr('action') +  "appGetAllExame",
         method: "get",
         success: function (obj) {
 
@@ -278,7 +295,7 @@ function appGetEmpresasByExame(servico)
                 if(data.length > 0)
                     params = [{label: "Selecione um Exame", value: 0}];
                 $.each(data, function (i, d) {
-                    params.push({ label: d.exame, value: d.id});
+                    params.push({ label: d.exame, value: d.id, attributes: { servico: d.servico }});
                 });
                 selectboxExame.multiselect({
                     nableFiltering: true,
@@ -290,14 +307,15 @@ function appGetEmpresasByExame(servico)
                     nonSelectedText: 'selecione...'
                 });
                 selectboxExame.multiselect('dataprovider', params);
+                $("#loadSelected").css("display", "none")
             }
         }
     });
 }
 
 // -- CARD
-$('#AppExame').change(function() {
-
+function cardEscolhaLocal()
+{
     let data = $('#AppExame').val() +"," +$("#AppCidade").val();
 
     $.ajax({
@@ -322,15 +340,51 @@ $('#AppExame').change(function() {
                 });
                 $("#lblEmpresasExames").html(html);
                 $("#lblEmpresasExames").css("display", "flex");
-                
+
                 window.scrollTo( 0, 800 );
                 swal("ESCOLHA O LOCAL DE SUA PREFERÊNCIA ABAIXO E CLIQUE NELE PARA SER INFORMADO(A) DE  COMO PODERÁ REALIZAR O AGENDAMENTO.");
             }
         }
 
     });
+}
 
-});
+function cardEscolhaLocalAgendamento()
+{
+    let data = $('#AppExame').val() +"," +$("#AppCidade").val();
+
+    $.ajax({
+        url: $("#AppFrmConsulta").attr('action') +  "appGetEmpresaByExame/"+ data,
+        method: "get",
+        success: function (obj) {
+
+            if (obj != null) {
+                var data = obj.data;
+
+                let html = "";
+                $.each(data, function (i, d) {
+
+                    html = html + "<div class='row'><div class='card d-flex' id='card_"+d.id+"' style='margin: 10px 0;'><div class='card-body'>" +
+                        "<h6 class='card-title' style='cursor: pointer; color: blue;' " +
+                        "onclick='msgTextCardAgendamento(`"+ d.id +"`, `"+d.descricao_agenda+"`,`"+d.email+"`,`"+d.telefone+"`,`"+d.celular+"`,`"+data.length+"`)'" +
+                        "> " + d.id + " - " + d.nome + "</h6>" +
+                        "<div class='selectedEmpresaAgendamento' id='selectedEmpresaAgendamento_"+d.id+"' style='position: relative; top: 0; float: right; right: 5px; display: none; color: blue;'> SELECIONADO </div> " +
+                        "<p class='card-text'> " + d.endereco + ", " + d.bairro + " <br></p> " +
+                        "<p class='msgIntoCardAgendamento' id='msgIntoCardAgendamento_"+d.id+"' ></p>" +
+                        "</div></div></div>";
+
+                });
+                $("#cardSelecaoAgendamento").html(html);
+                $("#cardSelecaoAgendamento").css("display", "flex");
+
+                window.scrollTo( 0, 800 );
+                // swal("ESCOLHA O LOCAL DE SUA PREFERÊNCIA ABAIXO E CLIQUE NELE PARA SER INFORMADO(A) DE  COMO PODERÁ REALIZAR O AGENDAMENTO.");
+            }
+        }
+
+    });
+}
+
 
 function msgTextCard(id, msg, email, telefone, celular, rows)
 {
@@ -354,8 +408,8 @@ function msgTextCard(id, msg, email, telefone, celular, rows)
                     "</div>" +
                     "<div class='col' style='padding-left: 0; padding-right: 0;'>" +
                         "<div class='px-0 pg-3 border' style='margin: 18px 0;'>" +
-                            "<button onclick='enviarParaAgenda(`"+email+"`,`"+telefone+"`,`"+celular+"`)' style='width: 50%; z-index: 900;' type='button' class='btn btn-primary'>Desejo ir nesse</button>" +
-                            "<button onclick='clearMsgTextCard("+rows+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-danger'>Desejo escolher outro</button>" +
+                            "<button onclick='enviarParaAgenda(`"+email+"`,`"+telefone+"`,`"+celular+"`, "+rows+", "+id+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-primary'>Desejo ir nesse</button>" +
+                            "<button onclick='clearMsgTextCard("+rows+", "+id+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-danger'>Desejo escolher outro</button>" +
                         "</div>" +
                     "</div>" +
                 "</div>" +
@@ -363,46 +417,76 @@ function msgTextCard(id, msg, email, telefone, celular, rows)
 
     $("#msgIntoCard_"+id).html(html);
 }
-function clearMsgTextCard(count)
+
+function clearMsgTextCard(count, id)
 {
     for(let i = 1; i <= count; i ++){
         $("#card_"+i).css("background-color", "#fff" );
-        $("#msgIntoCard_"+i).html("");
+        $("#msgIntoCard_"+id).html("");
     }
     $(".card").css("background-color", "#fff");
 }
 
-function enviarParaAgenda(email, telefone, celular)
+function msgTextCardAgendamento(id, msg, email, telefone, celular, rows)
+{
+    $(".msgIntoCardAgendamento").html("");
+    $(".card").css("background-color", "#fff");
+
+    $("#card_"+id).css("background-color", "rgb(235 238 241)" );
+    $("#card_"+id).css("color", "#000");
+    $(".card-text").css("color", "#000");
+    $(".msgIntoCardAgendamento").css("color", "#000");
+
+    let html = "<table class='table table-bordered border-primary'><tr><td style='font-size: 1.3rem;'>"+ msg +"</td></tr></table>"+
+        "<div class='container px-0 pg-4'>"+
+        "<div class='row'>" +
+        "<div class='col'>" +
+        "<div class='px-0 pg-3 border'>" +
+        "Email: <a href='mail:'" + email + "'>" + email + "</a>"+
+        "<br>Telefone: <a href='tel:" + telefone + "'>" + telefone + "</a>"+
+        "<br>Celular: <a href='tel:" + celular + "'>" + celular + "</a><br>" +
+        "</div>" +
+        "</div>" +
+        "<div class='col' style='padding-left: 0; padding-right: 0;'>" +
+        "<div class='px-0 pg-3 border' style='margin: 18px 0;'>" +
+        "<button onclick='agendamentoAppLaboratorio("+id+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-primary'>Desejo ir nesse</button>" +
+        "<button onclick='clearMsgTextCardAgendamento("+rows+", "+id+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-danger'>Desejo escolher outro</button>" +
+        "</div>" +
+        "</div>" +
+        "</div>" +
+        "</div>";
+
+    $("#msgIntoCardAgendamento_"+id).html(html);
+}
+
+function clearMsgTextCardAgendamento(count, id)
+{
+    for(let i = 1; i <= count; i ++){
+        $("#card_"+i).css("background-color", "#fff" );
+        $("#msgIntoCardAgendamento_"+id).html("");
+    }
+    $(".card").css("background-color", "#fff");
+}
+
+function enviarParaAgenda(email, telefone, celular, r, id)
 {
     swal("Estamos quase lá", "entre em contato através do email: "+ email + ", ou dos telefones: "+ telefone + ", "+ celular +".")
     .then((value) => {
-        location.href = "https://vertreck.net.br";
+        // location.href = "https://vertreck.net.br";
+        clearMsgTextCard(r, id);
     });
 }
 
-function appGetLaboratorioByCidadeAndServico()
+function agendamentoAppLaboratorio(empresa)
 {
-    let data = $('#Appservico').find('option:selected').val() +","+$('#AppCidade').find('option:selected').val();
+    $(".selectedEmpresaAgendamento").css("display", "none");
+    $("#selectedEmpresaAgendamento_"+empresa).css("display", "block");
+    $("#inpAgendamentoContainerempresa").val(empresa);
 
-    var selectbox = $('#AppLaboratorio');
-    $.ajax({
-        url: $("#AppFrmAgendamento").attr('action') +  "appGetLaboratorioByCidadeAndServico/"+ data,
-        method: "post",
-        success: function (obj) {
-
-            if (obj != null) {
-                var data = obj.data;
-
-                selectbox.find('option').remove();
-                $('<option>').val(null).text("Selecione...").appendTo(selectbox);
-                $.each(data, function (i, d) {
-                    $('<option>').val(d.id).text(d.nome).appendTo(selectbox);
-                });
-            }
-        }
-
-    });
+    swal("Laboratório selecionado! Fas uso de medicação? Se sim informe abaixo e clique no botão de SOLICITAR no fim da página!");
+    window.scrollTo( 0, 800 );
 }
+
 
 function appGetLaboratorioDescById(id)
 {
