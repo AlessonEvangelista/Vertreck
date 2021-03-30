@@ -121,6 +121,14 @@ $('#AppCidade').change(function() {
 $('#AppExame').change(function() {
     appGetServicoByExame();
 });
+$("#horaAgendamento").on("focusout", function (){
+   if( parseInt($("#horaAgendamento").val().substr(0, 2)) < "07" || parseInt($("#horaAgendamento").val().substr(0, 2)) > "11" )
+   {
+       swal("OPS!", "Por favor selecionar um horário entre as 07:00 e 11:59");
+       $("#horaAgendamento").val("");
+       $("#horaAgendamento").focus();
+   }
+});
 
 function verifySessionLogin(id, nome)
 {
@@ -261,9 +269,6 @@ function appGetServicoByExame()
             let txtservico = servico.replace(/\s/g, '');
             if( txtservico.toLowerCase() === "análisesclínicas" )
             {
-                $("#AppAgendamentoContainer").css("display", "block")
-                $("#lblEmpresasExames").css("display", "none");
-
                 cardEscolhaLocalAgendamento();
                 // cardEscolhaLocal("lblEmpresasExames", "primario");
             }
@@ -283,7 +288,7 @@ function appGetEmpresasByExame()
     let selectboxExame = $('#AppExame');
     $("#loadSelected").css("display", "block")
     $.ajax({
-        url: $("#AppFrmConsulta").attr('action') +  "appGetAllExame",
+        url: $("#AppFrmConsulta").attr('action') +  "appGetAllExame/" + $('#AppCidade').val(),
         method: "get",
         success: function (obj) {
 
@@ -332,7 +337,7 @@ function cardEscolhaLocal()
                     html = html + "<div class='card d-flex' id='card_"+d.id+"' style='margin: 10px 0;'><div class='card-body'>" +
                         "<h6 class='card-title' style='cursor: pointer; color: blue;' " +
                         "onclick='msgTextCard(`"+ d.id +"`, `"+d.descricao_agenda+"`,`"+d.email+"`,`"+d.telefone+"`,`"+d.celular+"`,`"+data.length+"`)'" +
-                        "> " + d.id + " - " + d.nome + "</h6>" +
+                        "> " + d.nome + "</h6>" +
                         "<p class='card-text'> " + d.endereco + ", " + d.bairro + " <br></p> " +
                         "<p class='msgIntoCard' id='msgIntoCard_"+d.id+"' ></p>" +
                         "</div></div>";
@@ -361,23 +366,30 @@ function cardEscolhaLocalAgendamento()
             if (obj != null) {
                 var data = obj.data;
 
-                let html = "";
-                $.each(data, function (i, d) {
+                if(data.length === 0) {
+                    swal("Ops!", "Ainda não temos clinicas para esta região. Gostaria de indicar alguma? envie um e-mail para: atendimento_app@vertreck.net.br.")
+                } else {
+                    $("#AppAgendamentoContainer").css("display", "block")
+                    $("#lblEmpresasExames").css("display", "none");
 
-                    html = html + "<div class='row'><div class='card d-flex' id='card_"+d.id+"' style='margin: 10px 0;'><div class='card-body'>" +
-                        "<h6 class='card-title' style='cursor: pointer; color: blue;' " +
-                        "onclick='msgTextCardAgendamento(`"+ d.id +"`, `"+d.descricao_agenda+"`,`"+d.email+"`,`"+d.telefone+"`,`"+d.celular+"`,`"+data.length+"`)'" +
-                        "> " + d.id + " - " + d.nome + "</h6>" +
-                        "<div class='selectedEmpresaAgendamento' id='selectedEmpresaAgendamento_"+d.id+"' style='position: relative; top: 0; float: right; right: 5px; display: none; color: blue;'> SELECIONADO </div> " +
-                        "<p class='card-text'> " + d.endereco + ", " + d.bairro + " <br></p> " +
-                        "<p class='msgIntoCardAgendamento' id='msgIntoCardAgendamento_"+d.id+"' ></p>" +
-                        "</div></div></div>";
+                    let html = "";
+                    $.each(data, function (i, d) {
 
-                });
-                $("#cardSelecaoAgendamento").html(html);
-                $("#cardSelecaoAgendamento").css("display", "flex");
+                        html = html + "<div class='row'><div class='card d-flex' id='card_" + d.id + "' style='margin: 10px 0;'><div class='card-body'>" +
+                            "<h6 class='card-title' style='cursor: pointer; color: blue;' " +
+                            "onclick='msgTextCardAgendamento(`" + d.id + "`, `" + d.descricao_agenda + "`,`" + d.email + "`,`" + d.telefone + "`,`" + d.celular + "`,`" + data.length + "`)'" +
+                            "> " + d.nome + "</h6>" +
+                            "<div class='selectedEmpresaAgendamento' id='selectedEmpresaAgendamento_" + d.id + "' style='position: relative; top: 0; float: right; right: 5px; display: none; color: blue;'> SELECIONADO </div> " +
+                            "<p class='card-text'> " + d.endereco + ", " + d.bairro + " <br></p> " +
+                            "<p class='msgIntoCardAgendamento' id='msgIntoCardAgendamento_" + d.id + "' ></p>" +
+                            "</div></div></div>";
 
-                window.scrollTo( 0, 800 );
+                    });
+                    $("#cardSelecaoAgendamento").html(html);
+                    $("#cardSelecaoAgendamento").css("display", "flex");
+
+                    window.scrollTo(0, 800);
+                }
                 // swal("ESCOLHA O LOCAL DE SUA PREFERÊNCIA ABAIXO E CLIQUE NELE PARA SER INFORMADO(A) DE  COMO PODERÁ REALIZAR O AGENDAMENTO.");
             }
         }
@@ -396,7 +408,7 @@ function msgTextCard(id, msg, email, telefone, celular, rows)
     $(".card-text").css("color", "#000");
     $(".msgIntoCard").css("color", "#000");
 
-    let html = "<table class='table table-bordered border-primary'><tr><td style='font-size: 1.3rem;'>"+ msg +"</td></tr></table>"+
+    let html = "<table class='table table-bordered border-primary'><tr><td style='font-size: 1.3rem; background-color: #f7c324; color: #000;'>"+ msg +"</td></tr></table>"+
             "<div class='container px-0 pg-4'>"+
                 "<div class='row'>" +
                     "<div class='col'>" +
@@ -437,7 +449,7 @@ function msgTextCardAgendamento(id, msg, email, telefone, celular, rows)
     $(".card-text").css("color", "#000");
     $(".msgIntoCardAgendamento").css("color", "#000");
 
-    let html = "<table class='table table-bordered border-primary'><tr><td style='font-size: 1.3rem;'>"+ msg +"</td></tr></table>"+
+    let html = "<table class='table table-bordered border-primary'><tr><td style='font-size: 1.3rem; background-color: #f7c324; color: #000;'>"+ msg +"</td></tr></table>"+
         "<div class='container px-0 pg-4'>"+
         "<div class='row'>" +
         "<div class='col'>" +
@@ -483,8 +495,8 @@ function agendamentoAppLaboratorio(empresa)
     $("#selectedEmpresaAgendamento_"+empresa).css("display", "block");
     $("#inpAgendamentoContainerempresa").val(empresa);
 
-    swal("Laboratório selecionado! Fas uso de medicação? Se sim informe abaixo e clique no botão de SOLICITAR no fim da página!");
-    window.scrollTo( 0, 800 );
+    swal("Laboratório selecionado!", "VocÊ faz uso de medicação? Se sim informe abaixo e clique no botão de SOLICITAR no fim da página!");
+    window.scrollTo( 0, $("#AppMedicamentosLbl").offset().top );
 }
 
 
@@ -500,7 +512,7 @@ function appGetLaboratorioDescById(id)
 
                 $('#lblLaboratorioDesc').html("" +
                     "<div class='card d-flex' id='card_"+data.id+"'><div class='card-body'>" +
-                    "<h6 class='card-title'> " + data.id + ", " + data.nome + "</h6>" +
+                    "<h6 class='card-title'> " + data.nome + "</h6>" +
                     "<p class='card-text'> " + data.endereco + ", " + data.bairro + " <br>" +
                     "Tel: <a href='tel:" + data.telefone + "'>" + data.telefone + "</a>; <br> Cel: <a href='tel:" + data.celular + "'>" + data.celular + "</a></p> </div></div>");
             }

@@ -82,6 +82,23 @@
                                     <div class="row" id="cardSelecaoAgendamento">
                                     </div>
                                     <div class="row">
+                                        <label> Informe o Dia e a Hora do Agendamento</label>
+                                        <div class="row">
+                                            <div class="col-md-12" id="appData&HoraAgendament">
+                                                <div class="input-group">
+                                                    <select class="form-control" id="diaAgendamento" name="diaAgendamento">
+                                                        <option value="segunda">Segunda</option>
+                                                        <option value="terca">Terça</option>
+                                                        <option value="quarta">Quarta</option>
+                                                        <option value="quinta">Quinta</option>
+                                                        <option value="sexta">Sexta</option>
+                                                    </select>
+                                                    <input type="time" id="horaAgendamento" name="horaAgendamento" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <label> Faz o uso de medicação?</label>
 
                                         <div class="row">
@@ -96,7 +113,7 @@
 
                                     <div class="row">
                                         <div class="col-md-12" style="margin: 20px 0;">
-                                            <button class="btn btn-primary w-100" type="submit" id="appConsultaSolicitar" >SOLICITAR</button>
+                                            <button class="btn btn-primary w-100" type="submit" id="appConsultaSolicitar" >SOLICITAR AGENDAMENTO</button>
                                             <a style="display: none;" class="btn btn-primary w-100" id="appConsultaFinalizar" > <span style="width: 200px; margin: 0 auto;"> CONFIRMAR LIGAÇÃO </span></a>
                                         </div>
                                     </div>
@@ -200,6 +217,9 @@
         }
         else
         {
+            $("#loadSelected").css("display", "block");
+            $("#loadSelected").css("top", "60%");
+            $("#loadSelected").css("height", "100vh");
             $.ajax({
                 url: ApiUserAgenda,
                 method: "post",
@@ -207,17 +227,21 @@
                     empresa: $("#inpAgendamentoContainerempresa").val(),
                     usuario: sessionStorage.getItem("id"),
                     medicamento: ( $("#AppMedicamentosDesc").val() === "" ? "" : $("#AppMedicamentosDesc").val() ),
-                    exames: $("#AppExame").val()
-                    // dia: null,
-                    // hora: null
+                    exames: $("#AppExame").val(),
+                    dia: $("#diaAgendamento").val(),
+                    hora: $("#horaAgendamento").val()
                 },
                 success: function (obj) {
                     if (obj != null) {
                         var data = JSON.parse(obj.data);
 
-                        $("#appConsultaSolicitar").css("display", "none");
-                        $("#appConsultaFinalizar").css("display", "flex");
+                        // $("#appConsultaSolicitar").css("display", "none");
+                        // $("#appConsultaFinalizar").css("display", "flex");
+                        $("#loadSelected").css("display", "none");
                         swal(data.data)
+                            .then((value) => {
+                                document.location.reload(true);
+                            });
                     }
                 },
                 error: function (y, d) {
@@ -228,13 +252,13 @@
         }
     });
 
-    $('#appConsultaFinalizar').click(function() {
-        swal("Eai!", "LIGOU E CONFIRMOU A SUA CONSULTA?")
-            .then((value) => {
-                // TODO ENVIAR EMAIL
-                document.location.reload(true);
-            });
-    });
+    // $('#appConsultaFinalizar').click(function() {
+    //     swal("Eai!", "LIGOU E CONFIRMOU A SUA CONSULTA?")
+    //         .then((value) => {
+    //             // TODO ENVIAR EMAIL
+    //             document.location.reload(true);
+    //         });
+    // });
 </script>
 <style>
     .row { margin: 10px 0; }

@@ -2399,6 +2399,7 @@ footer .menu li a:hover {
 .dropdown-menu.show {
   width: 100%;
   top: 193% !important;
+  min-height: 58vh;
 }
 .btn-group > button {
   text-align: left;
