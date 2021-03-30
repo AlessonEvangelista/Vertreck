@@ -2,6 +2,7 @@
 
     namespace App\Api;
     use App\Config\Utils;
+    use App\Email\Mail;
     use App\Models\Sql;
 
     class ExternalApi extends Sql
@@ -115,7 +116,13 @@
 
         public function appGetAllExame($id =null)
         {
-            $sql = "select e.id, e.exame, s.nome as servico from exame e inner join servico s on e.servico = s.id";
+            $cidadesPermitidas = [1994, 1990, 1790, 1825, 1756, 1762, 1871, 1965, 1974, 6666, 6681, 6691, 6699, 6768, 6780, 6811, 6860, 6939, 9422, 9390, 8799, 9379];
+            if(in_array($id, $cidadesPermitidas)) {
+                $sql = "select e.id, e.exame, s.nome as servico from exame e inner join servico s on e.servico = s.id";
+            } else {
+                $sql = "select e.id, e.exame, s.nome as servico from exame e inner join servico s on e.servico = s.id where e.id = 43";
+            }
+
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id);
             $stmt->execute();
@@ -181,19 +188,23 @@
             $data = $_POST;
             $usuario_agenda = [
                 "usuario" => $data['usuario'],
-                "empresa" => $data['empresa']
+                "empresa" => $data['empresa'],
+                "dia" => $data['dia'],
+                "hora" => $data['hora']
             ];
             if($data['medicamento']) {
                 $usuario_agenda = [
                     "usuario" => $data['usuario'],
                     "empresa" => $data['empresa'],
+                    "dia" => $data['dia'],
+                    "hora" => $data['hora'],
                     "medicamento" => $data['medicamento']
                 ];
             }
             $retorno = [ "status" => "erro",  "data" => 'Não foi possível o agendamento, por aqui! Por favor, ligue para consulta.'];
 
-            $sql = "INSERT INTO usuario_agenda (usuario, empresa ".($data['medicamento'] ? ", medicamento" : '')." )
-                        VALUES (:usuario, :empresa ".($data['medicamento'] ? ", :medicamento" : '')." )";
+            $sql = "INSERT INTO usuario_agenda (usuario, empresa, dia, hora ".($data['medicamento'] ? ", medicamento" : '')." )
+                        VALUES (:usuario, :empresa, :dia, :hora ".($data['medicamento'] ? ", :medicamento" : '')." )";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($usuario_agenda);
 
@@ -210,22 +221,65 @@
                     $stmt = $this->conn->prepare($sql);
                     $stmt->execute($agenda_exame);
                 }
-                $empresa = $this->getEmpresaTelefones($data['empresa']);
-                $retorno = [ "status" => "sucesso",  "data" => "Agenda SOLICITADA! Para CONFIRMAR por favor. Ligue no Tel: " . $empresa['telefone'] . " ou Cel: " . $empresa['celular'] . "! E confirmar data e horário. Depois não esqueça de clicar no botão abaixo de CONFIRMAÇÃO"];
+                $empresa = $this->getEmpresaDados($data['empresa']);
+                $usuario = $this->getUsuarioDados($data['usuario']);
+                $exame = $this->getExameDados($data['exames']);
+
+                $mail = new Mail();
+                $mail->setRemetente([ EMAIL_VERTRECK_DESTINATARIO, EMAIL_VERTRECK_DESTINATARIO_NAME ], [ $usuario['email'], $usuario['nome'] ]);
+                $dadosEmail = [
+                    "usuario" => [
+                        "nome" => $usuario['nome'],
+                        "cpf" => $usuario['cpf']
+                    ],
+                    "empresa" => [
+                        "nome_fantasia" => $empresa["nome_fantasia"],
+                        "endereco" => $empresa['endereco'],
+                        "bairro" => $empresa['bairro'],
+                        "telefone" => $empresa['telefone'],
+                        "celular" => $empresa['celular']
+                    ],
+                    "data" => [
+                        "dia" => $usuario_agenda['dia'],
+                        "hora" => $usuario_agenda['hora']
+                    ],
+                    "exame" => $exame['exame']
+                ];
+                $retEmail = $mail->envioEmail(1, $dadosEmail);
+                $retorno = [ "status" => "sucesso",  "data" => $retEmail];
             }
 
             return json_encode($retorno);
 
         }
 
-        private function getEmpresaTelefones($id)
+        private function getEmpresaDados($id)
         {
-            $sql = "select telefone, celular from empresa where id = :id";
+            $sql = "select telefone, email, celular, endereco, bairro, nome_fantasia from empresa where id = :id";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id);
             $stmt->execute();
 
             return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+
+        private function getUsuarioDados($id)
+        {
+            $sql = "select nome, email, cpf from usuario where id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+
+        private function getExameDados($id)
+        {
+            $sql = "select exame from exame where id = :id";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
 
