@@ -78,6 +78,7 @@
                                         <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Agendar Consulta</p>
                                     </div>
 
+                                    <input type="hidden" name="usuarioLogado" id="usuarioLogado" value="<?= $_SESSION['id'] ?>">
                                     <input type="hidden" name="inpAgendamentoEmpresa" id="inpAgendamentoContainerempresa">
                                     <div class="row" id="cardSelecaoAgendamento">
                                     </div>
@@ -212,7 +213,7 @@
 
         if( $("#inpAgendamentoContainerempresa").val() === "" )
         {
-            swal("Para SOLICITAR agendamento, por favor selecione uma empresa na lista, clicando sobre o seu nome, e selecionando ela depois!");
+            swal("Para SOLICITAR agendamento, por favor selecione uma empresa na lista clicando sobre o seu nome, e defina uma dia e hora!");
             return false;
         }
         else
@@ -225,7 +226,7 @@
                 method: "post",
                 data: {
                     empresa: $("#inpAgendamentoContainerempresa").val(),
-                    usuario: sessionStorage.getItem("id"),
+                    usuario: ($("#usuarioLogado").val() ? $("#usuarioLogado").val() : sessionStorage.getItem("id")),
                     medicamento: ( $("#AppMedicamentosDesc").val() === "" ? "" : $("#AppMedicamentosDesc").val() ),
                     exames: $("#AppExame").val(),
                     dia: $("#diaAgendamento").val(),

@@ -155,15 +155,16 @@
         {
 
             $data = $_POST;
+            $usLogin = ($_SESSION['id'] ? $_SESSION['id'] : $data['usuario']);
             $usuario_agenda = [
-                "usuario" => $data['usuario'],
+                "usuario" => $usLogin,
                 "empresa" => $data['empresa'],
                 "dia" => $data['dia'],
                 "hora" => $data['hora']
             ];
             if($data['medicamento']) {
                 $usuario_agenda = [
-                    "usuario" => $data['usuario'],
+                    "usuario" => $usLogin,
                     "empresa" => $data['empresa'],
                     "dia" => $data['dia'],
                     "hora" => $data['hora'],
@@ -191,7 +192,7 @@
                     $stmt->execute($agenda_exame);
                 }
                 $empresa = $this->getEmpresaDados($data['empresa']);
-                $usuario = $this->getUsuarioDados($data['usuario']);
+                $usuario = $this->getUsuarioDados($usLogin);
                 $exame = $this->getExameDados($data['exames']);
 
                 $mail = new Mail();

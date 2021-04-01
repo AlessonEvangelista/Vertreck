@@ -28,17 +28,14 @@
             $this->mail->Port = SMTP_PORT;
         }
 
-        public function setRemetente($destinatario, $usuario = null)
+        public function setRemetente($destinatario, $usuario)
         {
             // Define o remetente
             $this->mail->setFrom(EMAIL_VERTRECK_FROM, EMAIL_VERTRECK_FROM_NAME);
 
             $this->mail->addAddress($destinatario[0], $destinatario[1]);
+            $this->mail->addCC($usuario[0], $usuario[1]);
 
-            if($usuario)
-                $this->mail->addCC($usuario[0], $usuario[1]);
-
-            $this->mail->addCC('alesson.evangelista@autoavaliar.com.br', 'Alesson AA');
             $this->mail->addCC('alex.rodrigues@vertreck.com.br', 'Alex Vertreck APP');
             $this->mail->addCC('jose.rodrigues@vertreck.com.br', 'Nino Vertreck APP');
         }

@@ -50,7 +50,7 @@
             $createUser = (new Access())->createUsuario($data);
 
             if($createUser) {
-                (new Utils())->saveSessions('login', ["id" => $id, "nome" => $data["nome"], "email" => $data["email"] ]);
+                (new Utils())->saveSessions('login', ["id" => $createUser, "nome" => $data["nome"], "email" => $data["email"] ]);
 
                 if($_SERVER['HTTP_HOST'] === 'localhost'){
                     header("Location:  http://localhost/pessoal/Vertreck/Proj/app.php?id=".$_SESSION['id']."&nome=".$_SESSION['nome']);
