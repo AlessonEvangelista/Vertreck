@@ -13,25 +13,6 @@
             header("content-type:application/json");
         }
 
-        public function cadastroUsuario()
-        {
-            $data = $this->validCreateField($_POST);
-            $retorno = [ "status" => "erro",  "data" => 'Erro ao cadastro'];
-
-            $sql = "INSERT INTO usuario (nome, email, senha, cpf, ".(isset($data['telefone']) ? "telefone," : "" )." ". (isset($data['data_nascimento']) ? "data_nascimento," : "" ) ." empresa, tipo) 
-                        VALUES (:nome, :email, :senha, :cpf, ".(isset($data['telefone']) ? ":telefone," : "" )." ". (isset($data['data_nascimento']) ? ":data_nascimento," : "" ) ." :empresa, :tipo)";
-
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute($data);
-
-            if($stmt->rowCount()){
-                $id = $this->conn->lastInsertId();
-                $retorno = [ "status" => "sucesso", "data" => ["id" => $id, "nome" => $data['nome'], "email" => $data['email']]];
-            }
-
-            return json_encode($retorno);
-        }
-
         public function loginUsuario()
         {
             $retorno = [ "status" => "erro",  "data" => 'Erro ao realizar login'];
@@ -68,18 +49,6 @@
             }
 
             return json_encode($retorno);
-        }
-
-        private function validCreateField($data)
-        {
-            if(isset($data['telefone']) || $data['telefone'] === "") { unset($data['telefone']); }
-            if(isset($data['data_nascimento']) || $data['data_nascimento'] === "") { unset($data['data_nascimento']); }
-
-            $data['senha'] = (new Utils())->encrypt($data['senha']);
-            $data['empresa'] = null;
-            $data['tipo'] = '3';
-
-            return $data;
         }
 
         public function appGetEstadoCombo()
@@ -230,7 +199,10 @@
                 $dadosEmail = [
                     "usuario" => [
                         "nome" => $usuario['nome'],
-                        "cpf" => $usuario['cpf']
+                        "cpf" => $usuario['cpf'],
+                        "nascimento" => $usuario['data_nascimento'],
+                        "telefone" => $usuario['telefone'],
+                        "email" => $usuario['email']
                     ],
                     "empresa" => [
                         "nome_fantasia" => $empresa["nome_fantasia"],
@@ -265,7 +237,7 @@
 
         private function getUsuarioDados($id)
         {
-            $sql = "select nome, email, cpf from usuario where id = :id";
+            $sql = "select nome, email, cpf, data_nascimento, telefone from usuario where id = :id";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id);
             $stmt->execute();

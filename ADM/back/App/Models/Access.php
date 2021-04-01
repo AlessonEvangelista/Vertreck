@@ -46,4 +46,19 @@
             else
                 return false;
         }
+
+        public function createUsuario($data)
+        {
+            $sql = "INSERT INTO usuario (nome, email, senha, cpf, telefone, data_nascimento, empresa, tipo) 
+                        VALUES (:nome, :email, :senha, :cpf, :telefone, :data_nascimento, :empresa, :tipo)";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($data);
+
+            if($stmt->rowCount()){
+                return $this->conn->lastInsertId();
+            } else {
+                return false;
+            }
+        }
     }

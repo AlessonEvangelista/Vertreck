@@ -44,34 +44,6 @@ function fastLoginApi(loginApi, redirectback)
     });
 }
 
-function cadastroUsuario(redirect)
-{
-    $.ajax({
-        url: $("#cadastroForm").attr('action'),
-        method: "post",
-        data: {
-            'nome': $("#cadastroNome").val(),
-            'email': $("#cadastroEmail").val(),
-            'cpf': $("#cadastroCpf").val(),
-            'telefone': $("#cadastroTelefone").val(),
-            'data_nascimento': $("#cadastroData_nascimento").val(),
-            'senha': $("#cadastroSenha").val()
-        },
-        success: function (obj) {
-
-            if (obj != null) {
-                var data = JSON.parse(obj.data);
-
-                saveLoginSessionRedirect(data, redirect);
-            }
-        },
-        error: function (err) {
-            console.log("error");
-            console.log(err);
-        }
-    });
-}
-
 function loginUsuario(redirect)
 {
     $.ajax({
@@ -495,7 +467,7 @@ function agendamentoAppLaboratorio(empresa)
     $("#selectedEmpresaAgendamento_"+empresa).css("display", "block");
     $("#inpAgendamentoContainerempresa").val(empresa);
 
-    swal("Laboratório selecionado!", "VocÊ faz uso de medicação? Se sim informe abaixo e clique no botão de SOLICITAR no fim da página!");
+    swal("Laboratório selecionado!", "Você faz uso de medicação? Se sim informe abaixo e clique no botão de SOLICITAR no fim da página!");
     window.scrollTo( 0, $("#AppMedicamentosLbl").offset().top );
 }
 

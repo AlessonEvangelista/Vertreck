@@ -55,6 +55,9 @@
                                                 <p> <b>Usuário</b></p> 
                                                 <p> <b>Nome: </b> {$data['usuario']['nome']} </p>
                                                 <p> <b>CPF Usuário:</b> {$data['usuario']['cpf']} </p>
+                                                <p> <b>Email Usuário:</b> {$data['usuario']['email']} </p>
+                                                <p> <b>Data de Nascimento:</b> {$data['usuario']['nascimento']} </p>
+                                                <p> <b>Telefone Usuário:</b> {$data['usuario']['telefone']} </p>
                                                 <p> <b>Empresa</b></p>
                                                 <p> <b>Nome Empresa: </b> {$data['empresa']['nome_fantasia']} </p>
                                                 <p> <b>Endereço Empresa: </b> {$data['empresa']['endereco']} - {$data['empresa']['bairro']} </p>
@@ -70,7 +73,7 @@
                 {
                     return "Mailer Error: " . $this->mail->ErrorInfo;
                 }else {
-                    return "Agenda SOLICITADA! Confira em seu e-mail sua solicitação de exame. Ligue diretamente na clinica, no Tel: " . $data['empresa']['telefone'] . " para maiores infromação";
+                    return "Agenda SOLICITADA! Confira em seu e-mail sua solicitação de exame. Ligue diretamente na clinica, no Tel: " . $data['empresa']['telefone'] . " para maiores informações";
                 }
             } catch (\Exception $e) {
                 // TODO SET LOG ERROR MAIl

@@ -29,13 +29,56 @@
                         header("Location:  http://localhost/pessoal/Vertreck/Proj/app.php?id=".$_SESSION['id']."&nome=".$_SESSION['nome']);
                         exit;
                     } else {
-                        header("Location:  https://vertreck.net.br/app.php ");
+                        header("Location:  https://vertreck.net.br/app.php?id=".$_SESSION['id']."&nome=".$_SESSION['nome']);
+                        exit;
+                    }
+                } else {
+                    if($_SERVER['HTTP_HOST'] === 'localhost'){
+                        header("Location:  http://localhost/pessoal/Vertreck/Proj/cadastro.php?cpf=".$_POST['fastLoginCpf']);
+                        exit;
+                    } else {
+                        header("Location:  https://vertreck.net.br/cadastro.php?cpf=".$_POST['fastLoginCpf']);
                         exit;
                     }
                 }
             }
+        }
 
+        public function cadastroUsuario()
+        {
+            $data = $this->validCreateField($_POST);
+            $createUser = (new Access())->createUsuario($data);
 
+            if($createUser) {
+                (new Utils())->saveSessions('login', ["id" => $id, "nome" => $data["nome"], "email" => $data["email"] ]);
+
+                if($_SERVER['HTTP_HOST'] === 'localhost'){
+                    header("Location:  http://localhost/pessoal/Vertreck/Proj/app.php?id=".$_SESSION['id']."&nome=".$_SESSION['nome']);
+                    exit;
+                } else {
+                    header("Location:  https://vertreck.net.br/app.php?id=".$_SESSION['id']."&nome=".$_SESSION['nome']);
+                    exit;
+                }
+            } else {
+                if($_SERVER['HTTP_HOST'] === 'localhost'){
+                    header("Location:  http://localhost/pessoal/Vertreck/Proj/cadastro.php?cpf=".$data['cpf']."&message=Algum-erro-ao-cadastrar");
+                    exit;
+                } else {
+                    header("Location:  https://vertreck.net.br/cadastro.php?cpf=".$data['cpf']."&message=Algum-erro-ao-cadastrar");
+                    exit;
+                }
+            }
+
+            return json_encode($retorno);
+        }
+
+        private function validCreateField($data)
+        {
+            $data['senha'] = (new Utils())->encrypt($data['senha']);
+            $data['empresa'] = 0;
+            $data['tipo'] = '3';
+
+            return $data;
         }
 
         public function logout()

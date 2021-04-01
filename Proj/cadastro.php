@@ -1,7 +1,79 @@
+<?php
+    session_start();
+    if ($_SERVER['HTTP_HOST'] === 'localhost') {
+        define("LOCAL_API", "http://localhost/pessoal/Vertreck/ADM/back");
+        define("APP_BASE", "http://localhost/pessoal/Vertreck/Proj");
+        define("INTERNAL_BASE", "../ADM/back/api.php?url=External/");
+    }
+    else {
+        define("LOCAL_API", "https://vertreck.net.br/Adm/back");
+        define("APP_BASE", "https://vertreck.net.br");
+        define("INTERNAL_BASE", "Adm/back/api.php?url=External/");
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
-<?php require_once 'header.php'; ?>
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="keywords" content="Bootstrap, Landing page, Template, Registration, Landing">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="Grayrids">
+    <title>Vertreck</title>
+
+    <!-- Bootstrap CSS -->
+<!--    <link rel="stylesheet" href="css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="css/line-icons.css">
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/owl.theme.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/nivo-lightbox.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
+    <style>
+        .page-scroll { cursor: pointer; }
+    </style>
+</head>
+
+<body style="margin-top: 15vh; height: 100vh;">
+
+    <!-- Header Section Start -->
+    <header id="home" class="hero-area-2">
+        <div class="overlay"></div>
+        <nav class="navbar navbar-expand-md bg-inverse fixed-top scrolling-navbar">
+            <div class="container">
+                <a href="index.php" class="navbar-brand"><img src="img/logo-vertreck.png" alt=""></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="lni-menu"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto w-100 justify-content-end" id="menu-off">
+                        <li class="nav-item">
+                            <a class="nav-link page-scroll" href="index.php">Início</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link page-scroll" href="ouvidoria.php">Ouvidoria</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link page-scroll" data-bs-toggle="modal" data-bs-target="#appLoginCad">Entrar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </header>
+
 <div class="separeted"></div>
 <!-- Contact Section Start -->
 <section id="contact">
@@ -29,42 +101,42 @@
 <!--                                </div>-->
 
                             </div>
-                            <form id="cadastroForm" class="cadastroForm" method="post" action="<?= LOCAL_API ?>/api.php?url=External/cadastroUsuario">
+                            <form id="cadastroForm" class="cadastroForm" method="post" action="<?= LOCAL_API ?>/app.php?url=Access/cadastroUsuario">
 
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="cadastroNome" name="cadastroNome" placeholder="Nome" required data-error="informe o Nome">
+                                            <input type="text" class="form-control" id="cadastroNome" name="nome" placeholder="Nome" required data-error="informe o Nome" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <input type="email" placeholder="Email" id="cadastroEmail" class="form-control" name="cadastroEmail" required data-error="informe o Email">
+                                            <input type="email" placeholder="Email" id="cadastroEmail" class="form-control" name="email" required data-error="informe o Email" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="cadastroCpf" value="<?=$_GET['cpf']?>" name="cadastroCpf" onkeydown="fMasc( this, mCPF )" placeholder="Cpf" required data-error="informe o Cpf">
+                                            <input type="text" class="form-control" id="cadastroCpf" value="<?=$_GET['cpf']?>" name="cpf" onkeydown="fMasc( this, mCPF )" placeholder="Cpf" required data-error="informe o Cpf">
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="cadastroTelefone" name="cadastroTelefone" placeholder="Telefone" >
+                                            <input type="text" class="form-control" id="cadastroTelefone" name="telefone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" placeholder="Telefone" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <input type="date" class="form-control" id="cadastroData_nascimento" name="cadastroData_nascimento" placeholder="Data de Nascimento" >
+                                            <input type="date" class="form-control" id="cadastroData_nascimento" name="data_nascimento" placeholder="Data de Nascimento" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input type="password" placeholder="senha" id="cadastroSenha" name="cadastroSenha" class="form-control" required data-error="Informe a senha">
+                                            <input type="password" placeholder="senha" id="cadastroSenha" name="senha" class="form-control" required data-error="Informe a senha" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
@@ -107,13 +179,6 @@
     <script src="js/api.js"></script>
 
 <script>
-    $("#cadastroForm").submit(function(e){
-        let localApi = "<?= APP_BASE ?>";
-
-        e.preventDefault();
-        cadastroUsuario(localApi);
-    });
-
     function ValidaCpf(cpf){
         cpf = cpf.replace(/\D/g, '');
 
@@ -148,6 +213,43 @@
         cpf=cpf.replace(/(\d{3})(\d{1,2})$/,"$1-$2")
         return cpf
     }
+
+    function mask(o, f) {
+        setTimeout(function () {
+            var v = f(o.value);
+            if (v != o.value) {
+                o.value = v;
+            }
+        }, 1);
+    }
+
+    function mphone(v) {
+        var r = v.replace(/\D/g,"");
+        r = r.replace(/^0/,"");
+        if (r.length > 10) {
+            // 11+ digits. Format as 5+4.
+            r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/,"($1) $2-$3");
+        }
+        else if (r.length > 5) {
+            // 6..10 digits. Format as 4+4
+            r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/,"($1) $2-$3");
+        }
+        else if (r.length > 2) {
+            // 3..5 digits. Add (0XX..)
+            r = r.replace(/^(\d\d)(\d{0,5})/,"($1) $2");
+        }
+        else if (r.length > 0) {
+            // 1..2 digits. Just add (0XX
+            r = r.replace(/^(\d*)/, "($1");
+        }
+        return r;
+    }
+
+    <?php if(isset($_GET["message"])) {?>
+        window.onload = function(){
+            swal(<?= $_GET["message"] ?>);
+        }
+    <?php } ?>
 
 </script>
 
