@@ -90,9 +90,11 @@ $('#AppCidade').change(function() {
     // appGetServicoByCidade();
     appGetEmpresasByExame();
 });
-$('#AppExame').change(function() {
+// $('#AppExame').change(function() {
+// });
+$("#btnExameAgenda").click(function () {
     appGetServicoByExame();
-});
+})
 $("#horaAgendamento").on("focusout", function (){
    if( parseInt($("#horaAgendamento").val().substr(0, 2)) < "07" || parseInt($("#horaAgendamento").val().substr(0, 2)) > "11" )
    {
@@ -228,30 +230,30 @@ function appGetServicoByCidade()
 
 function appGetServicoByExame()
 {
-    let servico= "";
-    $.ajax({
-        url: $("#AppFrmConsulta").attr('action') +  "appGetServicoByExame/" + $('#AppExame').val(),
-        method: "get",
-        success: function (obj) {
-
-            if (obj != null) {
-                servico = obj.data.nome;
-            }
-
-            let txtservico = servico.replace(/\s/g, '');
-            if( txtservico.toLowerCase() === "análisesclínicas" )
-            {
+    // let servico= "";
+    // $.ajax({
+    //     url: $("#AppFrmConsulta").attr('action') +  "appGetServicoByExame/" + $('#AppExame').val().join(),
+    //     method: "get",
+    //     success: function (obj) {
+    //
+    //         if (obj != null) {
+    //             servico = obj.data.nome;
+    //         }
+    //
+    //         let txtservico = servico.replace(/\s/g, '');
+    //         if( txtservico.toLowerCase() === "análisesclínicas" )
+    //         {
                 cardEscolhaLocalAgendamento();
                 // cardEscolhaLocal("lblEmpresasExames", "primario");
-            }
-            else {
-                $("#divExamesServicos").css("display", "block");
-                $("#AppAgendamentoContainer").css("display", "none")
-
-                cardEscolhaLocal();
-            }
-        }
-    });
+    //         }
+    //         else {
+    //             $("#divExamesServicos").css("display", "block");
+    //             $("#AppAgendamentoContainer").css("display", "none")
+    //
+    //             cardEscolhaLocal();
+    //         }
+    //     }
+    // });
 
 }
 
@@ -328,7 +330,7 @@ function cardEscolhaLocal()
 
 function cardEscolhaLocalAgendamento()
 {
-    let data = $('#AppExame').val() +"," +$("#AppCidade").val();
+    let data = $('#AppExame').val().join() +"-" +$("#AppCidade").val();
 
     $.ajax({
         url: $("#AppFrmConsulta").attr('action') +  "appGetEmpresaByExame/"+ data,

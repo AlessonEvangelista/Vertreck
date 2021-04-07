@@ -61,8 +61,14 @@
                                         <div class="form-group">
                                             <label for="estado">Exame por serviço</label>
                                             <input type="hidden" name="servicoExame">
-                                            <select class="form-control" id="AppExame" name="AppExame"></select>
+                                            <select class="form-control" multiple id="AppExame" name="AppExame" style="overflow-y: hidden;max-height: 55px;"></select>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button type="button" class="btn btn-primary" id="btnExameAgenda"> ENVIAR </button>
                                     </div>
                                 </div>
 
@@ -218,8 +224,9 @@
         }
         else
         {
+            let elem = $("#navbarCollapse").offset();
             $("#loadSelected").css("display", "block");
-            $("#loadSelected").css("top", "60%");
+            $("#loadSelected").css("top", elem.top + 15);
             $("#loadSelected").css("height", "100vh");
             $.ajax({
                 url: ApiUserAgenda,
@@ -228,7 +235,7 @@
                     empresa: $("#inpAgendamentoContainerempresa").val(),
                     usuario: ($("#usuarioLogado").val() ? $("#usuarioLogado").val() : sessionStorage.getItem("id")),
                     medicamento: ( $("#AppMedicamentosDesc").val() === "" ? "" : $("#AppMedicamentosDesc").val() ),
-                    exames: $("#AppExame").val(),
+                    exames: $("#AppExame").val().join(),
                     dia: $("#diaAgendamento").val(),
                     hora: $("#horaAgendamento").val()
                 },

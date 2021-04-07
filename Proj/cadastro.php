@@ -85,21 +85,6 @@
                         <div class="contact-block wow fadeInUp" data-wow-delay="0.2s">
                             <div class="section-header">
                                 <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Agenciamento de exames</p>
-
-<!--                                <div class="row">-->
-<!--                                    <div class="col">-->
-<!--                                        <a class="btn btn-primary btn-sm" href="login.php" style="width: 90%; padding: 15px 10px 10px 10px;">-->
-<!--                                            <h6>Entrar </h6>-->
-<!--                                        </a>-->
-<!---->
-<!--                                    </div>-->
-<!--                                    <div class="col">-->
-<!--                                        <button type="button" class="btn btn-secondary btn-sm" style="width: 90%; padding: 15px 10px 10px 10px;">-->
-<!--                                            <h6> Cadastrar </h6>-->
-<!--                                        </button>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-
                             </div>
                             <form id="cadastroForm" class="cadastroForm" method="post" action="<?= LOCAL_API ?>/app.php?url=Access/cadastroUsuario">
 
@@ -124,7 +109,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <input type="text" class="form-control" id="cadastroTelefone" name="telefone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" placeholder="Telefone" required>
+                                            <input type="text" class="form-control" id="cadastroTelefone" name="telefone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" placeholder="Whatsapp" required>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
@@ -132,6 +117,23 @@
                                         <div class="form-group">
                                             <input type="date" class="form-control" id="cadastroData_nascimento" name="data_nascimento" placeholder="Data de Nascimento" required>
                                             <div class="help-block with-errors"></div>
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-md-3">-->
+<!--                                        <div class="form-group">-->
+<!--                                            <label for="cadastroEstado" style="float: left; color: #464a46dd;">Estado</label>-->
+<!--                                            <select id="cadastroEstado" class="form-control" name="estado"></select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-md-3">-->
+<!--                                        <div class="form-group">-->
+<!--                                            <label for="cadastroCidade" style="float: left; color: #464a46dd;">Cidade</label>-->
+<!--                                            <select id="cadastroCidade" class="form-control" name="estado"></select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-md-6">-->
+<!--                                        <div class="form-group">-->
+<!--                                            <input type="text" class="form-control" id="cadastroEndereco" name="endereco" placeholder="Endereço">-->
                                         </div>
                                     </div>
                                     <div class="col-md-12">

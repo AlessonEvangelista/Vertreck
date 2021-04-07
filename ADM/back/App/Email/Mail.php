@@ -26,6 +26,7 @@
 
             $this->mail->Host = SMTP_HOST;
             $this->mail->Port = SMTP_PORT;
+            $this->mail->CharSet = "UTF-8";
         }
 
         public function setRemetente($destinatario, $usuario)
@@ -36,7 +37,6 @@
             $this->mail->addAddress($destinatario[0], $destinatario[1]);
             $this->mail->addCC($usuario[0], $usuario[1]);
 
-            $this->mail->addCC('alex.rodrigues@vertreck.com.br', 'Alex Vertreck APP');
             $this->mail->addCC('jose.rodrigues@vertreck.com.br', 'Nino Vertreck APP');
         }
 
@@ -47,7 +47,7 @@
                 switch ($tipo)
                 {
                     case 1:
-                        $this->mail->Subject = ' TESTE - Agendamento realizado no APP Vertreck ';
+                        $this->mail->Subject = ' Agendamento realizado no APP Vertreck ';
                         $this->mail->Body    = "<p> <b>Agendamento realizado</b> </p> 
                                                 <p> <b>Usuário</b></p> 
                                                 <p> <b>Nome: </b> {$data['usuario']['nome']} </p>
@@ -69,7 +69,7 @@
                 if(!$this->mail->Send())
                 {
                     return "Mailer Error: " . $this->mail->ErrorInfo;
-                }else {
+                } else {
                     return "Agenda SOLICITADA! Confira em seu e-mail sua solicitação de exame. Ligue diretamente na clinica, no Tel: " . $data['empresa']['telefone'] . " para maiores informações";
                 }
             } catch (\Exception $e) {

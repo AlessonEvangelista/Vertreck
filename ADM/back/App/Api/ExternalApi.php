@@ -73,7 +73,7 @@
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
-        public function appGetServicoByExame($id =null)
+        public function appGetServicoByExame($id)
         {
             $sql = "select s.id, s.nome from servico s inner join exame e on s.id = e.servico Where e.id = :id";
             $stmt = $this->conn->prepare($sql);
@@ -99,15 +99,15 @@
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
-        public function appGetEmpresaByExame($data = null)
+        public function appGetEmpresaByExame($data)
         {
-            $dados = explode(",", $data);
+            $dt     = explode("-", $data);
+            $cidade = $dt[1];
+
             $sql = "select emp.id, emp.nome_fantasia as nome, emp.email, emp.endereco, emp.bairro, emp.telefone, emp.celular, emp.descricao_agenda from empresa emp 
                         inner join exame_empresa exe on emp.id = exe.empresa
-                        where exe.exame = :exame  and emp.cidade = :cidade group by emp.id";
+                        where exe.exame IN ({$dt[0]})  and emp.cidade = {$cidade} group by emp.id";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindValue(':exame', $dados[0]);
-            $stmt->bindValue(':cidade', $dados[1]);
             $stmt->execute();
 
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -182,14 +182,17 @@
                 $id = $this->conn->lastInsertId();
 
                 if($data['exames']) {
-                    $agenda_exame = [
-                        'usuario_agenda' => $id,
-                        'exame' => $data['exames']
-                    ];
+                    $exames = explode(",", $data['exames']);
+                    foreach ($exames as $exame) {
+                        $agenda_exame = [
+                            'usuario_agenda' => $id,
+                            'exame' => $exame
+                        ];
 
-                    $sql = "INSERT INTO usuario_agenda_exame (usuario_agenda, exame) VALUES (:usuario_agenda, :exame)";
-                    $stmt = $this->conn->prepare($sql);
-                    $stmt->execute($agenda_exame);
+                        $sql = "INSERT INTO usuario_agenda_exame (usuario_agenda, exame) VALUES (:usuario_agenda, :exame)";
+                        $stmt = $this->conn->prepare($sql);
+                        $stmt->execute($agenda_exame);
+                    }
                 }
                 $empresa = $this->getEmpresaDados($data['empresa']);
                 $usuario = $this->getUsuarioDados($usLogin);
@@ -216,7 +219,7 @@
                         "dia" => $usuario_agenda['dia'],
                         "hora" => $usuario_agenda['hora']
                     ],
-                    "exame" => $exame['exame']
+                    "exame" => $exame
                 ];
                 $retEmail = $mail->envioEmail(1, $dadosEmail);
                 $retorno = [ "status" => "sucesso",  "data" => $retEmail];
@@ -246,14 +249,19 @@
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
 
-        private function getExameDados($id)
+        public function getExameDados($ids)
         {
-            $sql = "select exame from exame where id = :id";
+            $sql = "select exame from exame where id IN ({$ids})";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindValue(':id', $id);
             $stmt->execute();
+            $res = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
+            $itens = "";
+            foreach ($res as $item) {
+                $itens = $itens . $item['exame'] . ', ';
+            }
+
+            return substr($itens, 0, -2);
         }
 
     }
