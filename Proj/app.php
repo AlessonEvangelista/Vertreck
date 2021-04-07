@@ -135,7 +135,7 @@
 
     </div>
 
-
+    <button class="btn btn-danger btn-sm" id="btn-close-multi-exame" style="width: 250px; margin: 0 auto; position: fixed; bottom: 0; left: 40%; display: none; z-index:99;"> Fechar </button>
 </body>
 <!-- jQuery first, then Tether, then Bootstrap JS. -->
 <script src="js/jquery-min.js"></script>

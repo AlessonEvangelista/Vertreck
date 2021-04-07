@@ -90,8 +90,6 @@ $('#AppCidade').change(function() {
     // appGetServicoByCidade();
     appGetEmpresasByExame();
 });
-// $('#AppExame').change(function() {
-// });
 $("#btnExameAgenda").click(function () {
     appGetServicoByExame();
 })
@@ -283,7 +281,13 @@ function appGetEmpresasByExame()
                     disableIfEmpty: true,
                     disabledText: 'Não encontrado Exame...',
                     nSelectedText: 'selecione.',
-                    nonSelectedText: 'selecione...'
+                    nonSelectedText: 'selecione...',
+                    onChange: function(){
+                        $("#btn-close-multi-exame").css("display", "block");
+                    },
+                    onDropdownHide: function(){
+                        $("#btn-close-multi-exame").css("display", "none");
+                    }
                 });
                 selectboxExame.multiselect('dataprovider', params);
                 $("#loadSelected").css("display", "none")
