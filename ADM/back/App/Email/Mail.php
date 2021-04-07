@@ -37,7 +37,7 @@
             $this->mail->addAddress($destinatario[0], $destinatario[1]);
             $this->mail->addCC($usuario[0], $usuario[1]);
 
-            $this->mail->addCC('jose.rodrigues@vertreck.com.br', 'Nino Vertreck APP');
+            // $this->mail->addCC('jose.rodrigues@vertreck.com.br', 'Nino Vertreck APP');
         }
 
         public function envioEmail($tipo, $data)
