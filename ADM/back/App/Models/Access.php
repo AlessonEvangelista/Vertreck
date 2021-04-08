@@ -49,8 +49,8 @@
 
         public function createUsuario($data)
         {
-            $sql = "INSERT INTO usuario (nome, email, senha, cpf, telefone, data_nascimento, empresa, tipo) 
-                        VALUES (:nome, :email, :senha, :cpf, :telefone, :data_nascimento, :empresa, :tipo)";
+            $sql = "INSERT INTO usuario (nome, email, senha, cpf, telefone, data_nascimento, estado, cidade, endereco, genero, empresa, tipo) 
+                        VALUES (:nome, :email, :senha, :cpf, :telefone, :data_nascimento, :estado, :cidade, :endereco, :genero, :empresa, :tipo)";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($data);

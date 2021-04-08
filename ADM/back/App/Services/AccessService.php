@@ -61,10 +61,10 @@
                 }
             } else {
                 if($_SERVER['HTTP_HOST'] === 'localhost'){
-                    header("Location:  http://localhost/pessoal/Vertreck/Proj/cadastro.php?cpf=".$data['cpf']."&message=Algum-erro-ao-cadastrar");
+                    header("Location:  http://localhost/pessoal/Vertreck/Proj/cadastro.php?cpf=".$data['cpf']."&message=Algum erro ao cadastrar");
                     exit;
                 } else {
-                    header("Location:  https://vertreck.net.br/cadastro.php?cpf=".$data['cpf']."&message=Algum-erro-ao-cadastrar");
+                    header("Location:  https://vertreck.net.br/cadastro.php?cpf=".$data['cpf']."&message=Algum erro ao cadastrar");
                     exit;
                 }
             }

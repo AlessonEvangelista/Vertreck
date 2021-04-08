@@ -76,89 +76,103 @@
 
 <div class="separeted"></div>
 <!-- Contact Section Start -->
-<section id="contact">
-    <div class="contact-form">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="offset-top">
-                    <div class="col-lg-12 col-md-12 col-xs-12">
-                        <div class="contact-block wow fadeInUp" data-wow-delay="0.2s">
-                            <div class="section-header">
-                                <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Agenciamento de exames</p>
-                            </div>
-                            <form id="cadastroForm" class="cadastroForm" method="post" action="<?= LOCAL_API ?>/app.php?url=Access/cadastroUsuario">
+<div class="contact-form">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="offset-top">
+                <div class="col-lg-12 col-md-12 col-xs-12">
+                    <div class="contact-block wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="section-header">
+                            <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Agenciamento de exames</p>
+                        </div>
+                        <form id="cadastroForm" class="cadastroForm" method="post" action="<?= LOCAL_API ?>/app.php?url=Access/cadastroUsuario">
 
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="cadastroNome" name="nome" placeholder="Nome" required data-error="informe o Nome" required>
-                                            <div class="help-block with-errors"></div>
-                                        </div>
+                            <input type="hidden" id="apiCadastro" value="<?= LOCAL_API ?>/api.php?url=External/">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="cadastroNome" name="nome" placeholder="Nome" required data-error="informe o Nome" required>
+                                        <div class="help-block with-errors"></div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="email" placeholder="Email" id="cadastroEmail" class="form-control" name="email" required data-error="informe o Email" required>
-                                            <div class="help-block with-errors"></div>
-                                        </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="email" placeholder="Email" id="cadastroEmail" class="form-control" name="email" required data-error="informe o Email" required>
+                                        <div class="help-block with-errors"></div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="cadastroCpf" value="<?=$_GET['cpf']?>" name="cpf" onkeydown="fMasc( this, mCPF )" placeholder="Cpf" required data-error="informe o Cpf">
-                                            <div class="help-block with-errors"></div>
-                                        </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="cadastroCpf" value="<?=$_GET['cpf']?>" name="cpf" onkeydown="fMasc( this, mCPF )" placeholder="Cpf" required data-error="informe o Cpf">
+                                        <div class="help-block with-errors"></div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="cadastroTelefone" name="telefone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" placeholder="Whatsapp" required>
-                                            <div class="help-block with-errors"></div>
-                                        </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="cadastroTelefone" name="telefone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" placeholder="Whatsapp" required>
+                                        <div class="help-block with-errors"></div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <input type="date" class="form-control" id="cadastroData_nascimento" name="data_nascimento" placeholder="Data de Nascimento" required>
-                                            <div class="help-block with-errors"></div>
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-3">-->
-<!--                                        <div class="form-group">-->
-<!--                                            <label for="cadastroEstado" style="float: left; color: #464a46dd;">Estado</label>-->
-<!--                                            <select id="cadastroEstado" class="form-control" name="estado"></select>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-3">-->
-<!--                                        <div class="form-group">-->
-<!--                                            <label for="cadastroCidade" style="float: left; color: #464a46dd;">Cidade</label>-->
-<!--                                            <select id="cadastroCidade" class="form-control" name="estado"></select>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-md-6">-->
-<!--                                        <div class="form-group">-->
-<!--                                            <input type="text" class="form-control" id="cadastroEndereco" name="endereco" placeholder="Endereço">-->
-                                        </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="date" class="form-control" id="cadastroData_nascimento" name="data_nascimento" placeholder="Data de Nascimento" required>
+                                        <div class="help-block with-errors"></div>
                                     </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <input type="password" placeholder="senha" id="cadastroSenha" name="senha" class="form-control" required data-error="Informe a senha" required>
-                                            <div class="help-block with-errors"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="submit-button">
-                                            <button class="btn btn-common btn-effect" id="submit" type="submit" >Cadastro</button>
-
-                                            <div id="msgSubmit" class="h3 hidden"></div>
-                                            <div class="clearfix"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <label class="col-md-3 col-form-label" for="cadastroGenero" style="color: #464a46dd;">Gênero</label>
+                                        <div class="col-md-9">
+                                            <select style="max-height: 41px;margin-bottom: 20px;" id="cadastroGenero" class="form-control" name="genero">
+                                                <option value="1">Masculino</option>
+                                                <option value="2">Feminino</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <label class="col-md-3 col-form-label" for="cadastroEstado" style="color: #464a46dd;">Estado</label>
+                                        <div class="col-md-9">
+                                            <select style="max-height: 41px;margin-bottom: 20px;" id="cadastroEstado" class="form-control" name="estado"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <label class="col-sm-3 col-form-label" for="cadastroCidade" style="float: left; color: #464a46dd;">Cidade</label>
+                                        <div class="col-sm-9">
+                                            <select style="max-height: 41px;margin-bottom: 20px;" id="cadastroCidade" class="form-control" name="cidade"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="cadastroEndereco" name="endereco" placeholder="Endereço">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="password" placeholder="senha" id="cadastroSenha" name="senha" class="form-control" required data-error="Informe a senha" required>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="submit-button">
+                                        <button class="btn btn-common btn-effect" id="submit" type="submit" >Cadastro</button>
+
+                                        <div id="msgSubmit" class="h3 hidden"></div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
 <!-- Contact Section End -->
 
 </body>
@@ -180,7 +194,37 @@
 
     <script src="js/api.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<style>
+    .multiselect {
+        padding: 8px 10px !important;
+        max-height: 40px;
+    }
+    .multiselect-container {
+        min-width: 230px;
+    }
+    .dropdown-menu.show {
+        top: 260% !important;
+    }
+</style>
+
 <script>
+
+    $(window).on("load", function(){
+        GetEstadoCombo();
+        swal("Não deixe de informar o seu numero de Whats, para contatos futuros!");
+    });
+
+    $("#cadastroEstado").focus(function (){
+        getCidadeCombo();
+    })
+    $("#cadastroEstado").change(function (){
+        getCidadeCombo();
+    })
+
     function ValidaCpf(cpf){
         cpf = cpf.replace(/\D/g, '');
 
@@ -247,9 +291,76 @@
         return r;
     }
 
+    function GetEstadoCombo()
+    {
+        let selectboxEstado = $('#cadastroEstado');
+        $.ajax({
+            url: $("#apiCadastro").val() + "appGetEstadoCombo",
+            method: "get",
+            crossDomain: true,
+            success: function (obj) {
+
+                if (obj != null) {
+                    var data = obj.data;
+
+                    selectboxEstado.multiselect('destroy');
+                    let params = [{label: "Selecione um Estado", value: 0}];
+                    $.each(data, function (i, d) {
+                        params.push({ label: d.nome, value: d.id});
+                    });
+                    selectboxEstado.multiselect({
+                        nableFiltering: true,
+                        enableCaseInsensitiveFiltering: true,
+                        buttonWidth:'100%',
+                        nSelectedText: 'selecione.',
+                        nonSelectedText: 'selecione...'
+                    });
+                    selectboxEstado.multiselect('dataprovider', params);
+                }
+            }
+
+        });
+    }
+
+    function getCidadeCombo()
+    {
+        var estado = $('#cadastroEstado');
+        var estadoSelecionado = estado.find('option:selected').val();
+
+        if (typeof estadoSelecionado === 'undefined'){
+            swal("Selecione um estado para prosseguir");
+            return;
+        }
+        let selectboxCidade = $('#cadastroCidade');
+        $.ajax({
+            url: $("#apiCadastro").val() +  "appGetCidade/"+estadoSelecionado,
+            method: "get",
+            success: function (obj) {
+
+                if (obj != null) {
+                    var data = obj.data;
+
+                    selectboxCidade.multiselect('destroy');
+                    let params = [{label: "Selecione uma Cidade", value: 0}];
+                    $.each(data, function (i, d) {
+                        params.push({ label: d.nome, value: d.id});
+                    });
+                    selectboxCidade.multiselect({
+                        nableFiltering: true,
+                        enableCaseInsensitiveFiltering: true,
+                        buttonWidth:'100%',
+                        nSelectedText: 'selecione.',
+                        nonSelectedText: 'selecione...'
+                    });
+                    selectboxCidade.multiselect('dataprovider', params);
+                }
+            }
+        });
+    }
+
     <?php if(isset($_GET["message"])) {?>
         window.onload = function(){
-            swal(<?= $_GET["message"] ?>);
+            swal("<?= $_GET["message"] ?>");
         }
     <?php } ?>
 
@@ -263,30 +374,33 @@
                 <h5 class="modal-title" id="staticBackdropLabel" style="font-family: 'Montserrat', sans-serif; font-weight: 700;"> Informe o seu CPF </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" style="margin: 5vh 0 0 0;">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4> Agende agora mesmo o seu exame na rede redenciada Petrobras</h4>
-                        <figcaption class="blockquote-footer" style="margin: 2vh 0 0 0;">
-                            <span> Informe o seu CPF abaixo </span>
-                        </figcaption>
+            <form action="<?= LOCAL_API ?>/app.php?url=Access/fastLoginClick" name="" method="post">
+                <div class="modal-body" style="margin: 5vh 0 0 0;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4> Agende agora mesmo o seu exame na rede redenciada Petrobras</h4>
+                            <figcaption class="blockquote-footer" style="margin: 2vh 0 0 0;">
+                                <span> Informe o seu CPF abaixo </span>
+                            </figcaption>
+                        </div>
                     </div>
-                </div>
-                <div class="row" style="margin: 5vh 0 0 0;">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <input type="text" class="form-control" onkeydown="fMasc( this, mCPF )" id="fastLoginCpf" name="fastLoginCpf" placeholder="CPF" >
+                    <div class="row" style="margin: 5vh 0 0 0;">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input type="text" class="form-control" onkeydown="fMasc( this, mCPF )" id="fastLoginCpf" name="fastLoginCpf" placeholder="CPF" >
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <div class="col-md-12">
-                    <div class="submit-button">
-                        <button class="btn btn-common btn-effect" type="button" onclick="fastLoginClick()" id="btnFastLogin" >Entrar</button>
+                <div class="modal-footer">
+                    <div class="col-md-12">
+                        <div class="submit-button">
+                            <!--                            onclick="fastLoginClick()"-->
+                            <button class="btn btn-common btn-effect" type="submit" id="btnFastLogin" >Entrar</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
