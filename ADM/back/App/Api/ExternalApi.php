@@ -73,25 +73,9 @@
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
-        public function appGetServicoByExame($id)
+        public function appGetAllExame($id)
         {
-            $sql = "select s.id, s.nome from servico s inner join exame e on s.id = e.servico Where e.id = :id";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindValue(':id', $id);
-            $stmt->execute();
-
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
-        }
-
-        public function appGetAllExame($id =null)
-        {
-            $cidadesPermitidas = [1994, 1990, 1790, 1825, 1756, 1762, 1871, 1965, 1974, 6666, 6681, 6691, 6699, 6768, 6780, 6811, 6860, 6939, 9422, 9390, 8799, 9379];
-            if(in_array($id, $cidadesPermitidas)) {
-                $sql = "select e.id, e.exame, s.nome as servico from exame e inner join servico s on e.servico = s.id";
-            } else {
-                $sql = "select e.id, e.exame, s.nome as servico from exame e inner join servico s on e.servico = s.id where e.id = 43";
-            }
-
+            $sql = "select e.id, e.exame, s.nome as servico from exame e inner join servico s on e.servico = s.id where s.id = :id";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id);
             $stmt->execute();
@@ -125,15 +109,21 @@
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
 
-        public function appGetServicoByCidade($cidade = null)
+        public function appGetServicoByCidade($cidade)
         {
-            $sql = "select 
+            $cidadesPermitidas = [1994, 1990, 1790, 1825, 1756, 1762, 1871, 1965, 1974, 6666, 6681, 6691, 6699, 6768, 6780, 6811, 6860, 6939, 9422, 9390, 8799, 9379];
+            if(in_array($cidade, $cidadesPermitidas)) {
+                $sql = "select 
                         s.id, s.nome from servico s 
                             inner join exame ex on ex.servico = s.id
                             left join exame_empresa eemp on eemp.exame = ex.id
                             inner join empresa e on eemp.empresa = e.id
                         WHERE 
                             e.cidade = :cidade group by s.id";
+            } else {
+                $sql = "select s.id, s.nome from servico s where s.id= 11";
+            }
+
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':cidade', $cidade);
             $stmt->execute();

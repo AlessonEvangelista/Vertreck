@@ -87,7 +87,9 @@ $('#AppEstado').change(function() {
     appGetCidade();
 });
 $('#AppCidade').change(function() {
-    // appGetServicoByCidade();
+    appGetServicoByCidade();
+});
+$('#Appservico').change(function() {
     appGetEmpresasByExame();
 });
 $("#btnExameAgenda").click(function () {
@@ -228,31 +230,11 @@ function appGetServicoByCidade()
 
 function appGetServicoByExame()
 {
-    // let servico= "";
-    // $.ajax({
-    //     url: $("#AppFrmConsulta").attr('action') +  "appGetServicoByExame/" + $('#AppExame').val().join(),
-    //     method: "get",
-    //     success: function (obj) {
-    //
-    //         if (obj != null) {
-    //             servico = obj.data.nome;
-    //         }
-    //
-    //         let txtservico = servico.replace(/\s/g, '');
-    //         if( txtservico.toLowerCase() === "análisesclínicas" )
-    //         {
-                cardEscolhaLocalAgendamento();
-                // cardEscolhaLocal("lblEmpresasExames", "primario");
-    //         }
-    //         else {
-    //             $("#divExamesServicos").css("display", "block");
-    //             $("#AppAgendamentoContainer").css("display", "none")
-    //
-    //             cardEscolhaLocal();
-    //         }
-    //     }
-    // });
-
+    $("#AppAgendamentoContainer").css("display", "none")
+    // TODO HABILITAR COM AGENDAMENTO
+    // cardEscolhaLocalAgendamento();
+    // TODO HABILITAR SOMENTE COM LIGAÇÃO
+    cardEscolhaLocal();
 }
 
 function appGetEmpresasByExame()
@@ -260,7 +242,7 @@ function appGetEmpresasByExame()
     let selectboxExame = $('#AppExame');
     $("#loadSelected").css("display", "block")
     $.ajax({
-        url: $("#AppFrmConsulta").attr('action') +  "appGetAllExame/" + $('#AppCidade').val(),
+        url: $("#AppFrmConsulta").attr('action') +  "appGetAllExame/" + $('#Appservico').val(),
         method: "get",
         success: function (obj) {
 
@@ -279,7 +261,7 @@ function appGetEmpresasByExame()
                     enableCaseInsensitiveFiltering: true,
                     buttonWidth:'100%',
                     disableIfEmpty: true,
-                    disabledText: 'Não encontrado Exame...',
+                    // disabledText: 'Não encontrado Exame...',
                     nSelectedText: 'selecione.',
                     nonSelectedText: 'selecione...',
                     onChange: function(){
@@ -299,7 +281,7 @@ function appGetEmpresasByExame()
 // -- CARD
 function cardEscolhaLocal()
 {
-    let data = $('#AppExame').val() +"," +$("#AppCidade").val();
+    let data = $('#AppExame').val().join() +"-" +$("#AppCidade").val();
 
     $.ajax({
         url: $("#AppFrmConsulta").attr('action') +  "appGetEmpresaByExame/"+ data,
@@ -309,23 +291,27 @@ function cardEscolhaLocal()
             if (obj != null) {
                 var data = obj.data;
 
-                let html = "";
-                $.each(data, function (i, d) {
+                if(data.length === 0) {
+                    swal("Ops!", "Ainda não temos clinicas para esta região. Gostaria de indicar alguma? envie um e-mail para: atendimento_app@vertreck.net.br.")
+                } else {
+                    let html = "";
+                    $.each(data, function (i, d) {
 
-                    html = html + "<div class='card d-flex' id='card_"+d.id+"' style='margin: 10px 0;'><div class='card-body'>" +
-                        "<h6 class='card-title' style='cursor: pointer; color: blue;' " +
-                        "onclick='msgTextCard(`"+ d.id +"`, `"+d.descricao_agenda+"`,`"+d.email+"`,`"+d.telefone+"`,`"+d.celular+"`,`"+data.length+"`)'" +
-                        "> " + d.nome + "</h6>" +
-                        "<p class='card-text'> " + d.endereco + ", " + d.bairro + " <br></p> " +
-                        "<p class='msgIntoCard' id='msgIntoCard_"+d.id+"' ></p>" +
-                        "</div></div>";
+                        html = html + "<div class='card d-flex' id='card_" + d.id + "' style='margin: 10px 0;'><div class='card-body'>" +
+                            "<h6 class='card-title' style='cursor: pointer; color: blue;' " +
+                            "onclick='msgTextCard(`" + d.id + "`, `" + d.descricao_agenda + "`,`" + d.email + "`,`" + d.telefone + "`,`" + d.celular + "`,`" + data.length + "`)'" +
+                            "> " + d.nome + "</h6>" +
+                            "<p class='card-text'> " + d.endereco + ", " + d.bairro + " <br></p> " +
+                            "<p class='msgIntoCard' id='msgIntoCard_" + d.id + "' ></p>" +
+                            "</div></div>";
 
-                });
-                $("#lblEmpresasExames").html(html);
-                $("#lblEmpresasExames").css("display", "flex");
+                    });
+                    $("#lblEmpresasExames").html(html);
+                    $("#lblEmpresasExames").css("display", "flex");
 
-                window.scrollTo( 0, 800 );
-                swal("ESCOLHA O LOCAL DE SUA PREFERÊNCIA ABAIXO E CLIQUE NELE PARA SER INFORMADO(A) DE  COMO PODERÁ REALIZAR O AGENDAMENTO.");
+                    window.scrollTo(0, 800);
+                    swal("ESCOLHA O LOCAL DE SUA PREFERÊNCIA ABAIXO E CLIQUE NELE PARA SER INFORMADO(A) DE  COMO PODERÁ REALIZAR O AGENDAMENTO.");
+                }
             }
         }
 

@@ -48,14 +48,14 @@
                                         </div>
                                     </div>
                                 </div>
-<!--                                <div class="row">-->
-<!--                                    <div class="col-md-12">-->
-<!--                                        <div class="form-group">-->
-<!--                                            <label for="estado">Serviço a ser realizado</label>-->
-<!--                                            <select class="form-control" id="Appservico" name="Appservico"></select>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="estado">Serviço a ser realizado</label>
+                                            <select class="form-control" id="Appservico" name="Appservico"></select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-12" id="divExamesServicos">
                                         <div class="form-group">
@@ -68,7 +68,7 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <button type="button" class="btn btn-primary" id="btnExameAgenda"> ENVIAR </button>
+                                        <button type="button" class="btn btn-primary" id="btnExameAgenda"> BUSCAR </button>
                                     </div>
                                 </div>
 
