@@ -83,7 +83,7 @@
                 <div class="col-lg-12 col-md-12 col-xs-12">
                     <div class="contact-block wow fadeInUp" data-wow-delay="0.2s">
                         <div class="section-header">
-                            <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Agenciamento de exames</p>
+                            <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Cadastro de usuário</p>
                         </div>
                         <form id="cadastroForm" class="cadastroForm" method="post" action="<?= LOCAL_API ?>/app.php?url=Access/cadastroUsuario">
 
@@ -91,13 +91,13 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="cadastroNome" name="nome" placeholder="Nome" required data-error="informe o Nome" required>
+                                        <input type="text" class="form-control" id="cadastroNome" name="nome" placeholder="Nome" data-error="informe o Nome" required>
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="email" placeholder="Email" id="cadastroEmail" class="form-control" name="email" required data-error="informe o Email" required>
+                                        <input type="email" placeholder="Email" id="cadastroEmail" class="form-control" name="email" data-error="informe o Email" required>
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="password" placeholder="senha" id="cadastroSenha" name="senha" class="form-control" required data-error="Informe a senha" required>
+                                        <input type="password" placeholder="senha" id="cadastroSenha" name="senha" class="form-control" data-error="Informe a senha" required>
                                         <div class="help-block with-errors"></div>
                                     </div>
                                 </div>

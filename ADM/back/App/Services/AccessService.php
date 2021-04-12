@@ -72,6 +72,30 @@
             return json_encode($retorno);
         }
 
+        public function editarUsuario()
+        {
+            $createUser = (new Access())->updateUsuario($_POST);
+            if($createUser) {
+                if($_SERVER['HTTP_HOST'] === 'localhost'){
+                    header("Location:  http://localhost/pessoal/Vertreck/Proj/editar.php?message=Dados atualizados com sucesso");
+                    exit;
+                } else {
+                    header("Location:  https://vertreck.net.br/editar.php?message=Dados atualizados com sucesso");
+                    exit;
+                }
+            } else {
+                if($_SERVER['HTTP_HOST'] === 'localhost'){
+                    header("Location:  http://localhost/pessoal/Vertreck/Proj/editar.php?message=Algum erro ao editar os dados");
+                    exit;
+                } else {
+                    header("Location:  https://vertreck.net.br/editar.php?message=Algum erro ao editar os dados");
+                    exit;
+                }
+            }
+
+            return json_encode($retorno);
+        }
+
         private function validCreateField($data)
         {
             $data['senha'] = (new Utils())->encrypt($data['senha']);

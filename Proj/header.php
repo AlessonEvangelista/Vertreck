@@ -74,6 +74,9 @@
                                 <a class="nav-link page-scroll" href="app.php">Exame</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link page-scroll" href="editar.php">Editar dados pessoais</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link page-scroll" href="ouvidoria.php">Ouvidoria</a>
                             </li>
                             <li class="nav-item">

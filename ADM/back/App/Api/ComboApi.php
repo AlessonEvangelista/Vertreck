@@ -50,7 +50,7 @@
 
         public function getEmpresaList()
         {
-            $sql = "SELECT e.id, et.tipo, e.nome_fantasia, e.email, e.telefone, e.celular, c.nome as cidade FROM empresa e inner join cidades c on e.cidade = c.id inner join empresa_tipo et on e.tipo = et.id";
+            $sql = "SELECT e.id, et.tipo, e.nome_fantasia, e.email, e.telefone, e.celular, c.nome as cidade FROM empresa e left join cidades c on e.cidade = c.id inner join empresa_tipo et on e.tipo = et.id";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 

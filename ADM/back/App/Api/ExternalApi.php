@@ -254,4 +254,15 @@
             return substr($itens, 0, -2);
         }
 
+        public function getUserDataEdit($id)
+        {
+            $sql = "select 
+                        u.nome, u.email, u.cpf, u.telefone, u.data_nascimento, u.endereco, u.genero, e.nome as estado, u.estado as idEstado, c.nome as cidade, u.cidade as idCidade
+                    from usuario u inner join estados e on u.estado = e.id inner join cidades c on u.cidade = c.id where u.id = {$id}";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }
+
     }

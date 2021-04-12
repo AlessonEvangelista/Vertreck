@@ -61,4 +61,16 @@
                 return false;
             }
         }
+
+        public function updateUsuario($data)
+        {
+            $sql = "UPDATE usuario SET nome='{$data['nome']}', email='{$data['email']}', telefone='{$data['telefone']}', data_nascimento='{$data['data_nascimento']}', genero={$data['genero']}, estado={$data['estado']}, cidade={$data['cidade']}, endereco='{$data['endereco']}' WHERE id={$_SESSION['id']}";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute($data);
+
+            if($stmt->rowCount() > 0) {
+                return true;
+            }
+            return false;
+        }
     }
