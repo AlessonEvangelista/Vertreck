@@ -21,8 +21,8 @@
 
                 if($stmt->rowCount() === 0 || $data['cnpj'] === "") {
                     unset($data['estado']);
-                    $sql = "INSERT INTO empresa (nome_fantasia, razao_social, cnpj, endereco, bairro, email, telefone, celular, cidade, tipo, descricao_agenda) 
-                                VALUES(:nome_fantasia, :razao_social, :cnpj, :endereco, :bairro, :email, :telefone, :celular, :cidade, :tipo, :descricao_agenda)";
+                    $sql = "INSERT INTO empresa (nome_fantasia, razao_social, cnpj, endereco, bairro, email, telefone, celular, cidade, tipo, descricao_agenda, status) 
+                                VALUES(:nome_fantasia, :razao_social, :cnpj, :endereco, :bairro, :email, :telefone, :celular, :cidade, :tipo, :descricao_agenda, 1)";
 
                     $stmt = $this->conn->prepare($sql);
                     $stmt->execute($data);

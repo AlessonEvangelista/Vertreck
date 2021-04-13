@@ -48,9 +48,9 @@
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
-        public function getEmpresaList()
+        public function getEmpresaList($status)
         {
-            $sql = "SELECT e.id, et.tipo, e.nome_fantasia, e.email, e.telefone, e.celular, c.nome as cidade FROM empresa e left join cidades c on e.cidade = c.id inner join empresa_tipo et on e.tipo = et.id";
+            $sql = "SELECT e.id, et.tipo, e.nome_fantasia, e.email, e.telefone, e.celular, c.nome as cidade FROM empresa e left join cidades c on e.cidade = c.id inner join empresa_tipo et on e.tipo = et.id WHERE e.id > 1 AND e.status = {$status} order by e.id";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -59,7 +59,7 @@
 
         public function getAllEmpresaList()
         {
-            $sql = "SELECT id, nome_fantasia, endereco FROM empresa";
+            $sql = "SELECT id, nome_fantasia, endereco FROM empresa WHERE status = 1";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -68,7 +68,7 @@
 
         public function getEmpresaCombo()
         {
-            $sql = "SELECT id, nome_fantasia FROM empresa";
+            $sql = "SELECT id, nome_fantasia FROM empresa WHERE id > 1 AND status = 1";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -186,7 +186,7 @@
         public function deleteEmpresa( $id = null )
         {
             try {
-                $sql = "DELETE FROM empresa WHERE id=$id";
+                $sql = "UPDATE empresa SET status = '0' WHERE id = '{$id}'";
                 $this->conn->exec($sql);
 
                 return json_encode(["status" => "success", "data" => "Registro excluido com sucesso"]);
@@ -194,7 +194,19 @@
             {
                 return json_encode(["status" => "error", "data" => $e->getMessage()]);
             }
+        }
 
+        public function ativarEmpresa($id)
+        {
+            try {
+                $sql = "UPDATE empresa SET status = '1' WHERE id = '{$id}'";
+                $this->conn->exec($sql);
+
+                return json_encode(["status" => "success", "data" => "Registro Ativo com sucesso"]);
+            } catch (\Exception $e)
+            {
+                return json_encode(["status" => "error", "data" => $e->getMessage()]);
+            }
         }
 
         public function deleteVinculoEmpresaExame( $id = null )

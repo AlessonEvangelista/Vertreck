@@ -8,7 +8,19 @@
         <!-- Illustrations -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary"><?= $page ?></h6>
+                <?php
+                    switch ($page)
+                    {
+                        case 'LISTA DE LABORATÓRIOS' :
+                            echo "<h6 class='m-0 font-weight-bold text-primary' style='float: left;'> {$page} </h6>";
+                            echo "<a data-bs-toggle='modal' data-bs-target='#ModalEmpresasExcluidas' onclick='empresasExcluidas()'> <h6 class='font-weight-bold text-primary' style='float: right; cursor: pointer; margin: 0px 15px;'> Laboratórios excluídos </h6> </a>";
+                            break;
+                        default:
+                            echo "<h6 class='m-0 font-weight-bold text-primary'> {$page} </h6>";
+                            break;
+                    }
+                ?>
+
             </div>
             <div class="card-body">
                 <?php
@@ -115,7 +127,7 @@
                                         <th scope="col">Email</th>
                                         <th scope="col">Tel/Cel</th>
                                         <th scope="col">Cidade</th>
-                                        <th scope="col">Agenda</th>
+<!--                                        <th scope="col">Agenda</th>-->
                                         <th scope="col">Ações</th>
                                     </tr>
                                     </thead>
@@ -504,7 +516,7 @@
     {
         var trHTML;
         $.ajax({
-            url: "back/api.php?url=Combo/getEmpresaList",
+            url: "back/api.php?url=Combo/getEmpresaList/1",
             method: "get",
             success: function (obj) {
                 if (obj != null) {
@@ -524,10 +536,13 @@
                             '<td>' + data[i].email + '</td>' +
                             '<td>' + data[i].telefone + ' / ' + data[i].celular + '</td>' +
                             '<td>' + data[i].cidade + '</td> ' +
-                            '<td> <button type="button" class="btn btn-sm btn-outline-success" onclick="showAgendaModal('+data[i].id+', `'+data[i].nome_fantasia+'`)"> Definir Agenda</button> </td> ' +
+                            // TODO COMENTADO VISTO NO MOMENTO NÃO ESTAR UTILIZANDO A AGENDA
+                            // '<td> <button type="button" class="btn btn-sm btn-outline-success" onclick="showAgendaModal('+data[i].id+', `'+data[i].nome_fantasia+'`)"> Definir Agenda</button> </td> ' +
                             '<td> ' +
-                                '<button type="button" class="btn btn-sm btn-outline-primary" onclick="editarModal(`1`, '+data[i].id+')"> Editar</button> ' +
-                                '<button type="button" class="btn btn-sm btn-outline-danger" onclick="excluirRegistro(`1`, '+data[i].id+')"> Excluir</button> ' +
+                                '<div class="btn-group" role="group">' +
+                                    '<button type="button" class="btn btn-sm btn-outline-primary" onclick="editarModal(`1`, '+data[i].id+')"> Editar</button> ' +
+                                    '<button type="button" class="btn btn-sm btn-outline-danger" onclick="excluirRegistro(`1`, '+data[i].id+')"> Excluir</button> ' +
+                                '</div>' +
                             '</td> ' +
                             '</tr>';
                     });
@@ -840,9 +855,64 @@
         modal.show()
     }
 
+    let empresasExcluidasModal=null;
+    function empresasExcluidas()
+    {
+        empresasExcluidasModal = new bootstrap.Modal(document.getElementById('ModalEmpresasExcluidas'));
+        empresasExcluidasModal.show();
+
+        var trHTML;
+        $.ajax({
+            url: "back/api.php?url=Combo/getEmpresaList/0",
+            method: "get",
+            success: function (obj) {
+                if (obj != null) {
+                    var data = obj.data;
+
+                    $.each(data, function (i, d) {
+                        $.each(Object.keys(d), function (x, y) {
+                            if(data[i][y] === null || data[i][y] === "") {
+                                data[i][y] = "---";
+                            }
+                        })
+                        trHTML += '' +
+                            '<tr> ' +
+                            '<td>' + data[i].id + '</td>' +
+                            '<td>' + data[i].tipo + '</td>' +
+                            '<td>' + data[i].nome_fantasia + '</td>' +
+                            '<td>' + data[i].email + '</td>' +
+                            '<td>' + data[i].cidade + '</td> ' +
+                            // '<td> <button type="button" class="btn btn-sm btn-outline-success" onclick="showAgendaModal('+data[i].id+', `'+data[i].nome_fantasia+'`)"> Definir Agenda</button> </td> ' +
+                            '<td> ' +
+                                '<button type="button" class="btn btn-sm btn-outline-success" onclick="ativarEmpresa('+data[i].id+')">Ativar empresa</button> ' +
+                            '</td> ' +
+                            '</tr>';
+                    });
+                    $('#tableListTbodyEmpresasExcluidas').empty().append(trHTML);
+                }
+            }
+        });
+    }
+
+    function ativarEmpresa(id)
+    {
+        if (window.confirm("Tem certeza que reativar este registro?")) {
+            $.ajax({
+                url: "back/api.php?url=Combo/ativarEmpresa/" + id,
+                method: "get",
+                success: function (obj) {
+                    let ret = JSON.parse(obj.data);
+                    alert(ret.data);
+
+                    getEmpresaList();
+                    closeEmpresasExcluidasModal();
+                }
+            });
+        }
+    }
+
     function excluirRegistro(intro, id)
     {
-        console.log(id);
         // GET SERVICE TO USE FUNCTION IN WATHEVER SERVICE
         let service = "";
         if (intro === "1") { service = "deleteEmpresa"; }
@@ -956,6 +1026,7 @@
 
     function closeAgendaModal() { if(AgendaModal !== null) { AgendaModal.hide() }}
     function closeEditarModal() { if(modal !== null) { modal.hide() }}
+    function closeEmpresasExcluidasModal() { if(empresasExcluidasModal !== null) { empresasExcluidasModal.hide() }}
 
 </script>
 
@@ -1169,6 +1240,36 @@
                 <a id="CloseAgendaModal" style="cursor: pointer;" onclick="closeEditarModal()"> X </a>
             </div>
             <div class="modal-body" id="EditarModalIntro">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EMPRESAS EXCLUÍDAS -->
+<div class="modal fade" id="ModalEmpresasExcluidas" tabindex="-1" role="dialog" aria-labelledby="ModalEmpresasExcluidas" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" > Laboratórios excluídos</h5>
+                <a id="CloseAgendaModal" style="cursor: pointer;" onclick="closeEmpresasExcluidasModal()"> X </a>
+            </div>
+            <div class="modal-body">
+                <table class="table table-sm" id="tableListEmpresa" >
+                    <thead class="thead-dark" >
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Nome Fantasia</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Cidade</th>
+                        <!--                                        <th scope="col">Agenda</th>-->
+                        <th scope="col">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableListTbodyEmpresasExcluidas">
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
