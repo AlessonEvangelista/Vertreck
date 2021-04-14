@@ -297,6 +297,7 @@
                                             <th scope="col">Exame</th>
                                             <th scope="col">Preço Unit.</th>
                                             <th scope="col">Preço Parc.</th>
+                                            <th scope="col">Ações</th>
                                         </tr>
                                         </thead>
                                         <tbody id="tblsExamesServicos"></tbody>
@@ -609,14 +610,35 @@
                                 data[i][y] = "---";
                             }
                         });
-                        trHTML += '<tr class="trServicoExameList_All" id="trServicoExameList_'+data[i].id+'" onclick="getExameServicoList(`'+data[i].id+'`)" > <td>' + data[i].id + '</td><td>' + data[i].nome + '</td> <td> <i style="font-size: 25px; text-align: center; " class="fas fa-angle-right"></i> </td> </tr>';
+                        trHTML += '<tr class="trServicoExameList_All" id="trServicoExameList_'+data[i].id+'" onclick="getExameServicoList(`'+data[i].id+'`)" > ' +
+                            '<td style="cursor: pointer" >' + data[i].id + '</td>' +
+                            '<td style="cursor: pointer" >' + data[i].nome + '</td> ' +
+                            '<td> ' +
+                                '<button class="btn btn-warning" style="float: left; " onclick="deletarservico(' + data[i].id + ')"> deletar </button> ' +
+                                '<i style="font-size: 25px; text-align: center; padding: 8px 0 0 10px; " class="fas fa-angle-right"></i> ' +
+                            '</td> ' +
+                            '</tr>';
                     });
-                    $('#tblsServicosExames').append(trHTML);
+                    $('#tblsServicosExames').empty().append(trHTML);
                 }
             }
         });
     }
 
+    function deletarservico(id)
+    {
+        $.ajax({
+            url: "back/api.php?url=Combo/deletarServico/" + id,
+            method: "get",
+            success: function (obj) {
+
+                if (obj != null) {
+                    alert(obj.data);
+                    getServicoExameList();
+                }
+            }
+        });
+    }
     function getExameServicoList( id )
     {
         $(".trServicoExameList_All").css("color", "#858796");
@@ -635,9 +657,29 @@
                                 data[i][y] = "---";
                             }
                         });
-                        trHTML += '<tr> <td>' + data[i].id + '</td><td>' + data[i].exame + '</td><td>' + data[i].preco_unit + '</td><td>' + data[i].preco_parc + '</td></tr>';
+                        trHTML += '<tr> ' +
+                            '<td>' + data[i].id + '</td>' +
+                            '<td>' + data[i].exame + '</td>' +
+                            '<td>' + data[i].preco_unit + '</td>' +
+                            '<td>' + data[i].preco_parc + '</td>' +
+                            '<td> <button class="btn btn-danger" style="float: left; " onclick="deletarExame(' + id + ', ' + data[i].id + ')"> deletar </button> </td>' +
+                            '</tr>';
                     });
                     $('#tblsExamesServicos').empty().append(trHTML);
+                }
+            }
+        });
+    }
+    function deletarExame(servico, id)
+    {
+        $.ajax({
+            url: "back/api.php?url=Combo/deletarExame/" + id,
+            method: "get",
+            success: function (obj) {
+
+                if (obj != null) {
+                    alert(obj.data);
+                    getExameServicoList(servico);
                 }
             }
         });

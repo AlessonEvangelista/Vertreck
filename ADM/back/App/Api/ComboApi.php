@@ -95,7 +95,7 @@
 
         public function getServicoExameList()
         {
-            $sql = "select id, nome from servico";
+            $sql = "select id, nome from servico WHERE status = 1";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -104,7 +104,7 @@
 
         public function getExameServicoList($id = null)
         {
-            $sql = "select id, exame, preco_unit, preco_parc from exame where servico = $id";
+            $sql = "select id, exame, preco_unit, preco_parc from exame where servico = {$id} AND status = 1";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -222,4 +222,36 @@
             }
         }
 
+        public function deletarServico($id)
+        {
+            try {
+                $sql = "SELECT id FROM exame WHERE servico = {$id} AND status = 1";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute();
+                if($stmt->rowCount() > 0) {
+                    return "Não é possível excluir serviços com exames vinculados";
+                } else {
+                    $sql = "UPDATE servico SET status = '0' WHERE id = '{$id}'";
+                    $this->conn->exec($sql);
+
+                    return "Excluído registro com sucesso";
+                }
+            } catch (\Exception $e)
+            {
+                return $e->getMessage();
+            }
+        }
+
+        public function deletarExame($id)
+        {
+            try {
+                $sql = "UPDATE exame SET status = '0' WHERE id = '{$id}'";
+                $this->conn->exec($sql);
+
+                return "Excluído registro com sucesso";
+            } catch (\Exception $e)
+            {
+                return $e->getMessage();
+            }
+        }
     }

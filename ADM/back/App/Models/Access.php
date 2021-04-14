@@ -49,8 +49,8 @@
 
         public function createUsuario($data)
         {
-            $sql = "INSERT INTO usuario (nome, email, senha, cpf, telefone, data_nascimento, estado, cidade, endereco, genero, empresa, tipo) 
-                        VALUES (:nome, :email, :senha, :cpf, :telefone, :data_nascimento, :estado, :cidade, :endereco, :genero, :empresa, :tipo)";
+            $sql = "INSERT INTO usuario (nome, email, cpf, telefone, data_nascimento, estado, cidade, genero, empresa, tipo) 
+                        VALUES (:nome, :email, :cpf, :telefone, :data_nascimento, :estado, :cidade, :genero, :empresa, :tipo)";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($data);
@@ -64,7 +64,7 @@
 
         public function updateUsuario($data)
         {
-            $sql = "UPDATE usuario SET nome='{$data['nome']}', email='{$data['email']}', telefone='{$data['telefone']}', data_nascimento='{$data['data_nascimento']}', genero={$data['genero']}, estado={$data['estado']}, cidade={$data['cidade']}, endereco='{$data['endereco']}' WHERE id={$_SESSION['id']}";
+            $sql = "UPDATE usuario SET nome='{$data['nome']}', email='{$data['email']}', telefone='{$data['telefone']}', data_nascimento='{$data['data_nascimento']}', genero={$data['genero']}, estado={$data['estado']}, cidade={$data['cidade']} WHERE id={$_SESSION['id']}";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($data);
 

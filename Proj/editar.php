@@ -98,22 +98,22 @@ if(isset($_GET['logout']))
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="row">
-                                        <label class="col-md-2 col-form-label" for="editarEstado" style="color: #464a46dd;">Endereço</label>
-                                        <div class="col-md-10">
-                                            <input type="text" class="form-control" id="editarEndereco" name="endereco" placeholder="Endereço" disabled>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="row">
-                                        <label class="col-md-2 col-form-label" for="editarEstado" style="color: #464a46dd;">Senha</label>
-                                        <div class="col-md-10">
-                                            <input type="password" placeholder="senha" id="editarSenha" name="senha" class="form-control" value="*****" disabled>
-                                        </div>
-                                    </div>
-                                </div>
+<!--                                <div class="col-md-12">-->
+<!--                                    <div class="row">-->
+<!--                                        <label class="col-md-2 col-form-label" for="editarEstado" style="color: #464a46dd;">Endereço</label>-->
+<!--                                        <div class="col-md-10">-->
+<!--                                            <input type="text" class="form-control" id="editarEndereco" name="endereco" placeholder="Endereço" disabled>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-12">-->
+<!--                                    <div class="row">-->
+<!--                                        <label class="col-md-2 col-form-label" for="editarEstado" style="color: #464a46dd;">Senha</label>-->
+<!--                                        <div class="col-md-10">-->
+<!--                                            <input type="password" placeholder="senha" id="editarSenha" name="senha" class="form-control" value="*****" disabled>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                                 <div class="col-md-12">
                                     <div class="submit-button">
                                         <button class="btn btn-common btn-effect" id="enabledEdit" type="button" style="display: block;">Editar</button>
@@ -204,7 +204,7 @@ if(isset($_GET['logout']))
                     $("#editarCpf").val(data.cpf);
                     $("#editarTelefone").val(data.telefone);
                     $("#editarData_nascimento").val(data.data_nascimento);
-                    $("#editarEndereco").val(data.endereco);
+                    // $("#editarEndereco").val(data.endereco);
                     $("#editarGenero").val(data.genero);
 
                     let selectboxEstado = $('#editarEstado');
@@ -239,7 +239,7 @@ if(isset($_GET['logout']))
         $("#editarTelefone").removeAttr("disabled")
         $("#editarData_nascimento").removeAttr("disabled")
         $("#editarGenero").removeAttr("disabled")
-        $("#editarEndereco").removeAttr("disabled")
+        // $("#editarEndereco").removeAttr("disabled")
         $("#editarEstado").removeAttr("disabled")
         $("#editarCidade").removeAttr("disabled")
 
@@ -256,7 +256,7 @@ if(isset($_GET['logout']))
         $("#editarTelefone").attr("disabled", "disabled")
         $("#editarData_nascimento").attr("disabled", "disabled")
         $("#editarGenero").attr("disabled", "disabled")
-        $("#editarEndereco").attr("disabled", "disabled")
+        // $("#editarEndereco").attr("disabled", "disabled")
         $("#editarEstado").attr("disabled", "disabled")
         $("#editarCidade").attr("disabled", "disabled")
 

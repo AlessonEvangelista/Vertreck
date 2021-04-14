@@ -146,17 +146,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="cadastroEndereco" name="endereco" placeholder="Endereço">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="password" placeholder="senha" id="cadastroSenha" name="senha" class="form-control" data-error="Informe a senha" required>
-                                        <div class="help-block with-errors"></div>
-                                    </div>
-                                </div>
+<!--                                <div class="col-md-12">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <input type="text" class="form-control" id="cadastroEndereco" name="endereco" placeholder="Endereço">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-12">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <input type="password" placeholder="senha" id="cadastroSenha" name="senha" class="form-control" data-error="Informe a senha" required>-->
+<!--                                        <div class="help-block with-errors"></div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                                 <div class="col-md-12">
                                     <div class="submit-button">
                                         <button class="btn btn-common btn-effect" id="submit" type="submit" >Cadastro</button>

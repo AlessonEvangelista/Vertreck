@@ -98,7 +98,8 @@
 
         private function validCreateField($data)
         {
-            $data['senha'] = (new Utils())->encrypt($data['senha']);
+            // TODO removido senha pois está logando com com cpf
+//            $data['senha'] = (new Utils())->encrypt($data['senha']);
             $data['empresa'] = 0;
             $data['tipo'] = '3';
 

@@ -292,7 +292,7 @@ function cardEscolhaLocal()
                 var data = obj.data;
 
                 if(data.length === 0) {
-                    swal("Ops!", "Ainda não temos clinicas para esta região. Gostaria de indicar alguma? envie um e-mail para: atendimento_app@vertreck.net.br.")
+                    // swal("Ops!", "Ainda não temos clinicas para esta região. Gostaria de indicar alguma? envie um e-mail para: atendimento_app@vertreck.net.br.")
                 } else {
                     let html = "";
                     $.each(data, function (i, d) {
@@ -310,7 +310,7 @@ function cardEscolhaLocal()
                     $("#lblEmpresasExames").css("display", "flex");
 
                     window.scrollTo(0, 800);
-                    swal("ESCOLHA O LOCAL DE SUA PREFERÊNCIA ABAIXO E CLIQUE NELE PARA SER INFORMADO(A) DE  COMO PODERÁ REALIZAR O AGENDAMENTO.");
+                    swal("ESCOLHA O LOCAL DE SUA PREFERÊNCIA E CLIQUE PARA SER INFORMADO(A) DE  COMO PODERÁ REALIZAR O AGENDAMENTO.");
                 }
             }
         }
