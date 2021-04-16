@@ -34,7 +34,7 @@
         Interface
     </div>
 
-    <?php if($_SESSION['id'] == 1) {?>
+    <?php if($_SESSION['tipo'] == 1 || $_SESSION['tipo'] == 4) {?>
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmp"
@@ -46,7 +46,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Componentes:</h6>
                     <a onclick="clickMenu('CADASTRO DE LABORATÓRIOS')" class="collapse-item" >Cadastro</a>
-                        <a onclick="clickMenu('LISTA DE LABORATÓRIOS')" class="collapse-item" >Listagem</a>
+                    <a onclick="clickMenu('LISTA DE LABORATÓRIOS')" class="collapse-item" >Listagem</a>
             </div>
         </div>
     </li>
@@ -63,7 +63,9 @@
         <div id="collapseUse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Componentes:</h6>
-                <a onclick="clickMenu('CADASTRO DE USUARIOS')" class="collapse-item" href="#">Cadastro</a>
+                <?php if($_SESSION['tipo'] == 1) {?>
+                    <a onclick="clickMenu('CADASTRO DE USUARIOS')" class="collapse-item" href="#">Cadastro</a>
+                <?php } ?>
                 <a onclick="clickMenu('LISTA DE USUARIOS')" class="collapse-item" href="#">Listagem</a>
             </div>
         </div>

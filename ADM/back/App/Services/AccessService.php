@@ -6,14 +6,21 @@
 
     class AccessService
     {
+        public function __construct()
+        {
+            session_start();
+        }
+
         public function Login()
         {
             if(isset($_POST['email']) && isset($_POST['password'])) {
                 $login = (new Access())->login($_POST['email'], $_POST['password']);
             }
-            (new Utils())->saveSessions('login', $login);
-
-            return true;
+            if($login) {
+                (new Utils())->saveSessions('login', $login);
+                return true;
+            }
+            return false;
         }
 
         public function fastLoginClick()

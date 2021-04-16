@@ -17,9 +17,17 @@
 
         $response = call_user_func_array(array(new $service, $url[0]), $_POST);
         if($_SERVER['HTTP_HOST'] === 'localhost'){
-            header("Location:  http://localhost/pessoal/Vertreck/ADM/index.php ");
+            if($response){
+                header("Location:  http://localhost/pessoal/Vertreck/ADM/index.php");
+            } else {
+                header("Location:  http://localhost/pessoal/Vertreck/ADM/login.php?message=Usuário ou senha incorretos, ou usuário não tem permissão de acesso");
+            }
         } else {
-            header("Location:  http://vertreck1.hospedagemdesites.ws/Adm/index.php ");
+            if($response) {
+                header("Location:  http://vertreck1.hospedagemdesites.ws/Adm/index.php");
+            } else {
+                header("Location:  http://vertreck1.hospedagemdesites.ws/Adm/login.php?message=Usuário ou senha incorretos, ou usuário não tem permissão de acesso");
+            }
         }
     } catch (\Exception $e) {
         var_dump($e->getMessage());

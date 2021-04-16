@@ -25,5 +25,6 @@
         public function destroySessions()
         {
             session_destroy();
+            unset($_SESSION);
         }
     }

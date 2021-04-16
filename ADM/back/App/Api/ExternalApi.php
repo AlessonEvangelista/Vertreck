@@ -13,6 +13,7 @@
             header("content-type:application/json");
         }
 
+        /*
         public function loginUsuario()
         {
             $retorno = [ "status" => "erro",  "data" => 'Erro ao realizar login'];
@@ -50,7 +51,7 @@
 
             return json_encode($retorno);
         }
-
+        */
         public function appGetEstadoCombo()
         {
             $sql = "select estd.id, estd.nome from estados estd 
@@ -75,7 +76,7 @@
 
         public function appGetAllExame($id)
         {
-            $sql = "select e.id, e.exame, s.nome as servico from exame e inner join servico s on e.servico = s.id where s.id = :id";
+            $sql = "select e.id, e.exame, s.nome as servico from exame e inner join servico s on e.servico = s.id where s.id = :id AND e.status=1";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id);
             $stmt->execute();
@@ -90,7 +91,7 @@
 
             $sql = "select emp.id, emp.nome_fantasia as nome, emp.email, emp.endereco, emp.bairro, emp.telefone, emp.celular, emp.descricao_agenda from empresa emp 
                         inner join exame_empresa exe on emp.id = exe.empresa
-                        where exe.exame IN ({$dt[0]})  and emp.cidade = {$cidade} group by emp.id";
+                        where exe.exame IN ({$dt[0]})  AND emp.cidade = {$cidade} AND emp.status=1 group by emp.id";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -119,6 +120,7 @@
                             left join exame_empresa eemp on eemp.exame = ex.id
                             inner join empresa e on eemp.empresa = e.id
                         WHERE 
+                            s.status = 1 AND
                             e.cidade = :cidade group by s.id";
             } else {
                 $sql = "select s.id, s.nome from servico s where s.id= 11";
@@ -133,7 +135,7 @@
 
         public function appGetExameByLaboratorio($emp)
         {
-            $sql = "select ex.id, ex.exame from exame ex inner join exame_empresa exe on exe.exame = ex.id where exe.empresa = :empresa";
+            $sql = "select ex.id, ex.exame from exame ex inner join exame_empresa exe on exe.exame = ex.id where exe.empresa = :empresa AND ex.status = 1";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':empresa', $emp);
             $stmt->execute();
@@ -231,7 +233,7 @@
 
         private function getUsuarioDados($id)
         {
-            $sql = "select nome, email, cpf, data_nascimento, telefone from usuario where id = :id";
+            $sql = "select nome, email, cpf, data_nascimento, telefone from usuario where id = :id and status=1";
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id);
             $stmt->execute();

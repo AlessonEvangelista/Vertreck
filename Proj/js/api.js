@@ -292,7 +292,7 @@ function cardEscolhaLocal()
                 var data = obj.data;
 
                 if(data.length === 0) {
-                    // swal("Ops!", "Ainda não temos clinicas para esta região. Gostaria de indicar alguma? envie um e-mail para: atendimento_app@vertreck.net.br.")
+                    swal("SERVIÇO TEMPORARIAMENTE INDISPONÍVEL NESTA LOCALIDADE.", "GENTILEZA ENTRAR EM CONTATO COM A CENTRAL DE ATENDIMENTO 0800 444 0050.")
                 } else {
                     let html = "";
                     $.each(data, function (i, d) {
@@ -331,7 +331,7 @@ function cardEscolhaLocalAgendamento()
                 var data = obj.data;
 
                 if(data.length === 0) {
-                    swal("Ops!", "Ainda não temos clinicas para esta região. Gostaria de indicar alguma? envie um e-mail para: atendimento_app@vertreck.net.br.")
+                    swal("SERVIÇO TEMPORARIAMENTE INDISPONÍVEL NESTA LOCALIDADE.", "GENTILEZA ENTRAR EM CONTATO COM A CENTRAL DE ATENDIMENTO 0800 444 0050.")
                 } else {
                     $("#AppAgendamentoContainer").css("display", "block")
                     $("#lblEmpresasExames").css("display", "none");
@@ -384,8 +384,8 @@ function msgTextCard(id, msg, email, telefone, celular, rows)
                     "</div>" +
                     "<div class='col' style='padding-left: 0; padding-right: 0;'>" +
                         "<div class='px-0 pg-3 border' style='margin: 18px 0;'>" +
-                            "<button onclick='enviarParaAgenda(`"+email+"`,`"+telefone+"`,`"+celular+"`, "+rows+", "+id+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-primary'>Desejo ir nesse</button>" +
-                            "<button onclick='clearMsgTextCard("+rows+", "+id+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-danger'>Desejo escolher outro</button>" +
+                            // "<button onclick='enviarParaAgenda(`"+email+"`,`"+telefone+"`,`"+celular+"`, "+rows+", "+id+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-primary'>Desejo ir nesse</button>" +
+                            "<button onclick='clearMsgTextCard("+rows+", "+id+")' style='width: 50%; z-index: 900; float: right;' type='button' class='btn btn-danger'>Desejo escolher outro</button>" +
                         "</div>" +
                     "</div>" +
                 "</div>" +
@@ -425,7 +425,7 @@ function msgTextCardAgendamento(id, msg, email, telefone, celular, rows)
         "</div>" +
         "<div class='col' style='padding-left: 0; padding-right: 0;'>" +
         "<div class='px-0 pg-3 border' style='margin: 18px 0;'>" +
-        "<button onclick='agendamentoAppLaboratorio("+id+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-primary'>Desejo ir nesse</button>" +
+        // "<button onclick='agendamentoAppLaboratorio("+id+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-primary'>Desejo ir nesse</button>" +
         "<button onclick='clearMsgTextCardAgendamento("+rows+", "+id+")' style='width: 50%; z-index: 900;' type='button' class='btn btn-danger'>Desejo escolher outro</button>" +
         "</div>" +
         "</div>" +

@@ -22,7 +22,7 @@
 
         public function getUsuarioTipo()
         {
-            $sql = "SELECT * FROM usuario_tipo where tipo !='Administrador'";
+            $sql = "SELECT * FROM usuario_tipo where id <> 1 AND id <> 3";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -48,6 +48,15 @@
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
+        public function getUsuarioAppList()
+        {
+            $sql = "SELECT id, nome, email, cpf, telefone FROM usuario WHERE tipo = 3 AND status = 1";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
         public function getEmpresaList($status)
         {
             $sql = "SELECT e.id, et.tipo, e.nome_fantasia, e.email, e.telefone, e.celular, c.nome as cidade FROM empresa e left join cidades c on e.cidade = c.id inner join empresa_tipo et on e.tipo = et.id WHERE e.id > 1 AND e.status = {$status} order by e.id";
@@ -66,9 +75,10 @@
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
-        public function getEmpresaCombo()
+        public function getEmpresaCombo($tipo)
         {
-            $sql = "SELECT id, nome_fantasia FROM empresa WHERE id > 1 AND status = 1";
+            $tp = ( ($tipo == 4) ? "id = 1" : "id > 1 AND status = 1" );
+            $sql = "SELECT id, nome_fantasia FROM empresa WHERE ".$tp;
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -77,7 +87,9 @@
 
         public function getUsuarioList()
         {
-            $sql = "select u.id, tu.tipo, u.nome, u.email, e.nome_fantasia as empresa, u.telefone from usuario u inner join 	usuario_tipo tu on u.tipo = tu.id inner join empresa e on u.empresa = e.id";
+            $sql = "select u.id, tu.tipo, u.nome, u.email, e.nome_fantasia as empresa, u.telefone 
+                        from usuario u inner join usuario_tipo tu on u.tipo = tu.id inner join empresa e on u.empresa = e.id
+                        WHERE u.status=1";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -173,9 +185,9 @@
             $sql = "select e.id, e.nome_fantasia, e.razao_social, e.cnpj, e.email, e.endereco, e.bairro, e.descricao_agenda,
                             e.telefone, e.celular, etd.nome as estado, c.nome as cidade, t.tipo, t.id as tipoId, c.id as cidadeId, etd.id as estadoId 
                         from empresa e 
-                            inner join cidades c on e.cidade = c.id 
-                            inner join estados etd on c.estado = etd.id
-                            inner join empresa_tipo t on e.tipo = t.id
+                            left join cidades c on e.cidade = c.id 
+                            left join estados etd on c.estado = etd.id
+                            left join empresa_tipo t on e.tipo = t.id
                             where e.id = $id";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();

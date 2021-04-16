@@ -17,10 +17,11 @@
             if( (new Exames())->createServico($_POST) )
             {
                 $_SESSION['message'] = 'Serviço Cadastrado com sucesso';
-                return true;
+            } else {
+                $_SESSION['message_tipo']=3;
             }
 
-            return false;
+            return true;
         }
 
         public function createExame()
@@ -28,14 +29,17 @@
             if( (new Exames())->createExame($_POST) )
             {
                 $_SESSION['message'] = 'Exame Cadastrado com sucesso';
-                return true;
+            } else {
+                $_SESSION['message_tipo']=3;
             }
-            return false;
+
+            return true;
         }
 
         public function setarEmpresa()
         {
             $_SESSION['pagina_back'] = 'EMPRESA EXAME';
+            $_SESSION['message'] = 'Ocorreu algum erro no cadastro de Exame para empresa.';
             $data = [
                 "empresa" => $_POST["pgEmpresaExameEmpresa"],
                 "exame" => $_POST["pgEmpresaExameExame"]
@@ -44,8 +48,10 @@
             if( (new Exames())->setEmpresa($data) )
             {
                 $_SESSION['message'] = "Cadastro Exame para empresa. Realizado com sucesso";
-                return true;
+            } else {
+                $_SESSION['message_tipo']=3;
             }
-            return false;
+
+            return true;
         }
     }

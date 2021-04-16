@@ -14,8 +14,14 @@
 
     if( isset($_SESSION['message']) && $_SESSION['message'] != NULL )
     {
-        echo "<div class='alert alert-success' role='alert'> ". $_SESSION['message'] ." </div> ";
-        $_SESSION['message'] = null;
+        $class = "success";
+        if( isset($_SESSION['message_tipo']) ) {
+            $class = "danger";
+            unset($_SESSION['message_tipo']);
+        }
+
+        echo "<div class='alert alert-{$class}' role='alert'> ". $_SESSION['message'] ." </div> ";
+        unset($_SESSION['message']);
     }
 ?>
 <!DOCTYPE html>
@@ -39,6 +45,7 @@
 
   <!-- Custom styles for this template-->
   <link href="public/css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="public/css/main.css" rel="stylesheet">
 
 </head>
 
@@ -49,11 +56,8 @@
 
     <?php require_once "menu.php"; ?>
 
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-
         <!-- Main Content -->
-        <div id="content">
+        <div id="content" style="width: 100%;">
 
             <?php require_once "header.php"; ?>
 
@@ -84,22 +88,17 @@
 
         </div>
         <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-            <div class="container my-auto">
-                <div class="copyright text-center my-auto">
-                    <span>Copyright &copy; <a href="https://www.linkedin.com/in/alesson-evangelista-9393b931/" target="_blank">AlessonEvangelista</a> / Vertreck <?= date("Y") ?></span>
-                </div>
-            </div>
-        </footer>
-        <!-- End of Footer -->
-
-    </div>
-    <!-- End of Content Wrapper -->
-
 </div>
 <!-- End of Page Wrapper -->
+<!-- Footer -->
+<footer class="sticky-footer bg-white" style="background-color: #224abe !important;color: #cdcdcd;">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>Copyright &copy; <a href="https://www.linkedin.com/in/alesson-evangelista-9393b931/" target="_blank">AlessonEvangelista</a> / Vertreck <?= date("Y") ?></span>
+        </div>
+    </div>
+</footer>
+<!-- End of Footer -->
 
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
@@ -174,23 +173,19 @@
     });
     // _____ FIM EMPRESA
     // USUARIO
-    $('#sltUsuarioTipo').focus(function() {
-        if(typeof $('#sltUsuarioTipo option:selected').val() === 'undefined') {
-            getTipos("sltUsuarioTipo", "Usuario");
-        }
+    $('#sltUsuarioTipo').ready(function () {
+        getTipos("sltUsuarioTipo", "Usuario");
     });
 
-    $('#sltUsuarioEmpresa').focus(function() {
-        if(typeof $('#sltUsuarioEmpresa option:selected').val() === 'undefined') {
-            getEmpresaCombo("sltUsuarioEmpresa");
-        }
+    $('#sltUsuarioTipo').change(function () {
+        getEmpresaCombo($('#sltUsuarioTipo').val(), "sltUsuarioEmpresa");
     });
     // _______ FIM USUARIO
     // SERVICOS/EXAMES
 
     $('#sltServicoEmpresa').focus(function() {
         if(typeof $('#sltServicoEmpresa option:selected').val() === 'undefined') {
-            getEmpresaCombo("sltServicoEmpresa");
+            getEmpresaCombo("", "sltServicoEmpresa");
         }
     });
 
@@ -204,10 +199,8 @@
         getExameCombo("mdlSltAgendamentoExame", document.getElementById('mdlAgendaEmpresaExame').value);
     });
 
-    $('#pgEmpresaExameEmpresa').focus(function() {
-        if(typeof $('#pgEmpresaExameEmpresa option:selected').val() === 'undefined') {
-            getEmpresaCombo("pgEmpresaExameEmpresa");
-        }
+    $('#pgEmpresaExameEmpresa').ready(function() {
+        getEmpresaCombo("", "pgEmpresaExameEmpresa");
     });
 
     $("#pgEmpresaExameServico").change(function () {
@@ -218,7 +211,7 @@
     // AGENDA
     $('#pgAgendaEmpresa').focus(function() {
         // if(typeof $('#pgAgendaEmpresa option:selected').val() === 'undefined') {
-            getEmpresaCombo("pgAgendaEmpresa");
+            getEmpresaCombo("", "pgAgendaEmpresa");
         // }
     });
 
@@ -327,4 +320,8 @@
 
 </script>
 
+<?php
+    unset($_SESSION['page']);
+    unset($_SESSION['pagina_back']);
+?>
 </html>

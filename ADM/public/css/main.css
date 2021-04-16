@@ -1,0 +1,11 @@
+.btn-group > button {
+    text-align: left;
+    border: 1px solid #cdcdcd;
+    padding: 6px 10px;
+}
+
+.multiselect-container.dropdown-menu.show {
+    max-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}

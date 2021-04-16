@@ -15,6 +15,10 @@
                             echo "<h6 class='m-0 font-weight-bold text-primary' style='float: left;'> {$page} </h6>";
                             echo "<a data-bs-toggle='modal' data-bs-target='#ModalEmpresasExcluidas' onclick='empresasExcluidas()'> <h6 class='font-weight-bold text-primary' style='float: right; cursor: pointer; margin: 0px 15px;'> Laboratórios excluídos </h6> </a>";
                             break;
+                        case 'LISTA DE USUARIOS' :
+                            echo "<h6 class='m-0 font-weight-bold text-primary' style='float: left;'> {$page} </h6>";
+                            echo "<a data-bs-toggle='modal' data-bs-target='#ModalUsuariosApp' onclick='listaUsuariosApp()'> <h6 class='font-weight-bold text-primary' style='float: right; cursor: pointer; margin: 0px 15px;'> USUÁRIOS DO APP </h6> </a>";
+                            break;
                         default:
                             echo "<h6 class='m-0 font-weight-bold text-primary'> {$page} </h6>";
                             break;
@@ -106,7 +110,7 @@
                                     <div class="form-row">
                                         <div class="form-group col-md-12">
                                             <label for="descricaoAgenda">MENSAGEM AGENDA USUÁRIO</label>
-                                            <input type="text" name="descricao_agenda" class="form-control" id="descricaoAgenda" value="Para você ser atendido nesse local, você vai precisar agendar seu atendimento. Abaixo telefones e email para que possa combinar o melhor dia e horário." >
+                                            <input type="text" name="descricao_agenda" class="form-control" id="descricaoAgenda" value="Para atendimento nesse local será necessário agendamento prévio. Entre em contato com um dos canais de atendimento relacionados acima." >
                                         </div>
                                     </div>
 
@@ -414,6 +418,7 @@
             enableFiltering: true,
             enableCaseInsensitiveFiltering: true,
             buttonWidth:'100%',
+            nSelectedText: 'selecione.',
             nonSelectedText: 'selecione...'
         });
     }
@@ -429,10 +434,19 @@
 
                     if (obj != null) {
                         var data = obj.data;
-                        selectbox.find('option').remove();
+                        selectbox.multiselect('destroy');
+                        let params = [{label: "Selecione...", value: 0}];
                         $.each(data, function (i, d) {
-                            $('<option>').val(d.id).text(d.tipo).appendTo(selectbox);
+                            params.push({ label: d.tipo, value: d.id});
                         });
+                        selectbox.multiselect({
+                            nableFiltering: true,
+                            enableCaseInsensitiveFiltering: true,
+                            buttonWidth:'100%',
+                            nSelectedText: 'selecione.',
+                            nonSelectedText: 'selecione...'
+                        });
+                        selectbox.multiselect('dataprovider', params);
                     }
                 }
 
@@ -491,26 +505,36 @@
         }
     }
 
-    function getEmpresaCombo(select)
+    function getEmpresaCombo(tipo, select)
     {
         var selectbox = $('#'+select);
 
-        if( selectbox.find('option').length === 0 || ( (selectbox.find('option').length === 0) === (select !== 'pgAgendaEmpresa') ) ) {
+        // if( selectbox.find('option').length === 0 || ( (selectbox.find('option').length === 0) === (select !== 'pgAgendaEmpresa') ) ) {
             $.ajax({
-                url: "back/api.php?url=Combo/getEmpresaCombo",
+                url: "back/api.php?url=Combo/getEmpresaCombo/" + tipo,
                 method: "post",
                 success: function (obj) {
                     if (obj != null) {
-                        var data = obj.data;
-                        selectbox.find('option').remove();
+                        let data = obj.data;
+
+                        selectbox.multiselect('destroy');
+                        let params = [{label: "Selecione...", value: 0}];
 
                         $.each(data, function (i, d) {
-                            $('<option>').val(d.id).text(d.nome_fantasia).appendTo(selectbox);
+                            params.push({ label: d.nome_fantasia, value: d.id});
                         });
+                        selectbox.multiselect({
+                            nableFiltering: true,
+                            enableCaseInsensitiveFiltering: true,
+                            buttonWidth:'100%',
+                            nSelectedText: 'selecione.',
+                            nonSelectedText: 'selecione...'
+                        });
+                        selectbox.multiselect('dataprovider', params);
                     }
                 }
             });
-        }
+        // }
     }
 
     function getEmpresaList()
@@ -695,11 +719,21 @@
 
                 if (obj != null) {
                     var data = obj.data;
-                    selectbox.find('option').remove();
+
+                    selectbox.multiselect('destroy');
+                    let params = [{label: "Selecione...", value: 0}];
 
                     $.each(data, function (i, d) {
-                        $('<option>').val(d.id).text(d.nome).appendTo(selectbox);
+                        params.push({ label: d.nome, value: d.id});
                     });
+                    selectbox.multiselect({
+                        nableFiltering: true,
+                        enableCaseInsensitiveFiltering: true,
+                        buttonWidth:'100%',
+                        nSelectedText: 'selecione.',
+                        nonSelectedText: 'selecione...'
+                    });
+                    selectbox.multiselect('dataprovider', params);
                 }
             }
         });
@@ -936,6 +970,46 @@
         });
     }
 
+    let listaUsuariosAppModal=null;
+    function listaUsuariosApp()
+    {
+        listaUsuariosAppModal = new bootstrap.Modal(document.getElementById('ModalListaUsuariosApp'));
+        listaUsuariosAppModal.show();
+
+        let trHTML;
+        $.ajax({
+            url: "back/api.php?url=Combo/getUsuarioAppList",
+            method: "get",
+            success: function (obj) {
+                if (obj != null) {
+                    var data = obj.data;
+
+                    $.each(data, function (i, d) {
+                        $.each(Object.keys(d), function (x, y) {
+                            if(data[i][y] === null || data[i][y] === "") {
+                                data[i][y] = "---";
+                            }
+                        })
+                        trHTML += '' +
+                            '<tr> ' +
+                            '<td>' + data[i].id + '</td>' +
+                            '<td>' + data[i].nome + '</td>' +
+                            '<td>' + data[i].email + '</td>' +
+                            '<td>' + data[i].cpf.substr( 0, 3 ) + ' ... ' + data[i].cpf.substr( data[i].cpf.length - 3, 3 ) + '</td>' +
+                            '<td>' + data[i].telefone + '</td> ' +
+                            // '<td> <button type="button" class="btn btn-sm btn-outline-success" onclick="showAgendaModal('+data[i].id+', `'+data[i].nome_fantasia+'`)"> Definir Agenda</button> </td> ' +
+                            '<td> ' +
+                            // '<button type="button" class="btn btn-sm btn-outline-success" onclick="ativarEmpresa('+data[i].id+')">Ativar empresa</button> ' +
+                                ' -- ' +
+                            '</td> ' +
+                            '</tr>';
+                    });
+                    $('#tableListTbodyUsuarioApp').empty().append(trHTML);
+                }
+            }
+        });
+    }
+
     function ativarEmpresa(id)
     {
         if (window.confirm("Tem certeza que reativar este registro?")) {
@@ -1069,6 +1143,7 @@
     function closeAgendaModal() { if(AgendaModal !== null) { AgendaModal.hide() }}
     function closeEditarModal() { if(modal !== null) { modal.hide() }}
     function closeEmpresasExcluidasModal() { if(empresasExcluidasModal !== null) { empresasExcluidasModal.hide() }}
+    function closeListaUsuariosApp() { if(listaUsuariosAppModal !== null) { listaUsuariosAppModal.hide() }}
 
 </script>
 
@@ -1309,6 +1384,36 @@
                     </tr>
                     </thead>
                     <tbody id="tableListTbodyEmpresasExcluidas">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- LISTA DE USUÁRIOS APP -->
+<div class="modal fade" id="ModalListaUsuariosApp" tabindex="-1" role="dialog" aria-labelledby="ModalListaUsuariosApp" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" > Lista Usuários do App</h5>
+                <a id="CloseAgendaModal" style="cursor: pointer;" onclick="closeListaUsuariosApp()"> X </a>
+            </div>
+            <div class="modal-body">
+                <table class="table table-sm" id="tableListUsuarioApp" >
+                    <thead class="thead-dark" >
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Cpf</th>
+                        <th scope="col">Telefone</th>
+                        <!-- <th scope="col">Agenda</th>-->
+                        <th scope="col">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableListTbodyUsuarioApp">
 
                     </tbody>
                 </table>

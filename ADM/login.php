@@ -60,9 +60,10 @@
                                     <hr>
 
                                         <?php
-                                            if (isset($_SESSION['message'])){
+                                            $message = ( isset($_SESSION['message']) ? $_SESSION['message'] : isset($_GET['message']) ? $_GET['message'] : "" );
+                                            if ($message){
                                                 echo "<div class='alert alert-danger' role='alert'>";
-                                                echo $_SESSION['message'];
+                                                    echo $message;
                                                 echo "</div>";
                                             }
                                         ?>

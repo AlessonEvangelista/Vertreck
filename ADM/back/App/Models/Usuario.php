@@ -19,19 +19,15 @@ class Usuario extends Sql
             if($data['senha']) {
                 $data['senha'] = (new Utils())->encrypt($data['senha']);
             }
-            $sql = "INSERT INTO usuario (tipo, empresa, cpf, nome, email, telefone, data_nascimento, senha) 
-                                VALUES(:tipo, :empresa, :cpf, :nome, :email, :telefone, :data_nascimento, :senha)";
+            $sql = "INSERT INTO usuario (tipo, empresa, cpf, nome, email, telefone, data_nascimento, senha, status) 
+                                VALUES(:tipo, :empresa, :cpf, :nome, :email, :telefone, :data_nascimento, :senha, 1)";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($data);
 
-            $_SESSION['message'] = 'Usuário Cadastrado com sucesso';
-            if (!$stmt->rowCount()) {
-                throw new \Exception("Ocorreu algum erro ao cadastrar. teste novamente mais tarde!");
-                $_SESSION['message'] = 'Ocorreu algum erro ao cadastrar. teste novamente mais tarde!';
+            if ($stmt->rowCount() > 0) {
+                return true;
             }
-
-            return $stmt->rowCount();
         }
         return false;
     }

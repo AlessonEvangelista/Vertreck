@@ -15,15 +15,14 @@
             $pass_hash = (new Utils())->encrypt($passwd);
 
             $sql = "SELECT 
-                        u.id, u.nome, u.email, u.telefone, u.data_nascimento, e.nome_fantasia, t.tipo 
+                        u.id, u.nome, u.email, u.telefone, u.data_nascimento, e.nome_fantasia, t.id as tipo
                     FROM usuario u inner join empresa e on u.empresa = e.id inner join usuario_tipo t on u.tipo = t.id 
-                    WHERE u.email = :email AND u.senha = :pwd";
+                    WHERE u.email = :email AND u.senha = :pwd AND u.tipo <> 3 AND u.status = 1";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':email', $email);
             $stmt->bindValue(':pwd', $pass_hash);
             $stmt->execute();
-
 
             if($stmt->rowCount() > 0)
                 return $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -34,7 +33,7 @@
         public function fastLogin($cpf)
         {
             $sql = "select id, nome, email from usuario
-                            WHERE cpf = :cpf";
+                            WHERE cpf = :cpf AND status=1";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':cpf', $cpf);
@@ -49,8 +48,8 @@
 
         public function createUsuario($data)
         {
-            $sql = "INSERT INTO usuario (nome, email, cpf, telefone, data_nascimento, estado, cidade, genero, empresa, tipo) 
-                        VALUES (:nome, :email, :cpf, :telefone, :data_nascimento, :estado, :cidade, :genero, :empresa, :tipo)";
+            $sql = "INSERT INTO usuario (nome, email, cpf, telefone, data_nascimento, estado, cidade, genero, empresa, tipo, status) 
+                        VALUES (:nome, :email, :cpf, :telefone, :data_nascimento, :estado, :cidade, :genero, :empresa, :tipo, 1)";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($data);

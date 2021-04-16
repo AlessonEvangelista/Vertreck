@@ -16,7 +16,7 @@ class Exames extends Sql
 
         if($valid) {
 
-            $sql = "INSERT INTO servico (nome) VALUES(:nome)";
+            $sql = "INSERT INTO servico (nome, status) VALUES(:nome, 1)";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($data);
@@ -34,7 +34,7 @@ class Exames extends Sql
 
         if($valid) {
 
-            $sql = "INSERT INTO exame (servico, exame, preco_unit, preco_parc) VALUES(:servico, :exame, :preco_unit, :preco_parc)";
+            $sql = "INSERT INTO exame (servico, exame, preco_unit, preco_parc, status) VALUES(:servico, :exame, :preco_unit, :preco_parc, 1)";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($data);
