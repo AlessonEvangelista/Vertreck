@@ -29,47 +29,48 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Interface
-    </div>
-
     <?php if($_SESSION['tipo'] == 1 || $_SESSION['tipo'] == 4) {?>
-    <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmp"
-           aria-expanded="true" aria-controls="collapseEmp">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Laboratórios</span>
-        </a>
-        <div id="collapseEmp" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Componentes:</h6>
-                    <a onclick="clickMenu('CADASTRO DE LABORATÓRIOS')" class="collapse-item" >Cadastro</a>
-                    <a onclick="clickMenu('LISTA DE LABORATÓRIOS')" class="collapse-item" >Listagem</a>
-            </div>
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Interface
         </div>
-    </li>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUse"
-           aria-expanded="true" aria-controls="collapseUse">
-            <i class="fas fa-fw fa-cog"></i>
-            <span>Usuários</span>
-        </a>
-        <div id="collapseUse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Componentes:</h6>
-                <?php if($_SESSION['tipo'] == 1) {?>
-                    <a onclick="clickMenu('CADASTRO DE USUARIOS')" class="collapse-item" href="#">Cadastro</a>
-                <?php } ?>
-                <a onclick="clickMenu('LISTA DE USUARIOS')" class="collapse-item" href="#">Listagem</a>
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEmp"
+               aria-expanded="true" aria-controls="collapseEmp">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Laboratórios</span>
+            </a>
+            <div id="collapseEmp" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Componentes:</h6>
+                        <a onclick="clickMenu('CADASTRO DE LABORATÓRIOS')" class="collapse-item" >Cadastro</a>
+                        <a onclick="clickMenu('LISTA DE LABORATÓRIOS')" class="collapse-item" >Listagem</a>
+                </div>
             </div>
-        </div>
-    </li>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUse"
+               aria-expanded="true" aria-controls="collapseUse">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Usuários</span>
+            </a>
+            <div id="collapseUse" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Componentes:</h6>
+                    <?php if($_SESSION['tipo'] == 1) {?>
+                        <a onclick="clickMenu('CADASTRO DE USUARIOS')" class="collapse-item" href="#">Cadastro</a>
+                    <?php } ?>
+                    <a onclick="clickMenu('LISTA DE USUARIOS')" class="collapse-item" href="#">Listagem</a>
+                </div>
+            </div>
+        </li>
+    <?php } ?>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -83,13 +84,32 @@
         <div id="collapseSer" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Componentes:</h6>
-                <a onclick="clickMenu('CADASTRO SERVICOS')" class="collapse-item" href="#">Cadastro</a>
-                <a onclick="clickMenu('LISTA DE SERVICOS')" class="collapse-item" href="#">Listagem</a>
-                <a onclick="clickMenu('EMPRESA EXAME')" class="collapse-item" href="#">Vincular Exame</a>
+                <?php if($_SESSION['tipo'] == 1 || $_SESSION['tipo'] == 4) { ?>
+                    <a onclick="clickMenu('CADASTRO SERVICOS')" class="collapse-item" href="#">Cadastro</a>
+                    <a onclick="clickMenu('LISTA DE SERVICOS')" class="collapse-item" href="#">Listagem</a>
+                    <a onclick="clickMenu('EMPRESA EXAME')" class="collapse-item" href="#">Vincular Exame</a>
+                <?php } ?>
+                <a onclick="clickMenu('EXAME PRECO')" class="collapse-item" href="#">Exame Preço</a>
             </div>
         </div>
     </li>
-    <?php } ?>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFinance"
+           aria-expanded="true" aria-controls="collapseFinance">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Financeiro</span>
+        </a>
+        <div id="collapseFinance" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Exames:</h6>
+                <a onclick="clickMenu('BAIXA EM EXAMES')" class="collapse-item" href="#">Baixa em Exames</a>
+            </div>
+        </div>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">

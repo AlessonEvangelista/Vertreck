@@ -18,7 +18,7 @@
                 $_SESSION['message'] = 'É necessário estar logado para realizar essa ação';
                 return false;
             }
-            if( $_SESSION['tipo'] !== "Administrador" ) {
+            if( $_SESSION['tipo'] !== "1" && $_SESSION['tipo'] !== "4" ) {
                 $_SESSION['message'] = 'É necessário ser Administrador para realizar essa ação';
                 return false;
             }

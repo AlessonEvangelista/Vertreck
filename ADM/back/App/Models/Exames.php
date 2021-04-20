@@ -34,7 +34,7 @@ class Exames extends Sql
 
         if($valid) {
 
-            $sql = "INSERT INTO exame (servico, exame, preco_unit, preco_parc, status) VALUES(:servico, :exame, :preco_unit, :preco_parc, 1)";
+            $sql = "INSERT INTO exame (servico, exame, preco_coleta, preco_entrega, preco_petrobras, status) VALUES(:servico, :exame, :preco_coleta, :preco_entrega, :preco_petrobras, 1)";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($data);
@@ -57,7 +57,11 @@ class Exames extends Sql
                     $stmt = $this->conn->prepare($sql);
                     $stmt->execute();
                     if($stmt->rowCount() === 0) {
-                        $sql = "INSERT INTO exame_empresa (exame, empresa) VALUES($item, " . $data['empresa'] . ")";
+                        $sql = "SELECT preco_coleta, preco_entrega FROM exame WHERE id={$item}";
+                        $stmt = $this->conn->prepare($sql);
+                        $stmt->execute();
+                        $query = $stmt->fetch(\PDO::FETCH_ASSOC);
+                        $sql = "INSERT INTO exame_empresa (exame, empresa, preco_coleta, preco_entrega) VALUES({$item}, '{$data['empresa']}', '{$query['preco_coleta']}', '{$query['preco_entrega']}')";
 
                         $stmt = $this->conn->prepare($sql);
                         $stmt->execute();

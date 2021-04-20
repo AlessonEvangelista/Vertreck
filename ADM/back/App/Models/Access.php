@@ -15,7 +15,7 @@
             $pass_hash = (new Utils())->encrypt($passwd);
 
             $sql = "SELECT 
-                        u.id, u.nome, u.email, u.telefone, u.data_nascimento, e.nome_fantasia, t.id as tipo
+                        u.id, u.nome, u.email, u.telefone, u.data_nascimento,e.id empresa, e.nome_fantasia, t.id as tipo
                     FROM usuario u inner join empresa e on u.empresa = e.id inner join usuario_tipo t on u.tipo = t.id 
                     WHERE u.email = :email AND u.senha = :pwd AND u.tipo <> 3 AND u.status = 1";
 

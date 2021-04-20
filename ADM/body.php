@@ -24,7 +24,6 @@
                             break;
                     }
                 ?>
-
             </div>
             <div class="card-body">
                 <?php
@@ -260,14 +259,20 @@
                                                 </div>
                                             </div>
                                             <div class="form-row">
-                                                <div class="form-group col-md-3">
-                                                    <label for="Servicoprecobruto">PREÇO UNITARIO</label>
-                                                    <input name="preco_unit" type="text" class="form-control" id="Servicoprecobruto" placeholder="R$ 250,00">
+                                                <div class="form-group col-md-4">
+                                                    <label for="Servicoprecobruto">PREÇO COLETA</label>
+                                                    <input name="preco_coleta" type="text" class="form-control" id="Servicoprecobruto" placeholder="R$ 250,00" onKeyPress="return(moeda(this,'.',',',event))">
                                                 </div>
-                                                <div class="form-group col-md-3">
+                                                <div class="form-group col-md-4">
                                                     <div class="form-group">
-                                                        <label for="Servicoprecoliquido">PREÇO PARCIAL</label>
-                                                        <input name="preco_parc" type="text" class="form-control" id="Servicoprecoliquido" placeholder="R$ 250,00">
+                                                        <label for="Servicoprecoentrega">PREÇO ENTREGA DE EXAME</label>
+                                                        <input name="preco_entrega" type="text" class="form-control" id="Servicoprecoentrega" placeholder="R$ 250,00" onKeyPress="return(moeda(this,'.',',',event))">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="Servicoprecopetrobras">PREÇO PETROBRAS</label>
+                                                        <input name="preco_petrobras" type="text" class="form-control" id="Servicoprecopetrobras" placeholder="R$ 250,00" onKeyPress="return(moeda(this,'.',',',event))">
                                                     </div>
                                                 </div>
                                             </div>
@@ -299,8 +304,8 @@
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Exame</th>
-                                            <th scope="col">Preço Unit.</th>
-                                            <th scope="col">Preço Parc.</th>
+                                            <th scope="col">Preço Coleta</th>
+                                            <th scope="col">Preço Entrega</th>
                                             <th scope="col">Ações</th>
                                         </tr>
                                         </thead>
@@ -358,6 +363,51 @@
                                 </div>
                             <?php
                             break;
+                        case 'EXAME PRECO':
+                            ?>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <?php if($_SESSION['tipo'] == 1 || $_SESSION['tipo'] == 4) { ?>
+                                        <h5>Adm selecione uma empresa abaixo: </h5>
+                                        <div class="input-group">
+                                                <select id="idEmpresaExamePreco" name="idEmpresaExamePreco"></select>
+                                        </div>
+                                    <?php } else { ?>
+                                        <h5>
+                                            Selecione os serviços que prestará para os usuários da Petrobrás <br>
+                                            caso queira prestar alguns dos serviços abaixo e não concorde com os valores,<br>
+                                            entre em contato o telefone para negociar: <a href="tel:08004440050" style="text-decoration: none;">0800 444 0050</a>
+                                        </h5>
+                                    <?php } ?>
+                                </div>
+                                <hr class="sidebar-divider">
+                                <div style="width: 440px; justify-content: center; position: absolute; right: 0; top: 0;">
+                                    <button type="button" class="btn btn-success" style="background-color: green;"></button> <label>Exames habilitados</label>
+                                    <button type="button" class="btn btn-primary"></button> <label>Habilitando</label>
+                                    <button type="button" class="btn btn-secondary"></button> <label>Não habilitados</label>
+                                </div>
+                                <div class="row" >
+                                    <table class="table table-sm table-striped table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <td style="font-size: 18px; font-weight: 800; background-color: #888888; color: #fff; border-color: #fff">SERVICOS</td>
+                                                <td style="font-size: 18px; font-weight: 800; background-color: #888888; color: #fff; border-color: #fff">EXAMES</td>
+                                                <td style="font-size: 18px; font-weight: 800; background-color: #888888; color: #fff; border-color: #fff" colspan="2">COLETAR </td>
+                                                <td style="font-size: 18px; font-weight: 800; background-color: #888888; color: #fff; border-color: #fff" colspan="2">ENTREGAR O EXAME</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tblExamePreco">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+
+                                </div>
+                            </div>
+                            <?php
+                            break;
                         case 'AGENDAS':
                             ?>
                                 <div class="col-md-12">
@@ -395,6 +445,8 @@
                                 </div>
                             <?php
                             break;
+                        case 'BAIXA EM EXAMES':
+                            break;
                     }
                 ?>
             </div>
@@ -414,13 +466,6 @@
             }
         ?>
 
-        $('#pgEmpresaExameExame').multiselect({
-            enableFiltering: true,
-            enableCaseInsensitiveFiltering: true,
-            buttonWidth:'100%',
-            nSelectedText: 'selecione.',
-            nonSelectedText: 'selecione...'
-        });
     }
 
     function getTipos(select, service)
@@ -684,8 +729,8 @@
                         trHTML += '<tr> ' +
                             '<td>' + data[i].id + '</td>' +
                             '<td>' + data[i].exame + '</td>' +
-                            '<td>' + data[i].preco_unit + '</td>' +
-                            '<td>' + data[i].preco_parc + '</td>' +
+                            '<td>' + data[i].preco_coleta + '</td>' +
+                            '<td>' + data[i].preco_entrega + '</td>' +
                             '<td> <button class="btn btn-danger" style="float: left; " onclick="deletarExame(' + id + ', ' + data[i].id + ')"> deletar </button> </td>' +
                             '</tr>';
                     });
@@ -1144,6 +1189,158 @@
     function closeEditarModal() { if(modal !== null) { modal.hide() }}
     function closeEmpresasExcluidasModal() { if(empresasExcluidasModal !== null) { empresasExcluidasModal.hide() }}
     function closeListaUsuariosApp() { if(listaUsuariosAppModal !== null) { listaUsuariosAppModal.hide() }}
+
+    function idEmpresaExamePreco()
+    {
+        var selectbox = $('#idEmpresaExamePreco');
+        $.ajax({
+            url: "back/api.php?url=Combo/getAllEmpresaList/1",
+            method: "post",
+            success: function (obj) {
+                if (obj != null) {
+                    let data = obj.data;
+                    selectbox.multiselect('destroy');
+
+                    let params=[]
+                    $.each(data, function (i, d) {
+                        params.push({ label: d.nome_fantasia, value: d.id});
+                    });
+                    selectbox.multiselect({
+                        enableFiltering: true,
+                        enableCaseInsensitiveFiltering: true,
+                        buttonWidth:'100%',
+                        nonSelectedText: 'selecione...'
+                    });
+                    selectbox.multiselect('dataprovider', params);
+                }
+            }
+        });
+    }
+
+    function getAllExamePreco(empresa = null)
+    {
+        $.ajax({
+            url: "back/api.php?url=Combo/getAllExamePreco",
+            method: "POST",
+            data: {
+                'empresa': empresa
+            },
+            success: function(obj) {
+                if ( obj != null )
+                {
+                    let table ="";
+                    let data = obj.data;
+
+                    $.each(data, function (i, d) {
+                        let inputCheckColeta = "";
+                        let inputCheckEntrega = "";
+
+                        if(data[i].precoColetaHabilitado > 0.00) {
+                            inputCheckColeta = '<input class="form-check-input" type="checkbox" checked onchange="vinculoEmpresaExamePreco(1, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_coleta + ' )" name=`checked_exame_' + data[i].idExame + '` id="checked_coleta_' + data[i].idExame + '">';
+                            inputCheckColeta += '<span class="slider round" id="checkboxSliderColeta_'+data[i].idExame+'" style="background-color: green;"></span>';
+                        } else {
+                            inputCheckColeta = '<input class="form-check-input" type="checkbox" onchange="vinculoEmpresaExamePreco(1, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_coleta + ' )" name=`checked_exame_' + data[i].idExame + '` id="checked_coleta_' + data[i].idExame + '">';
+                            inputCheckColeta += '<span class="slider round" id="checkboxSliderColeta_'+data[i].idExame+'"></span>';
+                        }
+                        if(data[i].precoEntregaHabilitado > 0.00) {
+                            inputCheckEntrega = '<input class="form-check-input" type="checkbox" checked onchange="vinculoEmpresaExamePreco(2, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_entrega + ' )" name=`checked_entrega_' + data[i].idExame + '` id="checked_entrega_' + data[i].idExame + '">';
+                            inputCheckEntrega += '<span class="slider round" id="checkboxSliderEntrega_'+data[i].idExame+'" style="background-color: green;"></span>';
+                        } else {
+                            inputCheckEntrega = '<input class="form-check-input" type="checkbox" onchange="vinculoEmpresaExamePreco(2, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_entrega + ' )" name=`checked_entrega_' + data[i].idExame + '` id="checked_entrega_' + data[i].idExame + '">';
+                            inputCheckEntrega += '<span class="slider round" id="checkboxSliderEntrega_'+data[i].idExame+'"></span>';
+                        }
+                        if( (data[i].precoColetaHabilitado === '0.00') && (data[i].precoEntregaHabilitado === '0.00') && (data[i].exameEmpresa != null) )
+                        {
+                            inputCheckColeta = '<input class="form-check-input" type="checkbox" checked onchange="vinculoEmpresaExamePreco(1, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_coleta + ' )" name=`checked_exame_' + data[i].idExame + '` id="checked_coleta_' + data[i].idExame + '">';
+                            inputCheckColeta += '<span class="slider round" id="checkboxSliderColeta_'+data[i].idExame+'" style="background-color: green;"></span>';
+
+                            inputCheckEntrega = '<input class="form-check-input" type="checkbox" checked onchange="vinculoEmpresaExamePreco(2, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_entrega + ' )" name=`checked_entrega_' + data[i].idExame + '` id="checked_entrega_' + data[i].idExame + '">';
+                            inputCheckEntrega += '<span class="slider round" id="checkboxSliderEntrega_'+data[i].idExame+'" style="background-color: green;"></span>';
+                        }
+
+                        table += '<tr>' +
+                            '<td>' + data[i].idExame + ' - ' + data[i].servico + '</td>' +
+                            '<td>' + data[i].exame + '</td>' +
+                            '<td style="width:50px;"> <label class="switch"> ' +
+                                inputCheckColeta +
+                            ' </label> </td>' +
+                            '<td>R$ ' + data[i].preco_coleta + '</td>' +
+                            '<td style="width:50px;"> <label class="switch"> ' +
+                                inputCheckEntrega +
+                            ' </label> </td>' +
+                            '<td>R$ ' + data[i].preco_entrega + '</td>' +
+                            '</tr>';
+                    });
+                    $('#tblExamePreco').empty().append(table);
+                }
+            }
+        });
+    }
+
+    function vinculoEmpresaExamePreco(tipo, exame, empresa, preco)
+    {
+        let val = 0;
+        if(tipo === 1){
+            val = $("#checked_coleta_"+exame)
+        } else {
+            val = $("#checked_entrega_"+exame)
+        }
+
+        /* Habilitando o checkbox*/
+        if( val.is(":checked") )
+        {
+            $.ajax({
+                url: "back/api.php?url=Combo/setEmpresaExamePreco",
+                timeout: 800,
+                method: "POST",
+                data: {
+                    'tipo' : tipo,
+                    'exame': exame,
+                    'preco' : preco,
+                    'empresa': empresa
+                },
+                success: function (obj){
+                    if(obj.data ) {
+                        if(tipo === 1){
+                            $("#checkboxSliderColeta_"+exame).css("background-color", "green");
+                        } else {
+                            $("#checkboxSliderEntrega_"+exame).css("background-color", "green");
+                        }
+                    }
+                }
+            })
+        } /* desabilitando o checkbox */
+        else {
+            $.ajax({
+                url: "back/api.php?url=Combo/disEmpresaExamePreco",
+                timeout: 800,
+                method: "POST",
+                data: {
+                    'tipo' : tipo,
+                    'exame': exame,
+                    'empresa': empresa
+                },
+                success: function (obj){
+
+                    if(obj.data) {
+                        val.prop("checked", false)
+                        val.removeAttr("checked");
+
+                        if(tipo === 1){
+                            $("#checkboxSliderColeta_"+exame).css("background-color", "#ccc");
+                        } else {
+                            $("#checkboxSliderEntrega_"+exame).css("background-color", "#ccc");
+                        }
+                        getAllExamePreco(empresa);
+                    }
+                },
+                error: function (i, er) {
+                    console.log(i)
+                }
+            })
+        }
+
+    }
 
 </script>
 

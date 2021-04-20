@@ -39,9 +39,7 @@
 
   <!-- Custom fonts for this template-->
   <link href="public/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link
-          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-          rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
   <link href="public/css/sb-admin-2.min.css" rel="stylesheet">
@@ -316,6 +314,54 @@
     $("#inputEmpresaCnpj").change(function(e){
         var x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2})/);
         e.target.value = !x[2] ? x[1] : x[1] + '.' + x[2] + '.' + x[3] + '/' + x[4] + (x[5] ? '-' + x[5] : '');
+    })
+
+    function moeda(a, e, r, t) {
+        let n = ""
+        , h = j = 0
+        , u = tamanho2 = 0
+        , l = ajd2 = ""
+        , o = window.Event ? t.which : t.keyCode;
+        if (13 == o || 8 == o)
+            return !0;
+        if (n = String.fromCharCode(o),
+        -1 == "0123456789".indexOf(n))
+            return !1;
+        for (u = a.value.length,
+        h = 0; h < u && ("0" == a.value.charAt(h) || a.value.charAt(h) == r); h++)
+            ;
+        for (l = ""; h < u; h++)
+            -1 != "0123456789".indexOf(a.value.charAt(h)) && (l += a.value.charAt(h));
+        if (l += n,
+        0 == (u = l.length) && (a.value = ""),
+        1 == u && (a.value = "0" + r + "0" + l),
+        2 == u && (a.value = "0" + r + l),
+        u > 2) {
+            for (ajd2 = "",
+            j = 0,
+            h = u - 3; h >= 0; h--)
+                3 == j && (ajd2 += e,
+                j = 0),
+                ajd2 += l.charAt(h),
+                j++;
+            for (a.value = "",
+            tamanho2 = ajd2.length,
+            h = tamanho2 - 1; h >= 0; h--)
+                a.value += ajd2.charAt(h);
+            a.value += r + l.substr(u - 2, u)
+        }
+        return !1
+    }
+
+    $("#tblExamePreco").ready(function() {
+        getAllExamePreco();
+        <?php if($_SESSION['tipo']) { ?>
+        idEmpresaExamePreco();
+        <?php } ?>
+    });
+
+    $("#idEmpresaExamePreco").change(function() {
+        getAllExamePreco($("#idEmpresaExamePreco").val());
     })
 
 </script>

@@ -116,7 +116,7 @@
 
         public function getExameServicoList($id = null)
         {
-            $sql = "select id, exame, preco_unit, preco_parc from exame where servico = {$id} AND status = 1";
+            $sql = "select id, exame, preco_coleta, preco_entrega from exame where servico = {$id} AND status = 1";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -195,16 +195,94 @@
             return $stmt->fetch(\PDO::FETCH_ASSOC);
         }
 
-        public function deleteEmpresa( $id = null )
+        public function getEmpresaWithExame()
         {
-            try {
-                $sql = "UPDATE empresa SET status = '0' WHERE id = '{$id}'";
-                $this->conn->exec($sql);
 
-                return json_encode(["status" => "success", "data" => "Registro excluido com sucesso"]);
-            } catch (\Exception $e)
-            {
-                return json_encode(["status" => "error", "data" => $e->getMessage()]);
+        }
+
+        public function getAllExamePreco()
+        {
+            $emp = ($_POST['empresa'] ? $_POST['empresa'] : $_SESSION['empresa']);
+            $sql = "SELECT s.id idServico,
+                        IF((select id from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id),
+                            (select id from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id), null) as exameEmpresa,
+                        IF((select 1 from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id and ee.preco_coleta <> 0.00),
+                            (select preco_coleta from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id), 0.00) as precoColetaHabilitado,
+                        IF((select 1 from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id and ee.preco_entrega <> 0.00),
+                            (select preco_entrega from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id), 0.00) as precoEntregaHabilitado,
+                        e.id idExame, s.nome servico, e.exame, e.preco_coleta, e.preco_entrega
+                        FROM exame e INNER JOIN servico s on e.servico = s.id WHERE e.status = 1";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
+        public function setEmpresaExamePreco()
+        {
+            $tipo = $_POST['tipo'];
+            $exame = $_POST['exame'];
+            $preco = $_POST['preco'];
+            $empresa = ($_POST['empresa'] ? $_POST['empresa'] : $_SESSION['empresa']);
+
+            try {
+                $sql = "SELECT id FROM exame_empresa WHERE exame=" . $exame . " AND empresa=" . $empresa;
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute();
+                if ($stmt->rowCount() === 0) {
+                    if ($tipo == 1) {
+                        $sql = "INSERT INTO exame_empresa (exame, empresa, preco_coleta) VALUES({$exame}, {$empresa}, '{$preco}')";
+                    } else {
+                        $sql = "INSERT INTO exame_empresa (exame, empresa, preco_entrega) VALUES({$exame}, {$empresa}, '{$preco}')";
+                    }
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->execute();
+
+                } else {
+                    $id = $stmt->fetch(\PDO::FETCH_ASSOC);
+                    if ($tipo == 1) {
+                        $sql = "UPDATE exame_empresa SET preco_coleta = '{$preco}' WHERE id = '{$id['id']}'";
+                    } else {
+                        $sql = "UPDATE exame_empresa SET preco_entrega = '{$preco}' WHERE id = '{$id['id']}'";
+                    }
+                    $this->conn->exec($sql);
+                }
+                return true;
+            } catch(\Exception $e) {
+                return false;
+            }
+        }
+
+        public function disEmpresaExamePreco($exame)
+        {
+            $tipo = $_POST['tipo'];
+            $exame = $_POST['exame'];
+            $empresa = ($_POST['empresa'] ? $_POST['empresa'] : $_SESSION['empresa']);
+
+            try {
+                $sql = "SELECT id, preco_coleta, preco_entrega FROM exame_empresa WHERE exame=" . $exame . " AND empresa=" . $empresa;
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute();
+                $query = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                if ($tipo == 1) {
+                    if($query['preco_entrega'] != '0.00') {
+                        $sql = "UPDATE exame_empresa SET preco_coleta = '0.00' WHERE id = '{$query['id']}'";
+                    } else {
+                        $sql = "DELETE FROM exame_empresa WHERE id ={$query['id']}";
+                    }
+                } else {
+                    if($query['preco_coleta'] != '0.00') {
+                        $sql = "UPDATE exame_empresa SET preco_entrega = '0.00' WHERE id = '{$query['id']}'";
+                    } else {
+                        $sql = "DELETE FROM exame_empresa WHERE id ={$query['id']}";
+                    }
+                }
+                $this->conn->exec($sql);
+                return true;
+
+            } catch (\Exception $e) {
+                return false;
             }
         }
 
@@ -215,6 +293,19 @@
                 $this->conn->exec($sql);
 
                 return json_encode(["status" => "success", "data" => "Registro Ativo com sucesso"]);
+            } catch (\Exception $e)
+            {
+                return json_encode(["status" => "error", "data" => $e->getMessage()]);
+            }
+        }
+
+        public function deleteEmpresa( $id = null )
+        {
+            try {
+                $sql = "UPDATE empresa SET status = '0' WHERE id = '{$id}'";
+                $this->conn->exec($sql);
+
+                return json_encode(["status" => "success", "data" => "Registro excluido com sucesso"]);
             } catch (\Exception $e)
             {
                 return json_encode(["status" => "error", "data" => $e->getMessage()]);
