@@ -446,6 +446,60 @@
                             <?php
                             break;
                         case 'BAIXA EM EXAMES':
+                            ?>
+                            <div class="col-md-12">
+                                <h5> Informe os exames realizados aos credenciados Petrobras para dar baixa nos valores. </h5>
+                                <button type="button" class="btn btn-primary" id="inforNewExame" onclick="darBaixaExame()">Dar baixa em exame</button>
+                            </div>
+                            <!-- Divider -->
+                            <hr class="sidebar-divider">
+
+                            <div class="col-md-12">
+                                <table class="table table-striped table-hover" >
+                                    <thead>
+                                        <tr>
+                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">#</td>
+                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">EXAME</td>
+                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">DATA</td>
+                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">PACIENTE</td>
+                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">COLETA</td>
+                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">ENTREGA</td>
+                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">VALOR</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>TESTE</td>
+                                            <td>05/11/2021</td>
+                                            <td>TESTE</td>
+                                            <td>X</td>
+                                            <td>X</td>
+                                            <td>100,00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>TESTE</td>
+                                            <td>05/11/2021</td>
+                                            <td>TESTE</td>
+                                            <td>X</td>
+                                            <td></td>
+                                            <td>25,00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-12">
+                                <div style="display: block; position: absolute; right: 0; width: 250px">
+                                    <h5 style="color: red;">TOTAL: R$ 125,00 </h5>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div style="display: block; position: relative; right: 0; width: 250px">
+                                    <button type="button" class="btn btn-success"> LIQUIDAR EXAMES </button>
+                                </div>
+                            </div>
+                            <?php
                             break;
                     }
                 ?>
@@ -522,32 +576,70 @@
         }
     }
 
-    function getCidade(comboEstado, comboCidade)
+    function getEstadoSelected(combo, id)
     {
-        var estado = $('#'+comboEstado);
-        var estadoSelecionado = $('#'+comboEstado).find('option:selected').val();
-
-        if (typeof estadoSelecionado === 'undefined'){
-            alert("Selecione um estado para prosseguir");
-            return;
-        }
-        var selectbox = $('#'+comboCidade);
+        console.log(id)
+        var selectbox = $('#'+combo);
         if(selectbox.find('option').length === 0) {
             $.ajax({
-                url: "back/api.php?url=Combo/getCidade/"+estadoSelecionado,
+                url: "back/api.php?url=Combo/getEstado",
                 method: "post",
                 success: function (obj) {
 
                     if (obj != null) {
                         var data = obj.data;
+
                         selectbox.find('option').remove();
                         $.each(data, function (i, d) {
-                            $('<option>').val(d.id).text(d.nome).appendTo(selectbox);
+                            if( id == d.id ) {
+                                $('<option selected >').val(d.id).text(d.nome).appendTo(selectbox);
+                            } else {
+                                $('<option>').val(d.id).text(d.nome).appendTo(selectbox);
+                            }
                         });
                     }
+
                 }
             });
         }
+    }
+
+    function getCidade(comboEstado, comboCidade, edit = null)
+    {
+        let estadoSelecionado = "";
+        var estado = $('#'+comboEstado);
+        if(estado.find('option:selected').val() !== null || estado.find('option:selected').val() != "null")
+            estadoSelecionado = estado.find('option:selected').val();
+
+        if (estadoSelecionado === 'null' && edit != null)
+            estadoSelecionado = 26;
+            
+        var selectbox = $('#'+comboCidade);
+        $.ajax({
+            url: "back/api.php?url=Combo/getCidade/"+estadoSelecionado,
+            method: "post",
+            success: function (obj) {
+
+                if (obj != null) {
+                    var data = obj.data;
+
+                    selectbox.multiselect('destroy');
+                    let params = [{label: "Selecione...", value: 0}];
+
+                    $.each(data, function (i, d) {
+                        params.push({ label: d.nome, value: d.id});
+                    });
+                    selectbox.multiselect({
+                        enableFiltering: true,
+                        enableCaseInsensitiveFiltering: true,
+                        buttonWidth:'100%',
+                        nSelectedText: 'selecione.',
+                        nonSelectedText: 'selecione...'
+                    });
+                    selectbox.multiselect('dataprovider', params);
+                }
+            }
+        });
     }
 
     function getEmpresaCombo(tipo, select)
@@ -569,7 +661,7 @@
                             params.push({ label: d.nome_fantasia, value: d.id});
                         });
                         selectbox.multiselect({
-                            nableFiltering: true,
+                            enableFiltering: true,
                             enableCaseInsensitiveFiltering: true,
                             buttonWidth:'100%',
                             nSelectedText: 'selecione.',
@@ -1055,6 +1147,13 @@
         });
     }
 
+    let ModalDarBaixaExame=null
+    function darBaixaExame()
+    {
+        ModalDarBaixaExame = new bootstrap.Modal(document.getElementById('ModalDarBaixaExame'));
+        ModalDarBaixaExame.show();
+    }
+
     function ativarEmpresa(id)
     {
         if (window.confirm("Tem certeza que reativar este registro?")) {
@@ -1154,15 +1253,39 @@
                 '<div class="form-row">'+
                     '<div class="form-group col-md-4">'+
                         '<label for="mdlUpdateEmpresaEstado">Estado</label>'+
-                        '<select name="estado" id="mdlUpdateEmpresaEstado" class="form-control" required>' +
+                        '<select name="estado" id="mdlUpdateEmpresaEstado" onchange="mdlEmpresaCidade()" class="form-control" required>' +
+                            '<option value="1"  > Acre </option> ' +
+                            '<option value="2"  > Alagoas </option> ' +
+                            '<option value="3"  > Amazonas </option> ' +
+                            '<option value="4"  > Amapá </option> ' +
+                            '<option value="5"  > Bahia </option> ' +
+                            '<option value="6" > Ceará </option> ' +
+                            '<option value="7" > Distrito Federal </option> ' +
+                            '<option value="8" > Espírito Santo </option> ' +
+                            '<option value="9" > Goiás </option> ' +
+                            '<option value="11" > Maranhão </option> ' +
+                            '<option value="12" > Minas Gerais </option> ' +
+                            '<option value="13" > Mato Grosso do Sul </option> ' +
+                            '<option value="14" > Mato Grosso </option> ' +
+                            '<option value="15" > Paraíba </option> ' +
+                            '<option value="16" > Pernambuco </option> ' +
+                            '<option value="17" > Piauí </option> ' +
+                            '<option value="18" > Paraná </option> ' +
+                            '<option value="19" > Rio de Janeiro </option> ' +
+                            '<option value="20" > Rio Grande do Norte </option> ' +
+                            '<option value="21" > Rondônia </option> ' +
+                            '<option value="22" > Roraima </option> ' +
+                            '<option value="23" > Rio Grande do Sul </option> ' +
+                            '<option value="24" > Santa Catarina </option> ' +
+                            '<option value="25" > Sergipe </option> ' +
+                            '<option value="26" > São Paulo </option> ' +
+                            '<option value="27" > Tocantins </option> ' +
                             '<option value="'+ data.estadoId +'" selected> '+data.estado+' </option> ' +
                         '</select>'+
                     '</div>'+
                     '<div class="form-group col-md-6">'+
-                        '<label for="sltEmpresaCidade">Cidade</label>'+
-                        '<select name="cidade" id="mdlUpdateEmpresaCidade" class="form-control" required>' +
-                            '<option value="'+data.cidadeId+'" selected> '+data.cidade+' </option> ' +
-                        '</select>'+
+                        '<label for="mdlUpdateEmpresaCidade">Cidade</label>'+
+                        '<select name="cidade" id="mdlUpdateEmpresaCidade" class="form-control" ></select>'+
                     '</div>'+
                     '<div class="form-group col-md-2">'+
                         '<label for="sltEmpresaTipo">Tipo Empresa</label>'+
@@ -1182,13 +1305,48 @@
         '</div>';
 
         $('#EditarModalIntro').empty().append(html);
+
+        getCidade("mdlUpdateEmpresaEstado", "mdlUpdateEmpresaCidade", 1);
+
         return true;
+    }
+
+    function mdlEmpresaCidade()
+    {
+        let estado = $("#mdlUpdateEmpresaEstado").find('option:selected').val()
+        let selectbox = $('#mdlUpdateEmpresaCidade');
+        $.ajax({
+            url: "back/api.php?url=Combo/getCidade/"+estado,
+            method: "post",
+            success: function (obj) {
+
+                if (obj != null) {
+                    var data = obj.data;
+
+                    selectbox.multiselect('destroy');
+                    let params = [{label: "Selecione...", value: 0}];
+
+                    $.each(data, function (i, d) {
+                        params.push({ label: d.nome, value: d.id});
+                    });
+                    selectbox.multiselect({
+                        enableFiltering: true,
+                        enableCaseInsensitiveFiltering: true,
+                        buttonWidth:'100%',
+                        nSelectedText: 'selecione.',
+                        nonSelectedText: 'selecione...'
+                    });
+                    selectbox.multiselect('dataprovider', params);
+                }
+            }
+        });
     }
 
     function closeAgendaModal() { if(AgendaModal !== null) { AgendaModal.hide() }}
     function closeEditarModal() { if(modal !== null) { modal.hide() }}
     function closeEmpresasExcluidasModal() { if(empresasExcluidasModal !== null) { empresasExcluidasModal.hide() }}
     function closeListaUsuariosApp() { if(listaUsuariosAppModal !== null) { listaUsuariosAppModal.hide() }}
+    function closeModalDarBaixaExame() { if(ModalDarBaixaExame !== null) { ModalDarBaixaExame.hide() }}
 
     function idEmpresaExamePreco()
     {
@@ -1339,6 +1497,62 @@
                 }
             })
         }
+
+    }
+
+    function habilitarTagBaixaExame(tagInformar)
+    {
+        if (tagInformar === 1) {
+            $("#tagBaixaExame_1").css("display", "block")
+            $("#tagBaixaExame_2").css("display", "none")
+        } else {
+            $("#tagBaixaExame_2").css("display", "block")
+            $("#tagBaixaExame_1").css("display", "none")
+
+            carregarTblTagBaixaExame();
+        }
+    }
+
+    function carregarTblTagBaixaExame()
+    {
+        $.ajax({
+            url: "back/api.php?url=Combo/getAllExameVinculadoEmpresa",
+            method: "GET",
+            success: function (obj) {
+                let data = obj.data;
+                if(data != null)
+                {
+                    let tbl = "";
+                    $.each(data, function (i, d) {
+                        console.log(data[i])
+
+                        tbl += '<tr>' +
+                            '<td>' +
+                                '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame(' + data[i].id + ')" name=`checked_be_exame_' + data[i].id + '` id="check_baixa_exame_' + data[i].id + '">' +
+                                '<label style="margin-left: 15px;" >' + data[i].exame + '</label> </td>' +
+                            '<td>VALOR COLETA: ' + data[i].preco_coleta + '</td>' +
+                            '<td>' +
+                                '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame_coleta(' + data[i].id + ')" name=`checked_be_exame_coleta_' + data[i].id + '` id="checked_be_exame_coleta_' + data[i].id + '">' +
+                                '<label style="margin-left: 5px;"> Coleta </label> ' +
+                            '</td>' +
+                            '<td>VALOR ENTREGA: ' + data[i].preco_entrega + '</td>' +
+                            '<td>' +
+                                '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame_entrega(' + data[i].id + ')" name=`checked_be_exame_entrega_' + data[i].id + '` id="checked_be_exame_entrega_' + data[i].id + '">' +
+                                '<label style="margin-left: 5px;"> Entrega </label> ' +
+                            '</td>' +
+                        '</tr>';
+                    });
+
+                    $('#TblBaixaExamesExames').empty().append(tbl);
+                }
+            },
+            error: function(i, o) {
+                console.log(i);
+            }
+        })
+    }
+
+    function checkBE_exame(exame){
 
     }
 
@@ -1614,6 +1828,115 @@
 
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BAIXA EXAME -->
+<div class="modal fade" id="ModalDarBaixaExame" tabindex="-1" role="dialog" aria-labelledby="ModalDarBaixaExame" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" > BAIXA EXAMES </h5>
+                <a id="CloseAgendaModal" style="cursor: pointer;" onclick="closeModalDarBaixaExame()"> X </a>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-4">
+                            <h5 style="color: blue; margin: 10px;"> <?php echo $_SESSION['nome_fantasia']; ?>: </h5>
+                        </div>
+                        <div class="col-3">
+                            <button type="button btn-lg" onclick="habilitarTagBaixaExame(1)" style="width: 100%" class="btn btn-primary"> INFORMAR PACIENTE </button>
+                        </div>
+                        <div class="col-3">
+                            <button type="button btn-lg" onclick="habilitarTagBaixaExame(2)" style="width: 100%" class="btn btn-primary"> INFORMAR EXAMES REALIZADOS </button>
+                        </div>
+                        <div class="col-2">
+                            <h4 style="position: absolute; right: 0; margin: 10px; color: red;"> <label id="BaixaExameTotal" >R$ 0,00</label> </h4>
+                        </div>
+                    </div>
+                    <!-- Divider -->
+                    <hr class="sidebar-divider">
+
+                    <div class="container-fluid" id="tagBaixaExame_1" style="padding: 10px 0; display: none;">
+                        <form name="FrmBaixaExameUsuario" method="POST" action="#" >
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="row">
+                                        <label for="inputPassword" class="col-sm-4 col-form-label">MATRÍCULA: </label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="matricula" required class="form-control" id="BEusuarioMatricula">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="row">
+                                        <label for="inputPassword" class="col-sm-3 col-form-label">CPF: </label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="cpf" required class="form-control" id="BEusuarioCpf">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="row">
+                                        <label for="inputPassword" class="col-sm-3 col-form-label">NOME: </label>
+                                        <div class="col-sm-9">
+                                            <input type="text" name="nome" required class="form-control" id="BEusuarioNome">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="row">
+                                        <label for="inputPassword" class="col-sm-5 col-form-label">D.T NASCIMENTO: </label>
+                                        <div class="col-sm-7">
+                                            <input type="date" name="data_nascimento" required class="form-control" id="BEusuariodata">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <button type="submit" class="btn btn-success" style="width: 200px; position: absolute; right: 0; margin: 35px;"> INFORMAR</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="container-fluid" id="tagBaixaExame_2" style="padding: 10px 0; display: none;">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <table class="table table-bordered border-primary">
+                                        <tbody id="TblBaixaExamesExames">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label for="formFile" class="form-label">ENVIE A GUIA DO EXAME EM PDF</label>
+                                        <input class="form-control" type="file" id="formFile">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label for="formFile" class="form-label">ENVIE A GUIA DA ENTREGA EM PDF</label>
+                                        <input class="form-control" type="file" id="formFile">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="btn btn-success" style="width: 200px; position: absolute; right: 0; margin: 35px;"> INFORMAR</button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>

@@ -251,8 +251,8 @@ function appGetEmpresasByExame()
 
                 selectboxExame.multiselect('destroy');
                 let params = [];
-                if(data.length > 0)
-                    params = [{label: "Selecione um Exame", value: 0}];
+                // if(data.length > 0)
+                //     params = [];
                 $.each(data, function (i, d) {
                     params.push({ label: d.exame, value: d.id, attributes: { servico: d.servico }});
                 });

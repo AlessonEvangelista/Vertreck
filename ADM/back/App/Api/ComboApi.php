@@ -218,6 +218,17 @@
             return $stmt->fetchAll(\PDO::FETCH_ASSOC);
         }
 
+        public function getAllExameVinculadoEmpresa()
+        {
+            $emp = $_SESSION['empresa'];
+            $sql = "SELECT e.id, e.servico, e.exame, e.preco_coleta, e.preco_entrega, e.status FROM exame e INNER JOIN exame_empresa ee on ee.exame = e.id 
+                        WHERE ee.empresa = {$emp} and e.status = 1";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
         public function setEmpresaExamePreco()
         {
             $tipo = $_POST['tipo'];

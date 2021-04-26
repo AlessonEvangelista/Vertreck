@@ -230,9 +230,6 @@
     // ________ FIM AGENDA
 
     // EMPRESA MDL
-    $('#mdlUpdateEmpresaEstado').focus(function() {
-        getEstado("mdlUpdateEmpresaEstado");
-    });
     $('#mdlUpdateEmpresaEstado').change(function() {
         getCidade("mdlUpdateEmpresaEstado", "mdlUpdateEmpresaCidade");
     });

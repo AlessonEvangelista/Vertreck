@@ -70,10 +70,10 @@
                 </div>
             </div>
         </li>
-    <?php } ?>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider">
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+    <?php } ?>
 
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSer"
