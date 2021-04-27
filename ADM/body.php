@@ -1290,7 +1290,9 @@
                     '<div class="form-group col-md-2">'+
                         '<label for="sltEmpresaTipo">Tipo Empresa</label>'+
                         '<select name="tipo" id="mdlUpdateEmpresaTipo" class="form-control" required>' +
-                            '<option value="'+data.tipoId+'" selected> '+data.tipo+' </option> ' +
+                            '<option value="1" '+ (data.tipoId == 1 ? "selected" : "") +' > Laboratório </option> ' +
+                            '<option value="2" '+ (data.tipoId == 2 ? "selected" : "") +' > Clínica </option> ' +
+                            '<option value="3" '+ (data.tipoId == 3 ? "selected" : "") +' > Petrobras </option> ' +
                         '</select>'+
                     '</div>'+
                 '</div>'+
