@@ -10,7 +10,10 @@
                 <div class="contents" style="padding: 2rem 0.4rem;">
                     <h2 class="head-title">Seja bem vindo <br> à rede credenciada Petrobras</h2>
                     <p style="display: flex; margin: 2rem 0;">
-                        <h4 class="head-title"> Central de atendimento <a href="tel:08005211006" style="text-decoration: none;">0800 521 1006</a> e <a style="text-decoration: none;" href="tel:08002044040">0800 204 4040</a> </h4>
+                        <h4 class="head-title"> Centrais de atendimento: <br>
+                            <a href="tel:08005211006" style="text-decoration: none;">0800 444 0050</a> <br>
+                            <a style="text-decoration: none;" href="tel:08002044040">0800 204 4040</a> <br>
+                            <a href="tel:08005211006" style="text-decoration: none;">0800 521 1006</a> <br></h4>
                     </p>
                     <?php if( !$_SESSION['nome'] ) { ?>
                         <div class="header-button">

@@ -67,14 +67,19 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <button type="button" class="btn btn-primary" id="btnExameAgenda"> BUSCAR </button>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-primary" id="btnExameAgenda"> BUSCAR </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="row" style="display: none; position: relative;top: -42px;left: 75%;" id="divImportarDadosEmpresa">
-                                    <div class="col-md-12">
-                                        <button type="button" class="btn btn-primary" id="BtnImportarDadosEmpresa"> IMPORTAR PARA MEU E-MAIL </button>
+                                    <div class="col-md-6">
+                                        <div class="row" style="display: none;float: right;" id="divImportarDadosEmpresa">
+                                            <div class="col-md-12">
+                                                <button type="button" style="padding: 15px;" class="btn btn-primary" id="BtnImportarDadosEmpresa"> Encaminhar dados dos pontos de atendimento <br> para meu email. </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
