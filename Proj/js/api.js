@@ -30,7 +30,7 @@ function fastLoginApi(loginApi, redirectback)
                 } else {
                     swal("Ops! não te encontramos..", "Por favor clique no botão abaixo e você será redirecionado a página de cadastro")
                         .then((value) => {
-                            location.href = redirectback + "/cadastro.php?cpf="+$("#fastLoginCpf").val();
+                            location.href = redirectback + "/cadastroUsuario.php?cpf="+$("#fastLoginCpf").val();
                         });
                 }
             }
@@ -38,7 +38,7 @@ function fastLoginApi(loginApi, redirectback)
         error: function (err) {
             swal("Ops! não te encontramos..", "Clicando no botão abaixo, você irá a tela de cadastro para refazer o seu cadastro. Caso persista o erro favor reportar no Email: vertreck@vertreck.com.br")
             .then((value) => {
-                location.href = redirectback + "/cadastro.php?cpf="+$("#fastLoginCpf").val();
+                location.href = redirectback + "/cadastroUsuario.php?cpf="+$("#fastLoginCpf").val();
             });
         }
     });
@@ -94,6 +94,9 @@ $('#Appservico').change(function() {
 });
 $("#btnExameAgenda").click(function () {
     appGetServicoByExame();
+})
+$("#BtnImportarDadosEmpresa").click(function (){
+    enviarDadosEmail();
 })
 $("#horaAgendamento").on("focusout", function (){
    if( parseInt($("#horaAgendamento").val().substr(0, 2)) < "07" || parseInt($("#horaAgendamento").val().substr(0, 2)) > "11" )
@@ -231,6 +234,7 @@ function appGetServicoByCidade()
 function appGetServicoByExame()
 {
     $("#AppAgendamentoContainer").css("display", "none")
+    $("#divImportarDadosEmpresa").css("display", "block")
     // TODO HABILITAR COM AGENDAMENTO
     // cardEscolhaLocalAgendamento();
     // TODO HABILITAR SOMENTE COM LIGAÇÃO
@@ -279,8 +283,11 @@ function appGetEmpresasByExame()
 }
 
 // -- CARD
+let empresasList = [
+]
 function cardEscolhaLocal()
 {
+    empresasList = [];
     let data = $('#AppExame').val().join() +"-" +$("#AppCidade").val();
 
     $.ajax({
@@ -304,6 +311,7 @@ function cardEscolhaLocal()
                             "<p class='card-text'> " + d.endereco + ", " + d.bairro + " <br></p> " +
                             "<p class='msgIntoCard' id='msgIntoCard_" + d.id + "' ></p>" +
                             "</div></div>";
+                        empresasList.push({id: d.id})
 
                     });
                     $("#lblEmpresasExames").html(html);
@@ -401,6 +409,26 @@ function clearMsgTextCard(count, id)
         $("#msgIntoCard_"+id).html("");
     }
     $(".card").css("background-color", "#fff");
+}
+
+function enviarDadosEmail()
+{
+    $.ajax({
+        url: $("#AppFrmAgendamento").attr('action') +  "enviarDadosEmpresaAoEmailUsuario",
+        method: "POST",
+        data: {empresas : empresasList},
+        success: function (obj) {
+
+            if (obj != null) {
+                var data = JSON.parse(obj.data);
+                swal(data.data);
+            }
+        },
+        error: function (e) {
+            console.log(e)
+        }
+
+    });
 }
 
 function msgTextCardAgendamento(id, msg, email, telefone, celular, rows)

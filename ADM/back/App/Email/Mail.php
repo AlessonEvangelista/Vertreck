@@ -40,12 +40,13 @@
             // $this->mail->addCC('jose.rodrigues@vertreck.com.br', 'Nino Vertreck APP');
         }
 
-        public function envioEmail($tipo, $data)
+        public function envioEmail($tipo, $data, $body)
         {
             try {
                 $this->mail->isHTML(true);  // Seta o formato do e-mail para aceitar conteúdo HTML
                 switch ($tipo)
                 {
+                    // 1 : Envio de email para agendamento de consulta. Não está funcionando no momento
                     case 1:
                         $this->mail->Subject = ' Agendamento realizado no APP Vertreck ';
                         $this->mail->Body    = "<p> <b>Agendamento realizado</b> </p> 
@@ -62,6 +63,13 @@
                                                 <p> <b>Exame </b>
                                                 <p> <b>Exame solicitado: </b> {$data['exame']} </p>
                                                 <p> <b>Dia e Hora: </b> {$data['data']['dia']} - {$data['data']['hora']} </p>";
+                        $retorno = "Agenda SOLICITADA! Confira em seu e-mail sua solicitação de exame. Ligue diretamente na clinica, no Tel: " . $data['empresa']['telefone'] . " para maiores informações";
+                        break;
+                    // 2 : Envio de email ao usuário pelo botão: "ENVIAR INFORMAÇÕES PARA MEU E-MAIL" implementado paro 0800
+                    case 2:
+                        $this->mail->Subject = ' Agendamento Vertreck : Informações do Laboratório/Clínica ';
+                        $this->mail->Body    = $body;
+                        $retorno = "Informações enviadas no seu e-mail";
                         break;
                 }
 
@@ -70,7 +78,7 @@
                 {
                     return "Mailer Error: " . $this->mail->ErrorInfo;
                 } else {
-                    return "Agenda SOLICITADA! Confira em seu e-mail sua solicitação de exame. Ligue diretamente na clinica, no Tel: " . $data['empresa']['telefone'] . " para maiores informações";
+                    return $retorno;
                 }
             } catch (\Exception $e) {
                 // TODO SET LOG ERROR MAIl

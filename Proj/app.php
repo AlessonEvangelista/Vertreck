@@ -72,6 +72,12 @@
                                     </div>
                                 </div>
 
+                                <div class="row" style="display: none; position: relative;top: -42px;left: 75%;" id="divImportarDadosEmpresa">
+                                    <div class="col-md-12">
+                                        <button type="button" class="btn btn-primary" id="BtnImportarDadosEmpresa"> IMPORTAR PARA MEU E-MAIL </button>
+                                    </div>
+                                </div>
+
                                 <div class="row" id="lblEmpresasExames" style="display: none; padding: 10px;"></div>
                             </form>
 

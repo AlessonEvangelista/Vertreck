@@ -33,7 +33,7 @@ if(isset($_GET['logout']))
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row">
-                                        <label class="col-md-1 col-form-label" for="editarEstado" style="color: #464a46dd;">Nome</label>
+                                        <label class="col-md-1 col-form-label" for="editarNome" style="color: #464a46dd;">Nome</label>
                                         <div class="col-md-11">
                                            <input type="text" class="form-control" id="editarNome" name="nome" placeholder="Nome" disabled>
                                         </div>
@@ -41,7 +41,7 @@ if(isset($_GET['logout']))
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label class="col-md-2 col-form-label" for="editarEstado" style="color: #464a46dd;">Email</label>
+                                        <label class="col-md-2 col-form-label" for="editarEmail" style="color: #464a46dd;">Email</label>
                                         <div class="col-md-10">
                                             <input type="email" placeholder="Email" id="editarEmail" class="form-control" name="email" disabled>
                                         </div>
@@ -49,7 +49,7 @@ if(isset($_GET['logout']))
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label class="col-md-2 col-form-label" for="editarEstado" style="color: #464a46dd;">Cpf</label>
+                                        <label class="col-md-2 col-form-label" for="editarCpf" style="color: #464a46dd;">Cpf</label>
                                         <div class="col-md-10">
                                             <input type="text" class="form-control" id="editarCpf" value="<?=$_GET['cpf']?>" name="cpf" onkeydown="fMasc( this, mCPF )" disabled>
                                         </div>
@@ -57,7 +57,7 @@ if(isset($_GET['logout']))
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label class="col-md-2 col-form-label" for="editarEstado" style="color: #464a46dd;">Telefone</label>
+                                        <label class="col-md-2 col-form-label" for="editarTelefone" style="color: #464a46dd;">Telefone</label>
                                         <div class="col-md-10">
                                             <input type="text" class="form-control" id="editarTelefone" name="telefone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" disabled>
                                         </div>
@@ -65,42 +65,42 @@ if(isset($_GET['logout']))
                                 </div>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <label class="col-md-3 col-form-label" for="editarEstado" style="color: #464a46dd;">Data Nascimento</label>
+                                        <label class="col-md-3 col-form-label" for="editarData_nascimento" style="color: #464a46dd;">Data Nascimento</label>
                                         <div class="col-md-9">
                                             <input type="date" class="form-control" id="editarData_nascimento" name="data_nascimento" disabled>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <label class="col-md-3 col-form-label" for="editarGenero" style="color: #464a46dd;">Gênero</label>
-                                        <div class="col-md-9">
-                                            <select style="max-height: 41px;margin-bottom: 20px;" id="editarGenero" class="form-control" name="genero" disabled>
-                                                <option value="1">Masculino</option>
-                                                <option value="2">Feminino</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <label class="col-md-3 col-form-label" for="editarEstado" style="color: #464a46dd;">Estado</label>
-                                        <div class="col-md-9" id="groupEstado">
-                                            <select style="max-height: 41px;margin-bottom: 20px;" id="editarEstado" class="form-control" name="estado" disabled="disabled"></select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <label class="col-sm-3 col-form-label" for="editarCidade" style="float: left; color: #464a46dd;">Cidade</label>
-                                        <div class="col-sm-9" id="groupCidade">
-                                            <select style="max-height: 41px;margin-bottom: 20px;" id="editarCidade" class="form-control" name="cidade" disabled></select>
-                                        </div>
-                                    </div>
-                                </div>
+<!--                                <div class="col-md-4">-->
+<!--                                    <div class="row">-->
+<!--                                        <label class="col-md-3 col-form-label" for="editarGenero" style="color: #464a46dd;">Gênero</label>-->
+<!--                                        <div class="col-md-9">-->
+<!--                                            <select style="max-height: 41px;margin-bottom: 20px;" id="editarGenero" class="form-control" name="genero" disabled>-->
+<!--                                                <option value="1">Masculino</option>-->
+<!--                                                <option value="2">Feminino</option>-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-4">-->
+<!--                                    <div class="row">-->
+<!--                                        <label class="col-md-3 col-form-label" for="editarEstado" style="color: #464a46dd;">Estado</label>-->
+<!--                                        <div class="col-md-9" id="groupEstado">-->
+<!--                                            <select style="max-height: 41px;margin-bottom: 20px;" id="editarEstado" class="form-control" name="estado" disabled="disabled"></select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-4">-->
+<!--                                    <div class="row">-->
+<!--                                        <label class="col-sm-3 col-form-label" for="editarCidade" style="float: left; color: #464a46dd;">Cidade</label>-->
+<!--                                        <div class="col-sm-9" id="groupCidade">-->
+<!--                                            <select style="max-height: 41px;margin-bottom: 20px;" id="editarCidade" class="form-control" name="cidade" disabled></select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
 <!--                                <div class="col-md-12">-->
 <!--                                    <div class="row">-->
-<!--                                        <label class="col-md-2 col-form-label" for="editarEstado" style="color: #464a46dd;">Endereço</label>-->
+<!--                                        <label class="col-md-2 col-form-label" for="editarEndereco" style="color: #464a46dd;">Endereço</label>-->
 <!--                                        <div class="col-md-10">-->
 <!--                                            <input type="text" class="form-control" id="editarEndereco" name="endereco" placeholder="Endereço" disabled>-->
 <!--                                        </div>-->
@@ -108,7 +108,7 @@ if(isset($_GET['logout']))
 <!--                                </div>-->
 <!--                                <div class="col-md-12">-->
 <!--                                    <div class="row">-->
-<!--                                        <label class="col-md-2 col-form-label" for="editarEstado" style="color: #464a46dd;">Senha</label>-->
+<!--                                        <label class="col-md-2 col-form-label" for="editarSenha" style="color: #464a46dd;">Senha</label>-->
 <!--                                        <div class="col-md-10">-->
 <!--                                            <input type="password" placeholder="senha" id="editarSenha" name="senha" class="form-control" value="*****" disabled>-->
 <!--                                        </div>-->
@@ -177,10 +177,10 @@ if(isset($_GET['logout']))
 
 <script>
 
-    let selectboxEstado = $('#editarEstado');
-    let selectboxCidade = $("#editarCidade");
-    let estado;
-    let cidade;
+    // let selectboxEstado = $('#editarEstado');
+    // let selectboxCidade = $("#editarCidade");
+    // let estado;
+    // let cidade;
 
     $(window).on("load", function(){
         <?php if(isset($_GET["message"])) {?>
@@ -205,21 +205,21 @@ if(isset($_GET['logout']))
                     $("#editarTelefone").val(data.telefone);
                     $("#editarData_nascimento").val(data.data_nascimento);
                     // $("#editarEndereco").val(data.endereco);
-                    $("#editarGenero").val(data.genero);
+                    // $("#editarGenero").val(data.genero);
 
-                    let selectboxEstado = $('#editarEstado');
-                    selectboxEstado.multiselect({
-                        buttonWidth:'100%',
-                        disabledText: data.estado
-                    });
+                    // let selectboxEstado = $('#editarEstado');
+                    // selectboxEstado.multiselect({
+                    //     buttonWidth:'100%',
+                    //     disabledText: data.estado
+                    // });
 
-                    let selectboxCidade = $("#editarCidade");
-                    selectboxCidade.multiselect({
-                        buttonWidth:'100%',
-                        disabledText: data.cidade
-                    });
-                    estado = {label: data.estado, value: data.idEstado};
-                    cidade = {label: data.cidade, value: data.idCidade};
+                    // let selectboxCidade = $("#editarCidade");
+                    // selectboxCidade.multiselect({
+                    //     buttonWidth:'100%',
+                    //     disabledText: data.cidade
+                    // });
+                    // estado = {label: data.estado, value: data.idEstado};
+                    // cidade = {label: data.cidade, value: data.idCidade};
                 }
             }
         });
@@ -238,10 +238,10 @@ if(isset($_GET['logout']))
         $("#editarEmail").removeAttr("disabled")
         $("#editarTelefone").removeAttr("disabled")
         $("#editarData_nascimento").removeAttr("disabled")
-        $("#editarGenero").removeAttr("disabled")
+        // $("#editarGenero").removeAttr("disabled")
         // $("#editarEndereco").removeAttr("disabled")
-        $("#editarEstado").removeAttr("disabled")
-        $("#editarCidade").removeAttr("disabled")
+        // $("#editarEstado").removeAttr("disabled")
+        // $("#editarCidade").removeAttr("disabled")
 
         GetEstadoCombo();
         getCidadeCombo(0);
@@ -255,30 +255,30 @@ if(isset($_GET['logout']))
         $("#editarEmail").attr("disabled", "disabled")
         $("#editarTelefone").attr("disabled", "disabled")
         $("#editarData_nascimento").attr("disabled", "disabled")
-        $("#editarGenero").attr("disabled", "disabled")
+        // $("#editarGenero").attr("disabled", "disabled")
         // $("#editarEndereco").attr("disabled", "disabled")
-        $("#editarEstado").attr("disabled", "disabled")
-        $("#editarCidade").attr("disabled", "disabled")
+        // $("#editarEstado").attr("disabled", "disabled")
+        // $("#editarCidade").attr("disabled", "disabled")
 
-        selectboxEstado.multiselect('destroy');
-        selectboxEstado.multiselect({
-            buttonWidth:'100%',
-            disabledText: estado.label
-        });
+        // selectboxEstado.multiselect('destroy');
+        // selectboxEstado.multiselect({
+        //     buttonWidth:'100%',
+        //     disabledText: estado.label
+        // });
 
-        selectboxCidade.multiselect('destroy');
-        selectboxCidade.multiselect({
-            buttonWidth:'100%',
-            disabledText: cidade.label
-        });
+        // selectboxCidade.multiselect('destroy');
+        // selectboxCidade.multiselect({
+        //     buttonWidth:'100%',
+        //     disabledText: cidade.label
+        // });
 
         $("#enabledEdit").css("display", "block");
         $("#submitEdit").css("display", "none");
     }
 
-    $("#editarEstado").change(function (){
-        getCidadeCombo(1);
-    })
+    // $("#editarEstado").change(function (){
+    //     getCidadeCombo(1);
+    // })
 
     function ValidaCpf(cpf){
         cpf = cpf.replace(/\D/g, '');
@@ -341,7 +341,7 @@ if(isset($_GET['logout']))
         return r;
     }
 
-    function GetEstadoCombo()
+    /*function GetEstadoCombo()
     {
         let selectboxEstado = $('#editarEstado');
         $.ajax({
@@ -372,9 +372,9 @@ if(isset($_GET['logout']))
             }
 
         });
-    }
+    }*/
 
-    function getCidadeCombo(chamada)
+    /*function getCidadeCombo(chamada)
     {
         let estadoSelecionado = "";
         let state = $('#editarEstado');
@@ -421,7 +421,7 @@ if(isset($_GET['logout']))
                 }
             }
         });
-    }
+    }*/
 
 </script>
 

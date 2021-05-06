@@ -127,7 +127,7 @@
                 <div class="modal-body" style="margin: 5vh 0 0 0;">
                     <div class="row">
                         <div class="col-md-12">
-                            <h4> Agende agora mesmo o seu exame na rede redenciada Petrobras</h4>
+                            <h4> Consulte agora mesmo a rede credenciada Petrobras</h4>
                             <figcaption class="blockquote-footer" style="margin: 2vh 0 0 0;">
                                 <span> Informe o seu CPF abaixo </span>
                             </figcaption>

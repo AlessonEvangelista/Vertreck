@@ -21,7 +21,7 @@
                                                     </button>
                                                 </div>
                                                 <div class="col">
-                                                    <a class="btn btn-primary btn-sm" href="cadastro.php" style="width: 90%; padding: 15px 10px 10px 10px;">
+                                                    <a class="btn btn-primary btn-sm" href="cadastroUsuario.php" style="width: 90%; padding: 15px 10px 10px 10px;">
                                                         <h6> Cadastrar </h6>
                                                     </a>
                                                 </div>

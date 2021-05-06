@@ -116,7 +116,7 @@
 
         public function getExameServicoList($id = null)
         {
-            $sql = "select id, exame, preco_coleta, preco_entrega from exame where servico = {$id} AND status = 1";
+            $sql = "select id, exame, preco_coleta, preco_exame from exame where servico = {$id} AND status = 1";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -208,9 +208,9 @@
                             (select id from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id), null) as exameEmpresa,
                         IF((select 1 from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id and ee.preco_coleta <> 0.00),
                             (select preco_coleta from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id), 0.00) as precoColetaHabilitado,
-                        IF((select 1 from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id and ee.preco_entrega <> 0.00),
-                            (select preco_entrega from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id), 0.00) as precoEntregaHabilitado,
-                        e.id idExame, s.nome servico, e.exame, e.preco_coleta, e.preco_entrega
+                        IF((select 1 from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id and ee.preco_exame <> 0.00),
+                            (select preco_exame from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id), 0.00) as precoEntregaHabilitado,
+                        e.id idExame, s.nome servico, e.exame, e.preco_coleta, e.preco_exame
                         FROM exame e INNER JOIN servico s on e.servico = s.id WHERE e.status = 1";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
@@ -221,8 +221,8 @@
         public function getAllExameVinculadoEmpresa()
         {
             $emp = $_SESSION['empresa'];
-            $sql = "SELECT e.id, e.servico, e.exame, e.preco_coleta, e.preco_entrega, e.status FROM exame e INNER JOIN exame_empresa ee on ee.exame = e.id 
-                        WHERE ee.empresa = {$emp} and e.status = 1";
+            $sql = "SELECT e.id, e.servico, e.exame, e.preco_coleta, if( ee.preco_exame, ee.preco_exame, e.preco_exame )  as preco_exame, e.status FROM exame e INNER JOIN exame_empresa ee on ee.exame = e.id 
+                        WHERE ee.empresa = {$emp} and e.status <> 0";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -244,7 +244,7 @@
                     if ($tipo == 1) {
                         $sql = "INSERT INTO exame_empresa (exame, empresa, preco_coleta) VALUES({$exame}, {$empresa}, '{$preco}')";
                     } else {
-                        $sql = "INSERT INTO exame_empresa (exame, empresa, preco_entrega) VALUES({$exame}, {$empresa}, '{$preco}')";
+                        $sql = "INSERT INTO exame_empresa (exame, empresa, preco_exame) VALUES({$exame}, {$empresa}, '{$preco}')";
                     }
                     $stmt = $this->conn->prepare($sql);
                     $stmt->execute();
@@ -254,7 +254,7 @@
                     if ($tipo == 1) {
                         $sql = "UPDATE exame_empresa SET preco_coleta = '{$preco}' WHERE id = '{$id['id']}'";
                     } else {
-                        $sql = "UPDATE exame_empresa SET preco_entrega = '{$preco}' WHERE id = '{$id['id']}'";
+                        $sql = "UPDATE exame_empresa SET preco_exame = '{$preco}' WHERE id = '{$id['id']}'";
                     }
                     $this->conn->exec($sql);
                 }
@@ -271,20 +271,20 @@
             $empresa = ($_POST['empresa'] ? $_POST['empresa'] : $_SESSION['empresa']);
 
             try {
-                $sql = "SELECT id, preco_coleta, preco_entrega FROM exame_empresa WHERE exame=" . $exame . " AND empresa=" . $empresa;
+                $sql = "SELECT id, preco_coleta, preco_exame FROM exame_empresa WHERE exame=" . $exame . " AND empresa=" . $empresa;
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute();
                 $query = $stmt->fetch(\PDO::FETCH_ASSOC);
 
                 if ($tipo == 1) {
-                    if($query['preco_entrega'] != '0.00') {
+                    if($query['preco_exame'] != '0.00') {
                         $sql = "UPDATE exame_empresa SET preco_coleta = '0.00' WHERE id = '{$query['id']}'";
                     } else {
                         $sql = "DELETE FROM exame_empresa WHERE id ={$query['id']}";
                     }
                 } else {
                     if($query['preco_coleta'] != '0.00') {
-                        $sql = "UPDATE exame_empresa SET preco_entrega = '0.00' WHERE id = '{$query['id']}'";
+                        $sql = "UPDATE exame_empresa SET preco_exame = '0.00' WHERE id = '{$query['id']}'";
                     } else {
                         $sql = "DELETE FROM exame_empresa WHERE id ={$query['id']}";
                     }

@@ -221,6 +221,38 @@
 
         }
 
+        public function enviarDadosEmpresaAoEmailUsuario()
+        {
+            if(isset($_SESSION['email'])) {
+                $dataAtual = date("d/m/Y H-i-s");
+                $mail = new Mail();
+                $mail->setRemetente([EMAIL_VERTRECK_DESTINATARIO, EMAIL_VERTRECK_DESTINATARIO_NAME], [$_SESSION['email'], $_SESSION['nome']]);
+
+                $body = "<p> <b>:: Informações</b> </p> 
+                    <p> <b>=> USUÁRIO</b></p> 
+                    <p> <b>Nome: </b> {$_SESSION['nome']} </p>
+                    <p> <b>Email Usuário:</b> {$_SESSION['email']} </p>";
+
+                foreach ($_POST['empresas'] as $empresa) {
+                    $empresa = $this->getEmpresaDados($empresa['id']);
+
+                    $body .= "
+                        <p> <b>=> LABORATÓRIO/CLÍNICA</b></p>
+                        <p> <b>Nome: </b> {$empresa['nome_fantasia']} </p>
+                        <p> <b>Endereço: </b> {$empresa['endereco']} - {$empresa['bairro']} </p>
+                        <p> <b>Telefone: </b> {$empresa['telefone']} / {$empresa['celular']} </p>
+                        <p> <b>Data Solicitação: </b> {$dataAtual} </p>";
+                }
+
+                $retEmail = $mail->envioEmail(2, [], $body);
+                $retorno = ["status" => "sucesso", "data" => $retEmail];
+            } else {
+                $retorno = ["status" => "erro", "data" => "Não consta e-mail do usuário. \n\n Favor verificar dados, Ou tente novamente mais tarde!"];
+            }
+
+            return json_encode($retorno);
+        }
+
         private function getEmpresaDados($id)
         {
             $sql = "select telefone, email, celular, endereco, bairro, nome_fantasia from empresa where id = :id";
@@ -259,8 +291,8 @@
         public function getUserDataEdit($id)
         {
             $sql = "select 
-                        u.nome, u.email, u.cpf, u.telefone, u.data_nascimento, u.endereco, u.genero, e.nome as estado, u.estado as idEstado, c.nome as cidade, u.cidade as idCidade
-                    from usuario u inner join estados e on u.estado = e.id inner join cidades c on u.cidade = c.id where u.id = {$id}";
+                        u.nome, u.email, u.cpf, u.telefone, u.data_nascimento
+                    from usuario u where u.id = {$id}";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 

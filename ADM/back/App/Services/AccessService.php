@@ -41,17 +41,17 @@
                     }
                 } else {
                     if($_SERVER['HTTP_HOST'] === 'localhost'){
-                        header("Location:  http://localhost/pessoal/Vertreck/Proj/cadastro.php?cpf=".$_POST['fastLoginCpf']);
+                        header("Location:  http://localhost/pessoal/Vertreck/Proj/cadastroUsuario.php?cpf=".$_POST['fastLoginCpf']);
                         exit;
                     } else {
-                        header("Location:  https://vertreck.net.br/cadastro.php?cpf=".$_POST['fastLoginCpf']);
+                        header("Location:  https://vertreck.net.br/cadastroUsuario.php?cpf=".$_POST['fastLoginCpf']);
                         exit;
                     }
                 }
             }
         }
 
-        public function cadastroUsuario()
+        public function cadastro()
         {
             $data = $this->validCreateField($_POST);
             $createUser = (new Access())->createUsuario($data);

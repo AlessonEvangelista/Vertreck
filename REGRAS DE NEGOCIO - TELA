@@ -1,0 +1,33 @@
+:: REGRAS DE TELA
+
+LABORATÓRIOS X CLÍNICAS
+{
+    PERGUNTA: QUAL É A REAL DIFERENÇA ENTRE OS 2?
+    ( ps: exames que não são realizados eu não encaro como diferença... Visto que laboratórios podem ou não realizar certo exame. )
+    ( O fato de laboratórios poderem realizar coletas. E o impacto em valores a ser cobrado? )
+}
+
+TELA DE BAIXA DE EXAMES
+{
+    CASO 1: {
+        LABORATÓRIOS: 
+        => REALIZAM COLETA[] E EXAME[]
+        => CASO O EXAME FOR DOS SERVIÇOS: [ANÁLISES CLINICAS, Coleta de exames nas instalações da PETROBRAS, Retirada de amostras biológicas]
+            => NESSE SERÁ ENVIADO A COLETA[X] E PDF DE GUIA[pdf] E A EXAME COM O PDF DE EXAME[pdf]
+
+        => CASO O EXAME NÃO FOR DOS SERVIÇOS: [ANÁLISES CLINICAS, Coleta de exames nas instalações da PETROBRAS, Retirada de amostras biológicas]
+            => NESSE CASO SERÁ REALIZADO APENAS A COLETA[X] E SERÁ ENVIADO APENAS O PDF DE GUIA[pdf]
+    }
+    CASO 2: {
+        CLÍNICAS:
+        => REALIZAM APENAS OPÇÕES DE COLETA[X]
+            => NESSE CASO SERÁ REALIZADO APENAS A COLETA[X] E SERÁ ENVIADO APENAS O PDF DE GUIA[pdf]
+        => EXAMES VINCULADOS AOS SERVIÇOS: [ANÁLISES CLINICAS, Coleta de exames nas instalações da PETROBRAS, Retirada de amostras biológicas]
+            => NÃO SERÃO NEM MESMO MOSTRADOS
+    }
+
+    ENVIO PDF: {
+        PERGUNTA: QUAL REAL DIFERENÇA ENTRE LABORATÓRIOS E CLÍNICAS NESSE CASO. EXISTE?
+            VISTO FOI IDENTIFICADO PELO NINO EM ÁUDIO, QUE PODE SER ENVIADO PDF DE GUIA E DE EXAMES, TANTO LABORATÓRIOS QUANTO CLÍNICAS...
+    }
+}

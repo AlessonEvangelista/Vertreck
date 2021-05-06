@@ -266,7 +266,7 @@
                                                 <div class="form-group col-md-4">
                                                     <div class="form-group">
                                                         <label for="Servicoprecoentrega">PREÇO ENTREGA DE EXAME</label>
-                                                        <input name="preco_entrega" type="text" class="form-control" id="Servicoprecoentrega" placeholder="R$ 250,00" onKeyPress="return(moeda(this,'.',',',event))">
+                                                        <input name="preco_exame" type="text" class="form-control" id="Servicoprecoentrega" placeholder="R$ 250,00" onKeyPress="return(moeda(this,'.',',',event))">
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-md-4">
@@ -522,6 +522,48 @@
 
     }
 
+    function fMasc(objeto,mascara) {
+        obj=objeto
+        masc=mascara
+        setTimeout("fMascEx()",1)
+    }
+
+    function fMascEx() {
+        obj.value=masc(obj.value)
+    }
+
+    function mCPF(cpf){
+        cpf=cpf.replace(/\D/g,"")
+        cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+        cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+        cpf=cpf.replace(/(\d{3})(\d{1,2})$/,"$1-$2")
+        return cpf
+    }
+
+    function ValidaCpf(cpf, campo){
+        cpf = cpf.replace(/\D/g, '');
+
+        var result = true;
+        [9, 10].forEach(function (j) {
+            var soma = 0, r;
+            cpf.split(/(?=)/).splice(0, j).forEach(function (e, i) {
+                soma += parseInt(e) * ((j + 2) - (i + 1));
+            });
+            r = soma % 11;
+            r = (r < 2) ? 0 : 11 - r;
+            if (r != cpf.substring(j, j + 1)) result = false;
+        });
+
+        if( cpf.toString().length > 0 && ( cpf.toString().length != 11 || /^(\d)\1{10}$/.test(cpf) || result == false) ) {
+            campo.value = "";
+            campo.focus();
+            alert("Por favor informe um CPF válido");
+            return false;
+        }
+
+        return result;
+    }
+
     function getTipos(select, service)
     {
         var selectbox = $('#'+select);
@@ -578,7 +620,6 @@
 
     function getEstadoSelected(combo, id)
     {
-        console.log(id)
         var selectbox = $('#'+combo);
         if(selectbox.find('option').length === 0) {
             $.ajax({
@@ -822,7 +863,7 @@
                             '<td>' + data[i].id + '</td>' +
                             '<td>' + data[i].exame + '</td>' +
                             '<td>' + data[i].preco_coleta + '</td>' +
-                            '<td>' + data[i].preco_entrega + '</td>' +
+                            '<td>' + data[i].preco_exame + '</td>' +
                             '<td> <button class="btn btn-danger" style="float: left; " onclick="deletarExame(' + id + ', ' + data[i].id + ')"> deletar </button> </td>' +
                             '</tr>';
                     });
@@ -1148,10 +1189,25 @@
     }
 
     let ModalDarBaixaExame=null
+    let baixaExamesProgress;
+    let valorBaixaExamesTotal;
     function darBaixaExame()
     {
+        baixaExamesProgress = 0;
+        valorBaixaExamesTotal = "0,00";
         ModalDarBaixaExame = new bootstrap.Modal(document.getElementById('ModalDarBaixaExame'));
         ModalDarBaixaExame.show();
+
+        $("#progress-bar-baixa-exames").css("width", baixaExamesProgress+"%");
+        $('#progress-bar-baixa-exames').append( baixaExamesProgress + '%' );
+        $("#BaixaExameTotal").empty().append(valorBaixaExamesTotal);
+    }
+
+    function editBaixaExamesProgress(porcentagem)
+    {
+        baixaExamesProgress = baixaExamesProgress + porcentagem;
+        $("#progress-bar-baixa-exames").css("width", baixaExamesProgress+"%");
+        $('#progress-bar-baixa-exames').empty().append( baixaExamesProgress + '%' );
     }
 
     function ativarEmpresa(id)
@@ -1348,7 +1404,12 @@
     function closeEditarModal() { if(modal !== null) { modal.hide() }}
     function closeEmpresasExcluidasModal() { if(empresasExcluidasModal !== null) { empresasExcluidasModal.hide() }}
     function closeListaUsuariosApp() { if(listaUsuariosAppModal !== null) { listaUsuariosAppModal.hide() }}
-    function closeModalDarBaixaExame() { if(ModalDarBaixaExame !== null) { ModalDarBaixaExame.hide() }}
+    function closeModalDarBaixaExame() { if(ModalDarBaixaExame !== null) {
+        if (window.confirm("Caso não tenha concluído o processo, \n Ao fechar, você irá perder as informações, e iniciar novamente o processo. \n Tem certeza disso?")) {
+            ModalDarBaixaExame.hide()
+            fecharMdlReiniciarProcessoBE();
+        }
+    }}
 
     function idEmpresaExamePreco()
     {
@@ -1403,10 +1464,10 @@
                             inputCheckColeta += '<span class="slider round" id="checkboxSliderColeta_'+data[i].idExame+'"></span>';
                         }
                         if(data[i].precoEntregaHabilitado > 0.00) {
-                            inputCheckEntrega = '<input class="form-check-input" type="checkbox" checked onchange="vinculoEmpresaExamePreco(2, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_entrega + ' )" name=`checked_entrega_' + data[i].idExame + '` id="checked_entrega_' + data[i].idExame + '">';
+                            inputCheckEntrega = '<input class="form-check-input" type="checkbox" checked onchange="vinculoEmpresaExamePreco(2, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_exame + ' )" name=`checked_entrega_' + data[i].idExame + '` id="checked_entrega_' + data[i].idExame + '">';
                             inputCheckEntrega += '<span class="slider round" id="checkboxSliderEntrega_'+data[i].idExame+'" style="background-color: green;"></span>';
                         } else {
-                            inputCheckEntrega = '<input class="form-check-input" type="checkbox" onchange="vinculoEmpresaExamePreco(2, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_entrega + ' )" name=`checked_entrega_' + data[i].idExame + '` id="checked_entrega_' + data[i].idExame + '">';
+                            inputCheckEntrega = '<input class="form-check-input" type="checkbox" onchange="vinculoEmpresaExamePreco(2, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_exame + ' )" name=`checked_entrega_' + data[i].idExame + '` id="checked_entrega_' + data[i].idExame + '">';
                             inputCheckEntrega += '<span class="slider round" id="checkboxSliderEntrega_'+data[i].idExame+'"></span>';
                         }
                         if( (data[i].precoColetaHabilitado === '0.00') && (data[i].precoEntregaHabilitado === '0.00') && (data[i].exameEmpresa != null) )
@@ -1414,7 +1475,7 @@
                             inputCheckColeta = '<input class="form-check-input" type="checkbox" checked onchange="vinculoEmpresaExamePreco(1, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_coleta + ' )" name=`checked_exame_' + data[i].idExame + '` id="checked_coleta_' + data[i].idExame + '">';
                             inputCheckColeta += '<span class="slider round" id="checkboxSliderColeta_'+data[i].idExame+'" style="background-color: green;"></span>';
 
-                            inputCheckEntrega = '<input class="form-check-input" type="checkbox" checked onchange="vinculoEmpresaExamePreco(2, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_entrega + ' )" name=`checked_entrega_' + data[i].idExame + '` id="checked_entrega_' + data[i].idExame + '">';
+                            inputCheckEntrega = '<input class="form-check-input" type="checkbox" checked onchange="vinculoEmpresaExamePreco(2, ' + data[i].idExame + ', ' + empresa + ', ' + data[i].preco_exame + ' )" name=`checked_entrega_' + data[i].idExame + '` id="checked_entrega_' + data[i].idExame + '">';
                             inputCheckEntrega += '<span class="slider round" id="checkboxSliderEntrega_'+data[i].idExame+'" style="background-color: green;"></span>';
                         }
 
@@ -1428,7 +1489,7 @@
                             '<td style="width:50px;"> <label class="switch"> ' +
                                 inputCheckEntrega +
                             ' </label> </td>' +
-                            '<td>R$ ' + data[i].preco_entrega + '</td>' +
+                            '<td>R$ ' + data[i].preco_exame + '</td>' +
                             '</tr>';
                     });
                     $('#tblExamePreco').empty().append(table);
@@ -1502,19 +1563,50 @@
 
     }
 
+    let processoBaixaIniciado=2;
     function habilitarTagBaixaExame(tagInformar)
     {
         if (tagInformar === 1) {
             $("#tagBaixaExame_1").css("display", "block")
-            $("#tagBaixaExame_2").css("display", "none")
-        } else {
-            $("#tagBaixaExame_2").css("display", "block")
-            $("#tagBaixaExame_1").css("display", "none")
+            $("#btnTagBaixaExame_1").css("background-color", "#4e73df")
+            $("#btnTagBaixaExame_1").css("border-color", "#4e73df")
 
-            carregarTblTagBaixaExame();
+            $("#tagBaixaExame_2").css("display", "none")
+
+            $("#tagBaixaExame_3").css("display", "none")
+
+        } else if(tagInformar === 2) {
+            if(processoBaixaIniciado > 0) {
+                $("#tagBaixaExame_2").css("display", "block")
+                $("#btnTagBaixaExame_2").css("background-color", "#4e73df")
+                $("#btnTagBaixaExame_2").css("border-color", "#4e73df")
+
+                $("#tagBaixaExame_1").css("display", "none")
+
+                $("#tagBaixaExame_3").css("display", "none")
+
+                carregarTblTagBaixaExame();
+            }
+        } else {
+            if(processoBaixaIniciado > 1) {
+                $("#tagBaixaExame_3").css("display", "block")
+                $("#btnTagBaixaExame_3").css("background-color", "#4e73df")
+                $("#btnTagBaixaExame_3").css("border-color", "#4e73df")
+
+                $("#tagBaixaExame_1").css("display", "none")
+
+                $("#tagBaixaExame_2").css("display", "none")
+            }
         }
     }
 
+    let valoresBEexames = [{
+        "id" : null,
+        "coleta" : null,
+        "exame" : null,
+        "total" : null
+    }]
+    let valoresBEexamesSelecionados = []
     function carregarTblTagBaixaExame()
     {
         $.ajax({
@@ -1525,25 +1617,11 @@
                 if(data != null)
                 {
                     let tbl = "";
-                    $.each(data, function (i, d) {
-                        console.log(data[i])
-
-                        tbl += '<tr>' +
-                            '<td>' +
-                                '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame(' + data[i].id + ')" name=`checked_be_exame_' + data[i].id + '` id="check_baixa_exame_' + data[i].id + '">' +
-                                '<label style="margin-left: 15px;" >' + data[i].exame + '</label> </td>' +
-                            '<td>VALOR COLETA: ' + data[i].preco_coleta + '</td>' +
-                            '<td>' +
-                                '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame_coleta(' + data[i].id + ')" name=`checked_be_exame_coleta_' + data[i].id + '` id="checked_be_exame_coleta_' + data[i].id + '">' +
-                                '<label style="margin-left: 5px;"> Coleta </label> ' +
-                            '</td>' +
-                            '<td>VALOR ENTREGA: ' + data[i].preco_entrega + '</td>' +
-                            '<td>' +
-                                '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame_entrega(' + data[i].id + ')" name=`checked_be_exame_entrega_' + data[i].id + '` id="checked_be_exame_entrega_' + data[i].id + '">' +
-                                '<label style="margin-left: 5px;"> Entrega </label> ' +
-                            '</td>' +
-                        '</tr>';
-                    });
+                    <?php if( (int)$_SESSION['empresa_tipo'] === 1 ){ ?>
+                        tbl = montarTableBaixaExameLaboratorio(data);
+                    <?php } if( (int)$_SESSION['empresa_tipo'] === 2 ){ ?>
+                        tbl = montarTableBaixaExameClinica(data);
+                    <?php } ?>
 
                     $('#TblBaixaExamesExames').empty().append(tbl);
                 }
@@ -1554,7 +1632,364 @@
         })
     }
 
-    function checkBE_exame(exame){
+    function fecharMdlReiniciarProcessoBE()
+    {
+        processoBaixaIniciado=2;
+        //TODO ATUALIZAR BANCO: exame_baixa_agendamento.status= 2 / 0
+
+        // Limpando aba usuário
+        $("#BEusuarioMatricula").val("");
+        $("#BEusuarioNome").val("");
+        $("#BEusuarioInformado").css("display", "none");
+
+        valoresBEexamesSelecionados = []
+
+        // ZERAR BARRA DE PROGRESSO; ZERAR VALOR TOTAL
+        baixaExamesProgress = 0;
+        valorBaixaExamesTotal = "0,00";
+
+        // Desmarcar Exames
+        $.each(valoresBEexames, function (i, d) {
+            setBECheckboxFalse(valoresBEexames[i].id)
+        });
+
+        // Caso tenha pdf selecionado remover dos campos
+        $("#formFileGuia").val("");
+        $("#formFileExame").val("");
+
+        editBaixaExamesProgress(baixaExamesProgress);
+        $("#BaixaExameTotal").empty().append(valorBaixaExamesTotal);
+
+        // Controle de tag ativas
+        $("#tagBaixaExame_1").css("display", "block");
+        $("#tagBaixaExame_2").css("display", "none");
+        $("#tagBaixaExame_3").css("display", "none");
+        $("#BEusuarioMatricula").focus();
+
+        // Controle de botoes ativos
+        $("#btnTagBaixaExame_1").css("background-color", "#4e73df");
+        $("#btnTagBaixaExame_2").css("background-color", "#bab9b9");
+        $("#btnTagBaixaExame_2").css("border-color", "#bab9b9");
+        $("#btnTagBaixaExame_3").css("background-color", "#bab9b9");
+        $("#btnTagBaixaExame_3").css("border-color", "#bab9b9");
+    }
+
+    function montarTableBaixaExameLaboratorio(data)
+    {
+        let tbl=null;
+        $.each(data, function (i, d) {
+
+            valoresBEexames.push({
+                "id" : data[i].id,
+                "coleta" : ( ( parseInt(data[i].servico) === 1 || parseInt(data[i].servico) === 8 ) ? data[i].preco_coleta : 0),
+                "exame" : data[i].preco_exame,
+                "total" :  ( ( ( parseInt(data[i].servico) === 1 || parseInt(data[i].servico) === 8 ) ? parseFloat(data[i].preco_coleta) : parseFloat("0.00") ) + parseFloat(data[i].preco_exame) ).toFixed(2)
+            })
+
+            let tbltd = '';
+            let tblspan = '';
+            if( parseInt(data[i].servico) === 1 || parseInt(data[i].servico) === 8 ) {
+                tbltd = '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame_coleta(' + data[i].id + ')" name=`checked_be_exame_coleta_' + data[i].id + '` id="checked_be_exame_coleta_' + data[i].id + '">' +
+                    '<label style="margin-left: 5px;" id="label_checked_be_exame_coleta_' + data[i].id + '"> Coleta </label> '
+                tblspan = 'VALOR COLETA: ' + data[i].preco_coleta;
+            }
+
+            tbl += '<tr id="trBE_'+data[i].id+'">' +
+                '<td>'+
+                '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame(' + data[i].id + ')" name=`checked_be_exame_' + data[i].id + '` id="check_baixa_exame_' + data[i].id + '">' +
+                '<label style="margin-left: 15px;" >' + data[i].exame + '</label> '+
+                '</td>' +
+                '<td>' + tblspan + '</td>' +
+                '<td>' + tbltd + '</td>' +
+                '<td>VALOR EXAME: ' + data[i].preco_exame + '</td>' +
+                '<td>' +
+                '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame_exame(' + data[i].id + ')" name=`checked_be_exame_exame_' + data[i].id + '` id="checked_be_exame_exame_' + data[i].id + '">' +
+                '<label style="margin-left: 5px;" id="label_checked_be_exame_entrega_' + data[i].id + '"> Exame </label> ' +
+                '</td>' +
+                '</tr>';
+        });
+
+        return tbl;
+    }
+
+    function montarTableBaixaExameClinica(data)
+    {
+        let tbl;
+        $.each(data, function (i, d) {
+
+            valoresBEexames.push({
+                "id" : data[i].id,
+                "coleta" : "0.00",
+                "exame" : data[i].preco_exame,
+                "total" :  ( parseFloat(data[i].preco_exame) ).toFixed(2)
+            })
+
+            tbl += '<tr id="trBE_'+data[i].id+'">' +
+                '<td>'+
+                '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame(' + data[i].id + ')" name=`checked_be_exame_' + data[i].id + '` id="check_baixa_exame_' + data[i].id + '">' +
+                '<label style="margin-left: 15px;" >' + data[i].exame + '</label> '+
+                '</td>' +
+                '<td>VALOR EXAME: ' + data[i].preco_exame + '</td>' +
+                '<td>' +
+                '<input class="form-check-input" type="checkbox" style="position: relative; margin-left: 0;" onchange="checkBE_exame_exame(' + data[i].id + ')" name=`checked_be_exame_exame_' + data[i].id + '` id="checked_be_exame_exame_' + data[i].id + '">' +
+                '<label style="margin-left: 5px;" id="label_checked_be_exame_entrega_' + data[i].id + '"> Exame </label> ' +
+                '</td>' +
+                '</tr>';
+        });
+
+        return tbl;
+    }
+
+    function checkBE_exame(exame)
+    {
+        $("#trBE_"+exame).css('background-color', "#fff");
+
+
+        $.each(valoresBEexames, function (i, d) {
+            if (parseInt(valoresBEexames[i].id) === parseInt(exame)) {
+
+                if( $("#check_baixa_exame_"+exame).prop('checked') ) {
+
+                    /* VERIFICA JÁ FOI MARCADO COLETA, E REMOVE PARA CONTABILIZAR O TOTAL*/
+                    if( $("#checked_be_exame_coleta_"+exame).prop('checked') ) {
+                        valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) - parseFloat(valoresBEexames[i].coleta);
+                    }
+                    /* VERIFICA JÁ FOI MARCADO ENTREGA, E REMOVE PARA CONTABILIZAR O TOTAL*/
+                    if( $("#checked_be_exame_exame_"+exame).prop('checked') ) {
+                        valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) - parseFloat(valoresBEexames[i].exame);
+                    }
+                    setBECheckboxTrue(exame);
+
+                    valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) + parseFloat(valoresBEexames[i].total);
+                    setValoresBEexamesSelecionados(valoresBEexames[i], valorBaixaExamesTotal)
+                } else {
+                    if( $("#checked_be_exame_coleta_"+exame).prop('checked') && $("#checked_be_exame_exame_"+exame).prop('checked') ) {
+                        valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) - parseFloat(valoresBEexames[i].total);
+                    }
+                    else if( $("#checked_be_exame_coleta_"+exame).prop('checked') && !$("#checked_be_exame_exame_"+exame).prop('checked') ) {
+                        valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) - parseFloat(valoresBEexames[i].coleta);
+                    }
+                    else if( !$("#checked_be_exame_coleta_"+exame).prop('checked') && $("#checked_be_exame_exame_"+exame).prop('checked') ) {
+                        valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) - parseFloat(valoresBEexames[i].exame);
+                    }
+                    else if( ($("#checked_be_exame_coleta_"+exame).prop('checked') === 'undefined') && $("#checked_be_exame_exame_"+exame).prop('checked') ) {
+                        valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) - parseFloat(valoresBEexames[i].exame);
+                    }
+                    setBECheckboxFalse(exame);
+                    removeValoresBEexamesSelecionados(valoresBEexames[i].id)
+                }
+            }
+        })
+
+        if( $("#check_baixa_exame_"+exame).prop('checked') ) {
+            $("#trBE_" + exame).css('background-color', "#efefef");
+        }
+
+        $("#BaixaExameTotal").empty().append(valorBaixaExamesTotal.toFixed(2));
+    }
+
+    function checkBE_exame_coleta(exame)
+    {
+        $("#label_checked_be_exame_coleta_"+exame).css("color", "#858796");
+        let ExameSelecionado = {"id" : null, "coleta": null, "exame": null, "total": null}
+        $.each(valoresBEexames, function (i, d) {
+            if ( parseInt(valoresBEexames[i].id) === parseInt(exame) ) {
+                ExameSelecionado.id = valoresBEexames[i].id;
+                ExameSelecionado.coleta = valoresBEexames[i].coleta;
+                ExameSelecionado.exame = valoresBEexames[i].exame;
+                ExameSelecionado.total = valoresBEexames[i].total;
+            }
+        });
+
+        if( $("#checked_be_exame_coleta_"+exame).prop('checked') ) {
+            valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) + parseFloat( ExameSelecionado.coleta);
+            $("#label_checked_be_exame_coleta_"+exame).css("color", "red");
+            setValoresBEexamesSelecionados(ExameSelecionado, valorBaixaExamesTotal)
+        } else {
+            if( !$("#checked_be_exame_exame_"+exame).prop('checked') ) {
+                $("#trBE_"+exame).css('background-color', "#fff");
+                $("#check_baixa_exame_"+exame).prop('checked', false)
+            }
+            valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) - parseFloat(ExameSelecionado.coleta)
+            removeValoresBEexamesSelecionadosItens('coleta', ExameSelecionado.id, valorBaixaExamesTotal)
+        }
+
+        $("#BaixaExameTotal").empty().append(valorBaixaExamesTotal.toFixed(2));
+    }
+
+    function checkBE_exame_exame(exame)
+    {
+        $("#label_checked_be_exame_exame_"+exame).css("color", "#858796");
+        let ExameSelecionado = {"id" : null, "coleta": null, "exame": null, "total": null}
+        $.each(valoresBEexames, function (i, d) {
+            if ( parseInt(valoresBEexames[i].id) === parseInt(exame) ) {
+                ExameSelecionado.id = valoresBEexames[i].id;
+                ExameSelecionado.coleta = valoresBEexames[i].coleta;
+                ExameSelecionado.exame = valoresBEexames[i].exame;
+                ExameSelecionado.total = valoresBEexames[i].total;
+            }
+        });
+
+        if( $("#checked_be_exame_exame_"+exame).prop('checked') ) {
+            valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) + parseFloat( ExameSelecionado.exame);
+            $("#label_checked_be_exame_exame_"+exame).css("color", "red");
+            setValoresBEexamesSelecionados(ExameSelecionado, valorBaixaExamesTotal)
+        } else {
+            if( !$("#checked_be_exame_coleta_"+exame).prop('checked') ) {
+                $("#trBE_"+exame).css('background-color', "#fff");
+                $("#check_baixa_exame_"+exame).prop('checked', false)
+            }
+            valorBaixaExamesTotal = parseFloat(valorBaixaExamesTotal) - parseFloat(ExameSelecionado.exame)
+            removeValoresBEexamesSelecionadosItens('exame', ExameSelecionado.id, valorBaixaExamesTotal)
+        }
+
+        $("#BaixaExameTotal").empty().append(valorBaixaExamesTotal.toFixed(2));
+    }
+
+    function setBECheckboxTrue(exame)
+    {
+        $("#checked_be_exame_coleta_"+exame).prop('checked', true);
+        $("#checked_be_exame_exame_"+exame).prop('checked', true);
+        $("#label_checked_be_exame_coleta_"+exame).css("color", "red");
+        $("#label_checked_be_exame_exame_"+exame).css("color", "red");
+    }
+
+    function setBECheckboxFalse(exame)
+    {
+        $("#checked_be_exame_coleta_"+exame).prop('checked', false);
+        $("#checked_be_exame_exame_"+exame).prop('checked', false);
+        $("#label_checked_be_exame_coleta_"+exame).css("color", "#858796");
+        $("#label_checked_be_exame_exame_"+exame).css("color", "#858796");
+    }
+
+    function setValoresBEexamesSelecionados(valores, total)
+    {
+        let atualizou = 0;
+        $.each(valoresBEexamesSelecionados, function (i, d) {
+            if(valoresBEexamesSelecionados[i].id === valores.id) {
+                valoresBEexamesSelecionados[i].coleta = (parseInt(valores.coleta) > 0 ? 1 : 0);
+                valoresBEexamesSelecionados[i].exame = (parseInt(valores.exame) > 0 ? 1 : 0);
+                valoresBEexamesSelecionados[i].total = total;
+                atualizou = 1;
+            }
+        })
+        if(atualizou === 0) {
+            valoresBEexamesSelecionados.push({
+                id: valores.id,
+                coleta: (parseInt(valores.coleta) > 0 ? 1 : 0),
+                exame: (parseInt(valores.exame) > 0 ? 1 : 0),
+                total: total
+            })
+        }
+    }
+    function removeValoresBEexamesSelecionados(id)
+    {
+        let idVal=null;
+        $.each(valoresBEexamesSelecionados, function(i, d) {
+            if (valoresBEexamesSelecionados[i].id === id) {
+                idVal = valoresBEexamesSelecionados.indexOf(this);
+            }
+        });
+
+        valoresBEexamesSelecionados.splice(idVal, 1);
+    }
+    function removeValoresBEexamesSelecionadosItens(iten, id, total)
+    {
+        $.each(valoresBEexamesSelecionados, function(i, d) {
+            if(iten === "coleta")
+            {
+                if (valoresBEexamesSelecionados[i].id === id) {
+                    valoresBEexamesSelecionados[i].coleta = 0;
+                }
+            }
+            else if(iten === "exame")
+            {
+                if (valoresBEexamesSelecionados[i].id === id) {
+                    valoresBEexamesSelecionados[i].exame = 0;
+                }
+            }
+            valoresBEexamesSelecionados[i].total = total;
+        });
+    }
+
+    let $BEformUsuario = {};
+    function BEformUsuario()
+    {
+        if ( $("#BEusuarioMatricula").val() === "" || $("#BEusuarioNome").val() === "" ) {
+            alert("Os campos do paciente são obrigatórios. \n\n Por favor informe-os para seguir com processo de baixa.");
+            return false;
+        }
+
+        let hoje = new Date();
+        $BEformUsuario = {
+            "matricula" : $("#BEusuarioMatricula").val(),
+            "nome" : $("#BEusuarioNome").val()
+        }
+        $.ajax({
+            url: "back/api.php?url=Financeiro/iniciarProcessoBaixaUsuario",
+            timeout: 800,
+            method: "POST",
+            data: $BEformUsuario,
+            success: function (obj){
+                if(obj.data[0] === 1) {
+                    let html = '<div class="col-12">' +
+                            '<h5> :: PACIENTE INFORMADO :: </h5> ' +
+                            '<table class="table table-borderless">' +
+                                '<thead style="font-weight: 900;"> <tr>' +
+                                    '<td> MATRICULA </td> <td> NOME </td> <td> DATA BAIXA </td>' +
+                                '</tr></thead>' +
+                                '<tbody style="font-weight: 600;"> <tr>' +
+                                    '<td> '+ $BEformUsuario.matricula +' </td>' +
+                                    '<td> '+ $BEformUsuario.nome +' </td>' +
+                                    '<td> '+ ((hoje.getDate() )) + "/" + ((hoje.getMonth() + 1)) + "/" + hoje.getFullYear() +' </td>' +
+                                '</tr></tbody>' +
+                            '</table>' +
+                        '</div>';
+
+                    $("#BEusuarioInformado").css("display", "block");
+                    $('#BEusuarioInformado').empty().append(html);
+                    processoBaixaIniciado=1;
+                    editBaixaExamesProgress(35);
+                }
+                alert(obj.data[1]);
+            },
+            error: function (i, er) {
+                console.log(i)
+            }
+        })
+    }
+
+    function BEformExames()
+    {
+        if( valoresBEexamesSelecionados.length === 0 ) {
+            alert("Por favor. \n\n Selecione exames realizados pelo paciente para seguir.");
+            return false;
+        }
+
+        $.ajax({
+            url: "back/api.php?url=Financeiro/informarExamesBaixaUsuario",
+            timeout: 800,
+            method: "POST",
+            data: {
+                "exames": valoresBEexamesSelecionados,
+                "total": valorBaixaExamesTotal
+            },
+            success: function (obj){
+                if(obj.data[0] === 1) {
+
+                    // console.log(obj.data)
+                    alert(obj.data[1]);
+
+                    editBaixaExamesProgress(35);
+                }
+                // console.log(obj.data)
+                // alert(obj.data[1]);
+            },
+            error: function (i, er) {
+                console.log(i)
+            }
+        })
+
 
     }
 
@@ -1849,23 +2284,26 @@
                         <div class="col-4">
                             <h5 style="color: blue; margin: 10px;"> <?php echo $_SESSION['nome_fantasia']; ?>: </h5>
                         </div>
-                        <div class="col-3">
-                            <button type="button btn-lg" onclick="habilitarTagBaixaExame(1)" style="width: 100%" class="btn btn-primary"> INFORMAR PACIENTE </button>
-                        </div>
-                        <div class="col-3">
-                            <button type="button btn-lg" onclick="habilitarTagBaixaExame(2)" style="width: 100%" class="btn btn-primary"> INFORMAR EXAMES REALIZADOS </button>
+                        <div class="col-2">
+                            <button type="button btn-lg" id="btnTagBaixaExame_1" onclick="habilitarTagBaixaExame(1)" style="width: 100%" class="btn btn-primary"> INFORMAR PACIENTE </button>
                         </div>
                         <div class="col-2">
-                            <h4 style="position: absolute; right: 0; margin: 10px; color: red;"> <label id="BaixaExameTotal" >R$ 0,00</label> </h4>
+                            <button type="button btn-lg" id="btnTagBaixaExame_2" onclick="habilitarTagBaixaExame(2)" style="width: 100%; background-color: #bab9b9; border-color:#bab9b9;" class="btn btn-primary"> INFORMAR EXAMES </button>
+                        </div>
+                        <div class="col-2">
+                            <button type="button btn-lg" id="btnTagBaixaExame_3" onclick="habilitarTagBaixaExame(3)" style="width: 100%; background-color: #bab9b9; border-color:#bab9b9;" class="btn btn-primary"> CONCLUIR PROCESSO </button>
+                        </div>
+                        <div class="col-2">
+                            <h4 style="position: fixed; right: 2%; margin: 10px; color: red; z-index: 9;"> R$<label id="BaixaExameTotal" ></label> </h4>
                         </div>
                     </div>
                     <!-- Divider -->
                     <hr class="sidebar-divider">
 
-                    <div class="container-fluid" id="tagBaixaExame_1" style="padding: 10px 0; display: none;">
+                    <div class="container-fluid" id="tagBaixaExame_1" style="padding: 10px 0; display: block;">
                         <form name="FrmBaixaExameUsuario" method="POST" action="#" >
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-6">
                                     <div class="row">
                                         <label for="inputPassword" class="col-sm-4 col-form-label">MATRÍCULA: </label>
                                         <div class="col-sm-8">
@@ -1873,35 +2311,37 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-3">
+<!--                                <div class="col-3">-->
+<!--                                    <div class="row">-->
+<!--                                        <label for="inputPassword" class="col-sm-3 col-form-label">CPF: </label>-->
+<!--                                        <div class="col-sm-9">-->
+<!--                                            <input type="text" name="cpf" onfocusout="ValidaCpf(this.value, BEusuarioCpf)" onkeydown="fMasc( this, mCPF )" required class="form-control" id="BEusuarioCpf">-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                                <div class="col-6">
                                     <div class="row">
-                                        <label for="inputPassword" class="col-sm-3 col-form-label">CPF: </label>
-                                        <div class="col-sm-9">
-                                            <input type="text" name="cpf" required class="form-control" id="BEusuarioCpf">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="row">
-                                        <label for="inputPassword" class="col-sm-3 col-form-label">NOME: </label>
+                                        <label for="inputPassword" class="col-sm-3 col-form-label">PACIENTE NOME: </label>
                                         <div class="col-sm-9">
                                             <input type="text" name="nome" required class="form-control" id="BEusuarioNome">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <div class="row">
-                                        <label for="inputPassword" class="col-sm-5 col-form-label">D.T NASCIMENTO: </label>
-                                        <div class="col-sm-7">
-                                            <input type="date" name="data_nascimento" required class="form-control" id="BEusuariodata">
-                                        </div>
-                                    </div>
-                                </div>
+<!--                                <div class="col-3">-->
+<!--                                    <div class="row">-->
+<!--                                        <label for="inputPassword" class="col-sm-5 col-form-label">D.T NASCIMENTO: </label>-->
+<!--                                        <div class="col-sm-7">-->
+<!--                                            <input type="date" name="data_nascimento" required class="form-control" id="BEusuariodata">-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </div>
                             <div class="row">
-                                <button type="submit" class="btn btn-success" style="width: 200px; position: absolute; right: 0; margin: 35px;"> INFORMAR</button>
+                                <button type="button" onclick="BEformUsuario()" class="btn btn-success" style="width: 200px; position: absolute; right: 0; margin: 35px;"> INFORMAR </button>
                             </div>
                         </form>
+                        <div class="row" style="display: none; position: absolute;width: 75%; top: 65%;" id="BEusuarioInformado">
+                        </div>
                     </div>
 
                     <div class="container-fluid" id="tagBaixaExame_2" style="padding: 10px 0; display: none;">
@@ -1915,29 +2355,46 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <label for="formFile" class="form-label">ENVIE A GUIA DO EXAME EM PDF</label>
-                                        <input class="form-control" type="file" id="formFile">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <label for="formFile" class="form-label">ENVIE A GUIA DA ENTREGA EM PDF</label>
-                                        <input class="form-control" type="file" id="formFile">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <button type="submit" class="btn btn-success" style="width: 200px; position: absolute; right: 0; margin: 35px;"> INFORMAR</button>
+
+                        <div class="row" style="margin: 20px 0;">
+                            <button type="button" onclick="BEformExames()" class="btn btn-success" style="width: 200px; position: relative; left: 80%; margin: 35px 0 0 0;"> INFORMAR</button>
                         </div>
                     </div>
 
+                    <div class="container-fluid" id="tagBaixaExame_3" style="padding: 10px 0; display: none;">
+                        <form action="back/app.php?url=Financeiro/UploadGuiasPdf" method="post" enctype="multipart/form-data">
+                            <div class="row" style="margin:15px 0;">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label for="formFileGuia" class="form-label">ENVIE A GUIA(pdf)</label>
+                                            <input class="form-control" name="formFileGuia" type="file" id="formFileGuia">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label for="formFileExame" class="form-label">ENVIE O EXAME(pdf)</label>
+                                            <input class="form-control" name="formFileExame" type="file" id="formFileExame">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin: 20px 0;">
+                                <button type="submit" class="btn btn-success" style="width: 200px; position: relative; left: 80%; margin: 35px 0 0 0;"> CONCLUIR PROCESSO </button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="progress">
+                    <div id="mdl_baixa_exames_usuario" ></div>
+                    <div id="mdl_baixa_exames_exames" ></div>
+                    <div class="progress-bar" role="progressbar" id="progress-bar-baixa-exames" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
         </div>

@@ -227,6 +227,24 @@
         setEmpresaToExame();
     });
 
+    $("#formFileGuia").change(function() {
+        let file = $("#formFileGuia").val();
+        if( file.split('.').pop().toLowerCase() !== "pdf" ) {
+            alert("É preciso que o arquivo seja um PDF!");
+            $("#formFileGuia").val("").focus();
+            return false;
+        }
+    });
+
+    $("#formFileExame").change(function() {
+        let file = $("#formFileExame").val();
+        if( file.split('.').pop().toLowerCase() !== "pdf" ) {
+            alert("É preciso que o arquivo seja um PDF!");
+            $("#formFileExame").val("").focus();
+            return false;
+        }
+    });
+
     // ________ FIM AGENDA
 
     // EMPRESA MDL

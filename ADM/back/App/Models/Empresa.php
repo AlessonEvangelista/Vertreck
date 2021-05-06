@@ -15,7 +15,7 @@
 
             if($valid) {
 
-                $sql = "SELECT 1 FROM empresa WHERE cnpj='".$data['cnpj']."'";
+                $sql = "SELECT 1 FROM empresa WHERE cnpj='".$data['cnpj']."' AND status <> '0'";
                 $stmt = $this->conn->prepare($sql);
                 $stmt->execute();
 

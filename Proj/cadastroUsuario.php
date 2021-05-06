@@ -85,67 +85,77 @@
                         <div class="section-header">
                             <p class="btn btn-subtitle wow fadeInDown" data-wow-delay="0.2s">Cadastro de usuário</p>
                         </div>
-                        <form id="cadastroForm" class="cadastroForm" method="post" action="<?= LOCAL_API ?>/app.php?url=Access/cadastroUsuario">
+                        <form id="cadastroForm" class="cadastroForm" method="post" action="<?= LOCAL_API ?>/app.php?url=Access/cadastro">
 
                             <input type="hidden" id="apiCadastro" value="<?= LOCAL_API ?>/api.php?url=External/">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="cadastroNome" name="nome" placeholder="Nome" data-error="informe o Nome" required>
-                                        <div class="help-block with-errors"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="email" placeholder="Email" id="cadastroEmail" class="form-control" name="email" data-error="informe o Email" required>
-                                        <div class="help-block with-errors"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="cadastroCpf" value="<?=$_GET['cpf']?>" name="cpf" onkeydown="fMasc( this, mCPF )" placeholder="Cpf" required data-error="informe o Cpf">
-                                        <div class="help-block with-errors"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="cadastroTelefone" name="telefone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" placeholder="Whatsapp" required>
-                                        <div class="help-block with-errors"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="date" class="form-control" id="cadastroData_nascimento" name="data_nascimento" placeholder="Data de Nascimento" required>
-                                        <div class="help-block with-errors"></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
                                     <div class="row">
-                                        <label class="col-md-3 col-form-label" for="cadastroGenero" style="color: #464a46dd;">Gênero</label>
+                                        <label class="col-md-1 col-form-label" for="cadastroNome" style="color: #464a46dd;">Nome</label>
+                                        <div class="col-md-11">
+                                            <input type="text" class="form-control" id="cadastroNome" name="nome" placeholder="Nome" data-error="informe o Nome" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-md-2 col-form-label" for="cadastroEmail" style="color: #464a46dd;">Email</label>
+                                        <div class="col-md-10">
+                                            <input type="email" placeholder="Email" id="cadastroEmail" class="form-control" name="email" data-error="informe o Email" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-md-2 col-form-label" for="cadastroCpf" style="color: #464a46dd;">Cpf</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" id="cadastroCpf" value="<?=$_GET['cpf']?>" name="cpf" onkeydown="fMasc( this, mCPF )" placeholder="Cpf" required data-error="informe o Cpf">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-md-2 col-form-label" for="cadastroTelefone" style="color: #464a46dd;">Whatsapp</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" id="cadastroTelefone" name="telefone" onkeypress="mask(this, mphone);" onblur="mask(this, mphone);" placeholder="Whatsapp" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <label class="col-md-3 col-form-label" for="cadastroData_nascimento" style="color: #464a46dd;">Data Nascimento</label>
                                         <div class="col-md-9">
-                                            <select style="max-height: 41px;margin-bottom: 20px;" id="cadastroGenero" class="form-control" name="genero">
-                                                <option value="1">Masculino</option>
-                                                <option value="2">Feminino</option>
-                                            </select>
+                                            <input type="date" class="form-control" id="cadastroData_nascimento" name="data_nascimento" placeholder="Data de Nascimento" required>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <label class="col-md-3 col-form-label" for="cadastroEstado" style="color: #464a46dd;">Estado</label>
-                                        <div class="col-md-9">
-                                            <select style="max-height: 41px;margin-bottom: 20px;" id="cadastroEstado" class="form-control" name="estado"></select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <label class="col-sm-3 col-form-label" for="cadastroCidade" style="float: left; color: #464a46dd;">Cidade</label>
-                                        <div class="col-sm-9">
-                                            <select style="max-height: 41px;margin-bottom: 20px;" id="cadastroCidade" class="form-control" name="cidade"></select>
-                                        </div>
-                                    </div>
-                                </div>
+<!--                                <div class="col-md-4">-->
+<!--                                    <div class="row">-->
+<!--                                        <label class="col-md-3 col-form-label" for="cadastroGenero" style="color: #464a46dd;">Gênero</label>-->
+<!--                                        <div class="col-md-9">-->
+<!--                                            <select style="max-height: 41px;margin-bottom: 20px;" id="cadastroGenero" class="form-control" name="genero">-->
+<!--                                                <option value="1">Masculino</option>-->
+<!--                                                <option value="2">Feminino</option>-->
+<!--                                            </select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-4">-->
+<!--                                    <div class="row">-->
+<!--                                        <label class="col-md-3 col-form-label" for="cadastroEstado" style="color: #464a46dd;">Estado</label>-->
+<!--                                        <div class="col-md-9">-->
+<!--                                            <select style="max-height: 41px;margin-bottom: 20px;" id="cadastroEstado" class="form-control" name="estado"></select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-md-4">-->
+<!--                                    <div class="row">-->
+<!--                                        <label class="col-sm-3 col-form-label" for="cadastroCidade" style="float: left; color: #464a46dd;">Cidade</label>-->
+<!--                                        <div class="col-sm-9">-->
+<!--                                            <select style="max-height: 41px;margin-bottom: 20px;" id="cadastroCidade" class="form-control" name="cidade"></select>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
 <!--                                <div class="col-md-12">-->
 <!--                                    <div class="form-group">-->
 <!--                                        <input type="text" class="form-control" id="cadastroEndereco" name="endereco" placeholder="Endereço">-->
