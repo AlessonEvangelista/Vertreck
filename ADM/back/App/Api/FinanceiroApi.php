@@ -17,11 +17,11 @@ class FinanceiroApi extends Sql
         try {
             $data = date('Y-m-d H:i:s');
             $sql = "INSERT INTO exame_baixa_agendamento (empresa, data_baixa, usuario_nome, matricula, status)
-            VALUES({$_SESSION['empresa']}, '{$data}', '{$nome}', $matricula, 1)";
+            VALUES({$_SESSION['empresa']}, '{$data}', '{$nome}', '{$matricula}', 1)";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
-            return [1, "Iniciado processo com sucesso. \n continue o processo!"];
+            return [1, "Processo iniciado com sucesso. \n Informe os exames realizado!"];
 
         } catch (\Exception $e) {
             return [0, "Ocorreu algum erro ao Iniciar o processo. \n\n {$e->getMessage()} "];
@@ -49,9 +49,35 @@ class FinanceiroApi extends Sql
             else {
                 throw new \Exception("Não foi encontrado exames iniciados no processo de baixa!");
             }
-            return [1, "Exames informados com sucesso. \n\n Só mais um passo para finalizar o processo!"];
+            return [1, "Exames informados com sucesso. \n\n Só mais um passo para finalizar o processo. \n\n Nos envie a(s) Guia(s) em PDF!"];
         } catch (\Exception $e) {
             return [0, "Ocorreu um erro ao informar exames. \n\n {$e->getMessage()}"];
         }
+    }
+
+    public function listExamesAtivos()
+    {
+        $sql = "select id, matricula, usuario_nome, data_baixa, valor_total from exame_baixa_agendamento where empresa = {$_SESSION['empresa']} AND status = 2";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function encerrarExames()
+    {
+        try {
+            $select = "SELECT id FROM exame_baixa_agendamento WHERE empresa = {$_SESSION['empresa']} AND status = 1";
+            $stmt = $this->conn->prepare($select);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $ids = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+                foreach ($ids as $id) {
+                    $update = "UPDATE exame_baixa_agendamento SET status = 0 WHERE id = '{$id['id']}'";
+                    $this->conn->exec($update);
+                }
+            }
+            return true;
+        } catch (\Exception $e){}
     }
 }

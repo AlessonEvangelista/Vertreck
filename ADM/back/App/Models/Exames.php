@@ -34,7 +34,7 @@ class Exames extends Sql
 
         if($valid) {
 
-            $sql = "INSERT INTO exame (servico, exame, preco_coleta, preco_entrega, preco_petrobras, status) VALUES(:servico, :exame, :preco_coleta, :preco_entrega, :preco_petrobras, 1)";
+            $sql = "INSERT INTO exame (servico, exame, preco_coleta, preco_exame, preco_petrobras, status) VALUES(:servico, :exame, :preco_coleta, :preco_exame, :preco_petrobras, 1)";
 
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($data);
@@ -57,11 +57,11 @@ class Exames extends Sql
                     $stmt = $this->conn->prepare($sql);
                     $stmt->execute();
                     if($stmt->rowCount() === 0) {
-                        $sql = "SELECT preco_coleta, preco_entrega FROM exame WHERE id={$item}";
+                        $sql = "SELECT preco_coleta, preco_exame FROM exame WHERE id={$item}";
                         $stmt = $this->conn->prepare($sql);
                         $stmt->execute();
                         $query = $stmt->fetch(\PDO::FETCH_ASSOC);
-                        $sql = "INSERT INTO exame_empresa (exame, empresa, preco_coleta, preco_entrega) VALUES({$item}, '{$data['empresa']}', '{$query['preco_coleta']}', '{$query['preco_entrega']}')";
+                        $sql = "INSERT INTO exame_empresa (exame, empresa, preco_coleta, preco_exame) VALUES({$item}, '{$data['empresa']}', '{$query['preco_coleta']}', '{$query['preco_exame']}')";
 
                         $stmt = $this->conn->prepare($sql);
                         $stmt->execute();

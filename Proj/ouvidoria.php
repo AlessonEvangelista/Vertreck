@@ -11,9 +11,8 @@
                 <h2 class="head-title">Ouvidoria <br> à rede credenciada Petrobras</h2>
                     Entre em contato conosco pelos canais abaixo.<br><br><br><br><br>
 
-                    <h6 style="font-size: 1.2rem;">Dúvidas, sugestões e reclamações: </h6><br>
-                    RT-PCR: <a href="tel:08005211006">0800 521 1006</a> <br>
-                    Rede Ocupacional: <a href="tel:08002044040"> 0800 204 4040</a>
+                    <h5 class="head-title"> Centrais de atendimento: <br>
+                            <a href="tel:08004440050" style="text-decoration: none;">0800 444 0050</a> <br></h5>
                     Email: <a href="mailto:vertreck@vertreck.com.br">vertreck@vertreck.com.br</a>
                 </p>
             </div>

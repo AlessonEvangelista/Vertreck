@@ -4,7 +4,7 @@
 ?>
 
 <div class="col-lg-12 mb-4">
-
+<?php // var_dump($_SESSION);?>
         <!-- Illustrations -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -449,7 +449,7 @@
                             ?>
                             <div class="col-md-12">
                                 <h5> Informe os exames realizados aos credenciados Petrobras para dar baixa nos valores. </h5>
-                                <button type="button" class="btn btn-primary" id="inforNewExame" onclick="darBaixaExame()">Dar baixa em exame</button>
+                                <button type="button" class="btn btn-primary" id="inforNewExame" onclick="darBaixaExame()">Informe de exame(s)</button>
                             </div>
                             <!-- Divider -->
                             <hr class="sidebar-divider">
@@ -459,44 +459,24 @@
                                     <thead>
                                         <tr>
                                             <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">#</td>
-                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">EXAME</td>
-                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">DATA</td>
+                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">MATRÍCULA</td>
                                             <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">PACIENTE</td>
-                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">COLETA</td>
-                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">ENTREGA</td>
+                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">DATA</td>
                                             <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">VALOR</td>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>TESTE</td>
-                                            <td>05/11/2021</td>
-                                            <td>TESTE</td>
-                                            <td>X</td>
-                                            <td>X</td>
-                                            <td>100,00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>TESTE</td>
-                                            <td>05/11/2021</td>
-                                            <td>TESTE</td>
-                                            <td>X</td>
-                                            <td></td>
-                                            <td>25,00</td>
-                                        </tr>
+                                    <tbody id="LstExamesInformados">
                                     </tbody>
                                 </table>
                             </div>
                             <div class="col-md-12">
                                 <div style="display: block; position: absolute; right: 0; width: 250px">
-                                    <h5 style="color: red;">TOTAL: R$ 125,00 </h5>
+                                    <h5 style="color: red;">TOTAL: <span id="totalLstExamesInformados"> </h5>
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div style="display: block; position: relative; right: 0; width: 250px">
-                                    <button type="button" class="btn btn-success"> LIQUIDAR EXAMES </button>
+                                <div style="display: block; position: relative; right: 0; width: 250px; min-height: 40px;">
+<!--                                    <button type="button" class="btn btn-success"> LIQUIDAR EXAMES </button>-->
                                 </div>
                             </div>
                             <?php
@@ -519,6 +499,7 @@
                 echo "getEmpresaExameList();";
             }
         ?>
+        <?php if($page === "BAIXA EM EXAMES"){ echo "tblListExamesInformados();"; } ?>
 
     }
 
@@ -1405,11 +1386,43 @@
     function closeEmpresasExcluidasModal() { if(empresasExcluidasModal !== null) { empresasExcluidasModal.hide() }}
     function closeListaUsuariosApp() { if(listaUsuariosAppModal !== null) { listaUsuariosAppModal.hide() }}
     function closeModalDarBaixaExame() { if(ModalDarBaixaExame !== null) {
-        if (window.confirm("Caso não tenha concluído o processo, \n Ao fechar, você irá perder as informações, e iniciar novamente o processo. \n Tem certeza disso?")) {
+        if (window.confirm("Caso não tenha concluído o processo, \n Ao fechar, você irá perder as informações. \n Tem certeza disso?")) {
             ModalDarBaixaExame.hide()
             fecharMdlReiniciarProcessoBE();
         }
     }}
+
+    function tblListExamesInformados()
+    {
+        let valorLstExames = parseFloat("0,00");
+        let tbl = $("#LstExamesInformados");
+
+        let trHTML;
+        $.ajax({
+            url: "back/api.php?url=Financeiro/listExamesAtivos",
+            method: "get",
+            success: function (obj) {
+                if (obj != null) {
+                    var data = obj.data;
+
+                    $.each(data, function (i, d) {
+                        trHTML += '' +
+                            '<tr> ' +
+                                '<td>' + data[i].id + '</td>' +
+                                '<td>' + data[i].matricula + '</td>' +
+                                '<td>' + data[i].usuario_nome + '</td>' +
+                                '<td>' + data[i].data_baixa + '</td>' +
+                                '<td>' + data[i].valor_total + '</td> ' +
+                            '</tr>';
+                        valorLstExames = parseFloat(data[i].valor_total) + parseFloat(valorLstExames);
+                    });
+                    tbl.empty().append(trHTML);
+                    $("#totalLstExamesInformados").empty().append(valorLstExames.toFixed(2));
+                }
+            }
+        });
+
+    }
 
     function idEmpresaExamePreco()
     {
@@ -1560,43 +1573,48 @@
                 }
             })
         }
-
     }
 
-    let processoBaixaIniciado=2;
-    function habilitarTagBaixaExame(tagInformar)
+    let processoBaixaIniciado=0;
+    function habilitarTagBaixaExame(tagInformar, event=0)
     {
-        if (tagInformar === 1) {
-            $("#tagBaixaExame_1").css("display", "block")
-            $("#btnTagBaixaExame_1").css("background-color", "#4e73df")
-            $("#btnTagBaixaExame_1").css("border-color", "#4e73df")
+        switch (tagInformar)
+        {
+            case 1 :
+                    $("#tagBaixaExame_1").css("display", "block")
+                    $("#btnTagBaixaExame_1").css("background-color", "#4e73df")
+                    $("#btnTagBaixaExame_1").css("border-color", "#4e73df")
 
-            $("#tagBaixaExame_2").css("display", "none")
+                    $("#tagBaixaExame_2").css("display", "none")
 
-            $("#tagBaixaExame_3").css("display", "none")
+                    $("#tagBaixaExame_3").css("display", "none")
+                break;
+            case 2 :
+                    if(processoBaixaIniciado > 0) {
+                        $("#btnTagBaixaExame_2").css("background-color", "#4e73df")
+                        $("#btnTagBaixaExame_2").css("border-color", "#4e73df")
 
-        } else if(tagInformar === 2) {
-            if(processoBaixaIniciado > 0) {
-                $("#tagBaixaExame_2").css("display", "block")
-                $("#btnTagBaixaExame_2").css("background-color", "#4e73df")
-                $("#btnTagBaixaExame_2").css("border-color", "#4e73df")
+                        if(event !== 0) {
+                            $("#tagBaixaExame_2").css("display", "block")
+                            $("#tagBaixaExame_1").css("display", "none")
+                            $("#tagBaixaExame_3").css("display", "none")
+                        }
+                        carregarTblTagBaixaExame();
+                    }
+                break;
+            case 3 :
+                    if(processoBaixaIniciado > 1) {
 
-                $("#tagBaixaExame_1").css("display", "none")
+                        $("#btnTagBaixaExame_3").css("background-color", "#4e73df")
+                        $("#btnTagBaixaExame_3").css("border-color", "#4e73df")
 
-                $("#tagBaixaExame_3").css("display", "none")
-
-                carregarTblTagBaixaExame();
-            }
-        } else {
-            if(processoBaixaIniciado > 1) {
-                $("#tagBaixaExame_3").css("display", "block")
-                $("#btnTagBaixaExame_3").css("background-color", "#4e73df")
-                $("#btnTagBaixaExame_3").css("border-color", "#4e73df")
-
-                $("#tagBaixaExame_1").css("display", "none")
-
-                $("#tagBaixaExame_2").css("display", "none")
-            }
+                        if(event !== 0) {
+                            $("#tagBaixaExame_3").css("display", "block")
+                            $("#tagBaixaExame_1").css("display", "none")
+                            $("#tagBaixaExame_2").css("display", "none")
+                        }
+                    }
+                break;
         }
     }
 
@@ -1634,7 +1652,7 @@
 
     function fecharMdlReiniciarProcessoBE()
     {
-        processoBaixaIniciado=2;
+        processoBaixaIniciado=0;
         //TODO ATUALIZAR BANCO: exame_baixa_agendamento.status= 2 / 0
 
         // Limpando aba usuário
@@ -1672,6 +1690,16 @@
         $("#btnTagBaixaExame_2").css("border-color", "#bab9b9");
         $("#btnTagBaixaExame_3").css("background-color", "#bab9b9");
         $("#btnTagBaixaExame_3").css("border-color", "#bab9b9");
+
+        $.ajax({
+            url: "back/api.php?url=Financeiro/encerrarExames",
+            method: "GET",
+            success: function (obj) {}, error: function(i, d) {
+                console.log("erro: ");
+                console.log(i);
+            }
+        });
+
     }
 
     function montarTableBaixaExameLaboratorio(data)
@@ -1950,6 +1978,7 @@
                     $('#BEusuarioInformado').empty().append(html);
                     processoBaixaIniciado=1;
                     editBaixaExamesProgress(35);
+                    habilitarTagBaixaExame(2, 0);
                 }
                 alert(obj.data[1]);
             },
@@ -1980,10 +2009,10 @@
                     // console.log(obj.data)
                     alert(obj.data[1]);
 
+                    processoBaixaIniciado=2;
                     editBaixaExamesProgress(35);
+                    habilitarTagBaixaExame(3, 0);
                 }
-                // console.log(obj.data)
-                // alert(obj.data[1]);
             },
             error: function (i, er) {
                 console.log(i)
@@ -2271,12 +2300,12 @@
 </div>
 
 <!-- BAIXA EXAME -->
-<div class="modal fade" id="ModalDarBaixaExame" tabindex="-1" role="dialog" aria-labelledby="ModalDarBaixaExame" aria-hidden="true" role="dialog">
+<div class="modal fade" id="ModalDarBaixaExame" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="ModalDarBaixaExame" aria-hidden="true" role="dialog">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" > BAIXA EXAMES </h5>
-                <a id="CloseAgendaModal" style="cursor: pointer;" onclick="closeModalDarBaixaExame()"> X </a>
+                <a id="CloseAgendaModal" style="cursor: pointer; font-size: 22px;font-weight: 900;" onclick="closeModalDarBaixaExame()"> X </a>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
@@ -2288,10 +2317,10 @@
                             <button type="button btn-lg" id="btnTagBaixaExame_1" onclick="habilitarTagBaixaExame(1)" style="width: 100%" class="btn btn-primary"> INFORMAR PACIENTE </button>
                         </div>
                         <div class="col-2">
-                            <button type="button btn-lg" id="btnTagBaixaExame_2" onclick="habilitarTagBaixaExame(2)" style="width: 100%; background-color: #bab9b9; border-color:#bab9b9;" class="btn btn-primary"> INFORMAR EXAMES </button>
+                            <button type="button btn-lg" id="btnTagBaixaExame_2" onclick="habilitarTagBaixaExame(2, 1)" style="width: 100%; background-color: #bab9b9; border-color:#bab9b9;" class="btn btn-primary"> INFORMAR EXAMES </button>
                         </div>
                         <div class="col-2">
-                            <button type="button btn-lg" id="btnTagBaixaExame_3" onclick="habilitarTagBaixaExame(3)" style="width: 100%; background-color: #bab9b9; border-color:#bab9b9;" class="btn btn-primary"> CONCLUIR PROCESSO </button>
+                            <button type="button btn-lg" id="btnTagBaixaExame_3" onclick="habilitarTagBaixaExame(3, 1)" style="width: 100%; background-color: #bab9b9; border-color:#bab9b9;" class="btn btn-primary"> CONCLUIR PROCESSO </button>
                         </div>
                         <div class="col-2">
                             <h4 style="position: fixed; right: 2%; margin: 10px; color: red; z-index: 9;"> R$<label id="BaixaExameTotal" ></label> </h4>
@@ -2368,7 +2397,7 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <label for="formFileGuia" class="form-label">ENVIE A GUIA(pdf)</label>
-                                            <input class="form-control" name="formFileGuia" type="file" id="formFileGuia">
+                                            <input class="form-control" name="formFileGuia" type="file" id="formFileGuia" required>
                                         </div>
                                     </div>
                                 </div>

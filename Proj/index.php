@@ -11,9 +11,7 @@
                     <h2 class="head-title">Seja bem vindo <br> à rede credenciada Petrobras</h2>
                     <p style="display: flex; margin: 2rem 0;">
                         <h4 class="head-title"> Centrais de atendimento: <br>
-                            <a href="tel:08005211006" style="text-decoration: none;">0800 444 0050</a> <br>
-                            <a style="text-decoration: none;" href="tel:08002044040">0800 204 4040</a> <br>
-                            <a href="tel:08005211006" style="text-decoration: none;">0800 521 1006</a> <br></h4>
+                            <a href="tel:08004440050" style="text-decoration: none;">0800 444 0050</a> <br></h4>
                     </p>
                     <?php if( !$_SESSION['nome'] ) { ?>
                         <div class="header-button">

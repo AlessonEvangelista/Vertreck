@@ -7,6 +7,14 @@
     const DBUSER = "root";
     const DBPASS = "vertreckDb";
 
+    const EXAME_BAIXA = [
+        "FECHADO" => 0,
+        "INICIADO - EM PROGRESSO" => 1,
+        "INFORMADO - PARA BAIXA" => 2,
+        "PAGO - PAGO PELA VERTRECK" => 3,
+        "ERRO - ERRO AO INFORMAR" => 4
+    ];
+
 //    const AUTH_SEND_EMAIL_EMAIL = "ealesson@gmail.com";
 //    const AUTH_SEND_EMAIL_PASS = "Ale&ve06032010";
 //    const SMTP_HOST = "smtp.gmail.com";
