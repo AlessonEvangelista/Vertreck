@@ -24,6 +24,24 @@
             return true;
         }
 
+        public function autoCreate()
+        {
+            $message = '3';
+            if( (new Empresa())->autoCreate($_POST) )
+            {
+                $_SESSION['message'] = NULL;
+                $message = '2';
+            }
+
+            if($_SERVER['HTTP_HOST'] === 'localhost'){
+                header("Location:  http://localhost/pessoal/Vertreck/ADM/login.php?message=".$message);
+                exit;
+            } else {
+                header("Location:  https://vertreck.net.br/Adm/login.php?message=2");
+                exit;
+            }
+        }
+
         public function update()
         {
             $_SESSION['message'] = 'Ocorreu algum erro ao editar empresa. tente novamente mais tarde! Ou informe ao administrador';

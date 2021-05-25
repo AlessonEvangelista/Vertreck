@@ -17,6 +17,9 @@
                         <div class="header-button">
                             <button type="button" class="btn btn-outline-primary" style="margin: 10px 0;" data-bs-toggle="modal" data-bs-target="#appLoginCad">Área do usuário</button>
                         </div>
+                        <div class="header-button" style="position: absolute; right: 10%; margin-top: -59px;">
+                            <a href="<?php if($_SERVER['HTTP_HOST'] === "localhost"){echo '../ADM/login.php'; }else{ echo 'Adm/login.php'; } ?>" class="btn btn-outline-primary" style="margin: 10px 0;" >Área da empresa</a>
+                        </div>
                     <?php } else { ?>
                         <div class="header-button">
                             <a class="btn btn-outline-primary" style="margin: 10px 0;" href="app.php">Área do usuário</a>

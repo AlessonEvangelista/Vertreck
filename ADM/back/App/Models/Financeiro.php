@@ -19,9 +19,9 @@
                     $id = $stmt->fetch(\PDO::FETCH_ASSOC);
 
                     if($data['tipo'] === 1) {
-                        $update = "UPDATE exame_baixa_agendamento SET pdf_coleta = '{$data['name']}' WHERE id = '{$id['id']}'";
+                        $update = "UPDATE exame_baixa_agendamento SET pdf_laudo = '{$data['name']}' WHERE id = '{$id['id']}'";
                     } else {
-                        $update = "UPDATE exame_baixa_agendamento SET pdf_exame = '{$data['name']}' WHERE id = '{$id['id']}'";
+                        $update = "UPDATE exame_baixa_agendamento SET pdf_nota_fiscal = '{$data['name']}' WHERE id = '{$id['id']}'";
                     }
                     $this->conn->exec($update);
                 }

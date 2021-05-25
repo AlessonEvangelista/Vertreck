@@ -20,23 +20,24 @@
                     mkdir($target_dir.$_SESSION['empresa'], 0777, true);
                 }
                 $target_dir = $target_dir.$_SESSION['empresa'];
-                $renameFile = $_SESSION['empresa']."_".basename( $_FILES['formFileGuia']['name'] )."_".date("d_m_Y_H-i-s");
+                $renameFile = $_SESSION['empresa']."_data_".date("d_m_Y_H-i-s")."_".basename( $_FILES['formFileLaudo']['name'] );
 
-                $file_guia_ext = explode(".", $_FILES["formFileGuia"]['name']);
+                $file_laudo_ext = explode(".", $_FILES["formFileLaudo"]['name']);
 
-                if($file_guia_ext[1] !== "pdf") {
+                if($file_laudo_ext[1] !== "pdf") {
                     throw new \Exception("Aquivo deve ser PDF");
                 }
-                if(move_uploaded_file( $_FILES["formFileGuia"]['tmp_name'], $target_dir ."/". "guia_".$renameFile ))
+                if(move_uploaded_file( $_FILES["formFileLaudo"]['tmp_name'], $target_dir ."/". "laudo_".$renameFile ))
                 {
-                    (new Financeiro())->saveUploadFile(['tipo' => 1, 'name' => "guia_".$renameFile ]);
+                    (new Financeiro())->saveUploadFile(['tipo' => 1, 'name' => "laudo_".$renameFile ]);
                 } else {
                     throw new \Exception("Ocorreu algum erro ao enviar o(s) aquivo(s)");
                 }
-                if( isset($_FILES["formFileExame"]) ) {
-                    if(move_uploaded_file( $_FILES["formFileExame"]['tmp_name'], $target_dir ."/". "exame_".$renameFile ))
+                if( isset($_FILES["formFileNota"]) ) {
+                    $renameFile = $_SESSION['empresa']."_data_".date("d_m_Y_H-i-s")."_".basename( $_FILES['formFileNota']['name'] );
+                    if(move_uploaded_file( $_FILES["formFileNota"]['tmp_name'], $target_dir ."/". "nota_".$renameFile ))
                     {
-                        (new Financeiro())->saveUploadFile(['tipo' => 2, 'name' => "exame_".$renameFile ]);
+                        (new Financeiro())->saveUploadFile(['tipo' => 2, 'name' => "nota_".$renameFile ]);
                     }
                 }
 

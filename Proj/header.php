@@ -11,10 +11,8 @@
         define("INTERNAL_BASE", "Adm/back/api.php?url=External/");
     }
     if(!isset($_SESSION['nome']) and !isset($_GET['rollback'])){
-        // echo "<script> alert('É necessário realizar o Login para ter acesso!'); </script>";
-        // header("Location: index.php?rollback=true");
-        var_dump($_REQUEST);
-        exit;
+         echo "<script> alert('É necessário realizar o Login para ter acesso!'); </script>";
+         header("Location: index.php?rollback=true");
     }
 ?>
 <head>

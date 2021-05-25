@@ -21,7 +21,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="#">
+        <a onclick="clickMenu('Home')" class="nav-link" href="#">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Painel</span></a>
     </li>
@@ -106,7 +106,13 @@
         <div id="collapseFinance" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Exames:</h6>
-                <a onclick="clickMenu('BAIXA EM EXAMES')" class="collapse-item" href="#">Baixa em Exames</a>
+                <?php if( $_SESSION['tipo'] == 2 ) { ?>
+                    <a onclick="clickMenu('BAIXA EM EXAMES')" class="collapse-item" href="#">Baixa em Exames</a>
+                <?php } ?>
+                <?php if($_SESSION['tipo'] == 1 || $_SESSION['tipo'] == 4) { ?>
+                    <a onclick="clickMenu('INFORMES DE EXAMES')" class="collapse-item" href="#">Informes</a>
+                <?php } ?>
+
             </div>
         </div>
     </li>
@@ -134,9 +140,9 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a onclick="clickMenu('AGENDAS')"  class="nav-link" href="#">
-            <i class="fas fa-fw fa-table"></i>
-            <span>Agendas</span></a>
+<!--        <a onclick="clickMenu('AGENDAS')"  class="nav-link" href="#">-->
+<!--            <i class="fas fa-fw fa-table"></i>-->
+<!--            <span>Agendas</span></a>-->
     </li>
 
 

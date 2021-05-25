@@ -204,14 +204,15 @@
         {
             $emp = ($_POST['empresa'] ? $_POST['empresa'] : $_SESSION['empresa']);
             $sql = "SELECT s.id idServico,
-                        IF((select id from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id),
-                            (select id from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id), null) as exameEmpresa,
-                        IF((select 1 from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id and ee.preco_coleta <> 0.00),
-                            (select preco_coleta from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id), 0.00) as precoColetaHabilitado,
-                        IF((select 1 from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id and ee.preco_exame <> 0.00),
-                            (select preco_exame from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id), 0.00) as precoEntregaHabilitado,
-                        e.id idExame, s.nome servico, e.exame, e.preco_coleta, e.preco_exame
-                        FROM exame e INNER JOIN servico s on e.servico = s.id WHERE e.status = 1";
+                            IF((select id from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id order by id desc limit 1), true, false) as exameEmpresa,
+                            IF((select 1 from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id and (ee.preco_coleta <> 0.00 || ee.preco_coleta <> null)), true, false) as precoColetaHabilitado,
+                            IF((select 1 from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id and (ee.preco_exame <> 0.00 ||  ee.preco_exame <> null)), true, false) as precoEntregaHabilitado,
+                            IF( (select ee.preco_coleta from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id order by id desc limit 1) > e.preco_coleta, 
+                                (select ee.preco_coleta from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id order by id desc limit 1), e.preco_coleta ) as preco_coleta, 
+                            IF( (select ee.preco_exame from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id order by id desc limit 1) > e.preco_exame,
+                                (select ee.preco_exame from exame_empresa ee where ee.empresa = {$emp} and ee.exame = e.id order by id desc limit 1), e.preco_exame) as preco_exame,
+                                e.id idExame, s.nome servico, e.exame 
+                            FROM exame e LEFT JOIN servico s on e.servico = s.id WHERE e.status in (1,3)";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -222,7 +223,7 @@
         {
             $emp = $_SESSION['empresa'];
             $sql = "SELECT e.id, e.servico, e.exame, e.preco_coleta, if( ee.preco_exame, ee.preco_exame, e.preco_exame )  as preco_exame, e.status FROM exame e INNER JOIN exame_empresa ee on ee.exame = e.id 
-                        WHERE ee.empresa = {$emp} and e.status <> 0";
+                        WHERE ee.empresa = {$emp} and e.id <> 83 AND e.status <> 0";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
 
@@ -264,7 +265,7 @@
             }
         }
 
-        public function disEmpresaExamePreco($exame)
+        public function disEmpresaExamePreco()
         {
             $tipo = $_POST['tipo'];
             $exame = $_POST['exame'];

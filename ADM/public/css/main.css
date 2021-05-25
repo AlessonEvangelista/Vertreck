@@ -87,3 +87,35 @@ input:checked + .slider:before {
     min-height: 99.6vh;
     margin: 0.2vh 0.2vw;
 }
+
+.container-table {
+    overflow: auto;
+    width: 100%;
+}
+
+.container-table table td {
+    min-width: 220px;
+    text-align: center;
+}
+#tblTheadGeralDadosExames {
+    font-weight: 800;
+    font-size: 18px;
+}
+
+@media (max-width: 1024px) {
+    .container-table {
+        max-width: 1000px;
+    }
+} @media (max-width: 1280px) {
+    .container-table {
+        max-width: 1100px;
+    }
+} @media (max-width: 1440px) {
+    .container-table {
+        max-width: 1300px;
+    }
+} @media (min-width: 1440px) {
+    .container-table {
+        max-width: 1560px;
+    }
+}

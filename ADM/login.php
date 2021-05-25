@@ -62,8 +62,18 @@
                                         <?php
                                             $message = ( isset($_SESSION['message']) ? $_SESSION['message'] : isset($_GET['message']) ? $_GET['message'] : "" );
                                             if ($message){
+                                                $messageString = "Algum erro ocorreu";
+                                                if($message == 1) {
+                                                    $messageString = "Usuário ou senha incorretos, ou usuário não tem permissão de acesso";
+                                                }
+                                                if($message == 2) {
+                                                    $messageString = "Empresa criada com sucesso! \n realize o login!";
+                                                }
+                                                if($message == 3) {
+                                                    $messageString = "Erro ao cadastrar empresa! \n tente novamente mais tarde!";
+                                                }
                                                 echo "<div class='alert alert-danger' role='alert'>";
-                                                    echo $message;
+                                                    echo $messageString;
                                                 echo "</div>";
                                             }
                                         ?>
@@ -71,8 +81,11 @@
 
                                 </form>
                                 <div class="text-center">
-                                    <a class="small" href="forgot-password.html">Esqueci minha senha?</a>
+                                    <!-- <a class="small" href="forgot-password.html">Esqueci minha senha?</a>-->
                                 </div>
+                            <div class="text-center">
+                                <h4><a class="small" href="cadastroEmpresa.php">Não é cadastrado? Cadastre-se</a></h4>
+                            </div>
                             </div>
                         </div>
                     </div>
