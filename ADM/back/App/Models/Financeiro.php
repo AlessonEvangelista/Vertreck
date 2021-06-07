@@ -42,6 +42,12 @@
             } catch (\Exception $e){}
         }
 
+        public function concluirProcessoSolicitarPagamento($data)
+        {
+            $updt = "UPDATE pagamento_exames SET nota_fiscal = '{$data['nota']}' WHERE id = {$data['pagamento']}";
+            $this->conn->exec($updt);
+        }
+
         public function examePendente()
         {
             try {

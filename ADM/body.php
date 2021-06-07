@@ -536,29 +536,36 @@
                             <!-- Divider -->
                             <hr class="sidebar-divider">
 
-                            <div class="col-md-12">
-                                <table class="table table-striped table-hover" >
-                                    <thead>
-                                        <tr>
-                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">#</td>
-                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">MATRÍCULA</td>
-                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">PACIENTE</td>
-                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">DATA</td>
-                                            <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">VALOR</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="LstExamesInformados">
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-md-12">
-                                <div style="display: block; position: absolute; right: 0; width: 250px">
-                                    <h5 style="color: red;">TOTAL: <span id="totalLstExamesInformados"> </h5>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-striped table-hover" >
+                                        <thead>
+                                            <tr>
+                                                <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">#</td>
+                                                <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">MATRÍCULA</td>
+                                                <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">PACIENTE</td>
+                                                <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">DATA</td>
+                                                <td style="font-size: 18px;font-weight: 800;background-color: #888888;color: #fff;">VALOR</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="LstExamesInformados">
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="col-md-12">
-                                <div style="display: block; position: relative; right: 0; width: 250px; min-height: 40px;">
-<!--                                    <button type="button" class="btn btn-success"> LIQUIDAR EXAMES </button>-->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div style="display: block; position: absolute; right: 0; width: 250px">
+                                        <h5 style="color: red;">TOTAL: <span id="totalLstExamesInformados"> </h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div style="display: block; position: relative; right: 0; width: 250px; min-height: 40px;">
+                                        <button type="button" id="btnOpenPagamentoExame" onclick="openPagamentoExame()" class="btn btn-success"> SOLICITAR PAGAMENTO </button>
+                                        <button type="button" id="btnEnviarPagamentoExame" style="display: none;" onclick="EnviarPagamentoExame()" class="btn btn-success"> ENVIAR PAGAMENTOS LOTE </button>
+                                    </div>
                                 </div>
                             </div>
                             <?php
@@ -612,6 +619,78 @@
 
     }
 
+    function openPagamentoExame()
+    {
+        if(qtddExames.length === 0) {
+            alert("É necessário informar exames para solicitar pagamentos!");
+            return false;
+        }
+        $("#btnEnviarPagamentoExame").css("display", "block");
+        $("#btnOpenPagamentoExame").css("display", "none");
+
+        for(i=0; i<= qtddExames; i++) {
+            $("#lblSelecionaExamePagamentoBloco_" + i).css("display", "inline-block");
+            $("#lblStlExamesPagId_"+i).css("top", "-8px");
+        }
+    }
+
+    function EnviarPagamentoExame()
+    {
+        if(comboExamesPagamento.length === 0) {
+            alert("Solicitação não realizada. \n Por favor selecione os exames para a solicitação!");
+        } else {
+            console.log(comboExamesPagamento)
+            $.ajax({
+                url: "back/api.php?url=Financeiro/enviarPagamentoLoteExames",
+                method: "POST",
+                data: {"data": comboExamesPagamento},
+                success: function(obj) {
+                    let data = obj.data;
+
+                    // Gerado solicitação de pagamento
+                    if( data[0] === 1 ) {
+
+                        // Abre painel solicitando nota
+                        $("#idPagamentoConcluido").val(data[1]);
+                        $("#mdlSolicitaNotaPagamento").css("display", "block")
+
+                        alert("INFORME UMA NOTA FISCAL PARA RECEBIMENTO DE SUA SOLICITACAO!");
+
+                    }
+                    else {
+                        console.log(data[1])
+                    }
+                },
+                error: function(er,d) {
+                    console.log(er);
+                }
+            })
+        }
+        $("#btnEnviarPagamentoExame").css("display", "none");
+        $("#btnOpenPagamentoExame").css("display", "block");
+
+        for(i=0; i<= qtddExames; i++) {
+            $("#lblSelecionaExamePagamentoBloco_"+i).css("display", "none");
+            $("#lblStlExamesPagId_"+i).css("top", "4px");
+        }
+    }
+
+    let comboExamesPagamento=[];
+    function montaExamesPagamentoBloco(id)
+    {
+        if($("#inptCheckBoxSelecionaExamePagamentoBloco_"+id).is(":checked")) {
+            comboExamesPagamento.push(id);
+        } else {
+            // Pega a posição do ítem removido, para removelo no splice
+            $.each(comboExamesPagamento, function(i, d) {
+                if (comboExamesPagamento[i] === id) {
+                    idVal = i;
+                }
+            });
+            comboExamesPagamento.splice(idVal, 1);
+        }
+    }
+
     let totalExamesInformados;
     let valorExamesInformados;
     let totalEmpresasCadastradas;
@@ -622,7 +701,6 @@
             url: "back/api.php?url=Financeiro/getTotalizadores",
             method: "POST",
             success: function(obj) {
-                console.log(obj)
                 $("#lblTotalExamesinfromados").empty().append(obj.data[0]);
                 $("#lblValorTotalExamesInformados").empty().append( ( obj.data[1] !== null ? "R$ " +obj.data[1] : "" ) );
                 $("#lblTotalEmpresasCadastradas").empty().append(obj.data[2]);
@@ -1530,6 +1608,7 @@
         }
     }
 
+    let qtddExames = 0;
     function tblListExamesInformados()
     {
         let valorLstExames = parseFloat("0,00");
@@ -1546,14 +1625,22 @@
                     $.each(data, function (i, d) {
                         trHTML += '' +
                             '<tr> ' +
-                                '<td>' + data[i].id + '</td>' +
+                                '<td style="width:150px; padding: 2px 7px;">' +
+                                    '<label id="lblSelecionaExamePagamentoBloco_'+ i +'" class="switch" style="position: relative; top: 4px; display: none;" >' +
+                                        '<input class="form-check-input" name="inptCheckBoxSelecionaExamePagamentoBloco_'+data[i].id+'" onchange="montaExamesPagamentoBloco('+ data[i].id +')" type="checkbox" id="inptCheckBoxSelecionaExamePagamentoBloco_'+data[i].id+'">' +
+                                        '<span class="slider round" id="checkBoxSelecionaExamePagamentoBloco_'+data[i].id+'" ></span>' +
+                                    '</label> ' +
+                                    '<label id="lblStlExamesPagId_'+i+'" style="position: relative; margin-left: 7px;top: 4px;" > ' + data[i].id + '</label>' +
+                                '</td>' +
                                 '<td>' + data[i].matricula + '</td>' +
                                 '<td>' + data[i].usuario_nome + '</td>' +
                                 '<td>' + data[i].data_baixa + '</td>' +
                                 '<td>' + data[i].valor_total + '</td> ' +
                             '</tr>';
                         valorLstExames = parseFloat(data[i].valor_total) + parseFloat(valorLstExames);
+                        qtddExames = i;
                     });
+                    qtddExames = qtddExames+1;
                     tbl.empty().append(trHTML);
                     $("#totalLstExamesInformados").empty().append(valorLstExames.toFixed(2));
                 }
@@ -2769,23 +2856,15 @@
                         <form action="back/app.php?url=Financeiro/UploadGuiasPdf" method="post" enctype="multipart/form-data">
                             <div class="row" style="margin: 15px 0;">
                                 <div class="col-12">
-                                    <h4>Último processo para finalizar o seu envio. <br> Para isso nos informe, <b>caso tenha gerado</b>, um laudo(<i>importante para conferência Petrobras</i>). E uma nota fiscal(<i>importante para o seu recebimento</i>).</h4> <br>
+                                    <h4>Último processo para finalizar o seu envio. <br> Para isso nos informe, <b>caso tenha gerado</b>, um laudo(<i>importante para conferência Petrobras</i>).</h4> <br>
                                 </div>
                             </div>
-                            <div class="row" style="margin:15px 0;">
-                                <div class="col-6">
+                            <div class="row" style="margin:15px 40px;">
+                                <div class="col-12">
                                     <div class="row">
                                         <div class="col-12">
                                             <label for="formFileGuia" class="form-label">ENVIE AQUI O SEU LAUDO(pdf)</label>
                                             <input class="form-control" name="formFileLaudo" type="file" id="formFileLaudo" style="padding: 3px;">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <label for="formFileExame" class="form-label">ENVIE AQUI A NOTA FISCAL(pdf)</label>
-                                            <input class="form-control" name="formFileNota" type="file" id="formFileNota" style="padding: 3px;">
                                         </div>
                                     </div>
                                 </div>
@@ -2849,6 +2928,34 @@
                     <button type="submit" onclick="EnviarPdfGuiasPorExames()" class="btn btn-success" style="width: 200px; position: relative; left: 80%; margin: 35px 0 0 0;"> Informar Guias </button>
                 </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="mdlSolicitaNotaPagamento" style="width: 79%; min-height: 300px; margin: 7% 12px; z-index: 1050; display: none; position: absolute;" >
+    <div class="modal-dialog" style="width: 100%; max-width: 100%; -webkit-box-shadow: 2px 1px 25px 0px rgba(50, 50, 50, 1); -moz-box-shadow: 2px 1px 25px 0px rgba(50, 50, 50, 1); box-shadow: 2px 1px 25px 0px rgba(50, 50, 50, 1);">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Informe por favor uma nota fiscal(importante para o seu recebimento)! </h5>
+                <!--<a id="CloseAgendaModal" style="cursor: pointer;" onclick="closeMdlSolicitaNotaPagamento()"> X </a>-->
+            </div>
+            <div class="modal-body">
+                <form action="back/app.php?url=Financeiro/concluirProcessoPagamento" method="post" enctype="multipart/form-data">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <input type="hidden" name="idPagamentoConcluido" id="idPagamentoConcluido">
+                                <label for="formFileExame" class="form-label">ENVIE AQUI A NOTA FISCAL(pdf)</label>
+                                <input class="form-control" name="formFileNota" type="file" id="formFileNota" style="padding: 3px;">
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin: 20px 0;">
+                            <button type="submit" class="btn btn-success" style="width: 200px; position: relative; left: 80%; margin: 35px 0 0 0;"> Informar Guias </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

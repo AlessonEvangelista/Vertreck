@@ -82,6 +82,40 @@ class FinanceiroApi extends Sql
         } catch (\Exception $e){}
     }
 
+    public function enviarPagamentoLoteExames()
+    {
+        try {
+            $sql = "INSERT INTO pagamento_exames (empresa, valor_total, status) VALUES ({$_SESSION['empresa']}, '0.00', 0)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $pagamento = $this->conn->lastInsertId();
+
+            $ex="";
+            foreach ($_POST["data"] as $exame) {
+                $ist = "INSERT INTO exame_baixa_pagamento (exame_baixa, pagamento_exames) VALUES ({$exame}, {$pagamento})";
+                $stmt = $this->conn->prepare($ist);
+                $stmt->execute();
+
+                $ex = $ex . $exame .", ";
+            }
+            $ex = substr($ex, 0, -2);
+
+            $sqlAll = "SELECT sum(valor_total) total FROM exame_baixa_agendamento WHERE id in({$ex}) AND status = 2";
+            $stmt = $this->conn->prepare($sqlAll);
+            $stmt->execute();
+            $val = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            $updt = "UPDATE pagamento_exames SET valor_total = '{$val['total']}', status = '1' WHERE id = {$pagamento}";
+            $this->conn->exec($updt);
+
+            // Conclui os exames
+            $updtEx = "UPDATE exame_baixa_agendamento SET status = 3 WHERE id in({$ex})";
+            $this->conn->exec($updtEx);
+
+            return [1, $pagamento];
+        } catch (\Exception $e){ return [0, $e->getMessage()]; }
+    }
+
     public function lstExameBaixaAll()
     {
         $arrHead = ['#', 'empresa', 'matricula', 'paciente', 'data', 'valor'];
